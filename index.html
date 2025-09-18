@@ -529,6 +529,96 @@
             opacity: 0.9;
         }
 
+        .sync-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .sync-section h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .sync-section p {
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .sync-instructions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .sync-step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .sync-step h4 {
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .sync-step p {
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .sync-tips {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .sync-tips h4 {
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .sync-tips ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .sync-tips li {
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+
+        .github-tips {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .github-tips p {
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .github-tips ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .github-tips li {
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .github-tips em {
+            font-style: italic;
+            color: #fff;
+        }
+
         .delete-section {
             margin-bottom: 30px;
             padding: 20px;
@@ -688,6 +778,10 @@
 
             .import-actions, .export-actions {
                 flex-direction: column;
+            }
+
+            .sync-instructions {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -955,6 +1049,45 @@
                         <button class="btn" onclick="downloadDataJson()">📁 下載 data.json 備份</button>
                         <button class="btn" onclick="downloadExcelBackup()">📊 下載 Excel 備份</button>
                         <button class="btn" onclick="manualDataSync()">🔄 手動同步資料</button>
+                    </div>
+                </div>
+                
+                <div class="sync-section">
+                    <h3>🌐 跨瀏覽器同步</h3>
+                    <p>在不同瀏覽器間同步您的資料</p>
+                    <div class="sync-instructions">
+                        <div class="sync-step">
+                            <h4>📤 步驟 1: 匯出資料</h4>
+                            <p>在當前瀏覽器中匯出您的資料</p>
+                            <button class="btn btn-primary" onclick="exportForSync()">匯出同步檔案</button>
+                        </div>
+                        <div class="sync-step">
+                            <h4>📥 步驟 2: 匯入資料</h4>
+                            <p>在其他瀏覽器中匯入剛才的檔案</p>
+                            <input type="file" id="syncFile" accept=".json,.xlsx" style="display: none;" onchange="importSyncFile()">
+                            <button class="btn btn-success" onclick="document.getElementById('syncFile').click()">選擇同步檔案</button>
+                        </div>
+                    </div>
+                    <div class="sync-tips">
+                        <h4>💡 使用提示</h4>
+                        <ul>
+                            <li>建議使用 Excel 格式進行同步，相容性更好</li>
+                            <li>每次同步前建議先備份現有資料</li>
+                            <li>同步檔案會自動合併重複記錄</li>
+                        </ul>
+                        
+                        <h4>🌐 GitHub Pages 部署說明</h4>
+                        <div class="github-tips">
+                            <p><strong>由於 GitHub Pages 的限制，不同瀏覽器的資料無法自動同步。</strong></p>
+                            <p>請使用以下步驟在不同瀏覽器間同步資料：</p>
+                            <ol>
+                                <li>在瀏覽器 A 中點擊「匯出同步檔案」</li>
+                                <li>下載生成的 JSON 檔案</li>
+                                <li>在瀏覽器 B 中點擊「選擇同步檔案」</li>
+                                <li>選擇剛才下載的檔案進行匯入</li>
+                            </ol>
+                            <p><em>這樣就能確保所有瀏覽器都有相同的資料了！</em></p>
+                        </div>
                     </div>
                 </div>
                 
@@ -2929,6 +3062,109 @@
                 console.error('手動同步失敗:', error);
                 alert('資料同步失敗，請檢查控制台錯誤訊息。');
             }
+        }
+
+        // 匯出同步檔案（專為跨瀏覽器同步設計）
+        function exportForSync() {
+            if (records.length === 0) {
+                alert('沒有記錄可以同步！');
+                return;
+            }
+
+            try {
+                const now = new Date();
+                const syncData = {
+                    records: records,
+                    metadata: {
+                        exportTime: now.toISOString(),
+                        version: "1.0",
+                        purpose: "cross-browser-sync",
+                        recordCount: records.length
+                    }
+                };
+
+                // 創建並下載同步檔案
+                const blob = new Blob([JSON.stringify(syncData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `family_sync_${formatDateToYYYYMMDD(now)}.json`;
+                
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                alert(`同步檔案已匯出！\n\n檔案包含 ${records.length} 筆記錄\n檔案名: family_sync_${formatDateToYYYYMMDD(now)}.json\n\n請將此檔案匯入到其他瀏覽器中。`);
+                
+            } catch (error) {
+                console.error('匯出同步檔案失敗:', error);
+                alert('匯出同步檔案失敗，請檢查控制台錯誤訊息。');
+            }
+        }
+
+        // 匯入同步檔案
+        function importSyncFile() {
+            const fileInput = document.getElementById('syncFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const syncData = JSON.parse(e.target.result);
+                    
+                    if (!syncData.records || !Array.isArray(syncData.records)) {
+                        alert('檔案格式不正確！請選擇有效的同步檔案。');
+                        return;
+                    }
+
+                    const importRecords = syncData.records;
+                    const currentCount = records.length;
+                    
+                    // 檢查重複記錄
+                    const duplicateCheck = checkForDuplicates(importRecords);
+                    const newRecords = duplicateCheck.newRecords;
+                    const duplicates = duplicateCheck.duplicates;
+
+                    if (newRecords.length === 0) {
+                        alert('沒有新的記錄需要匯入，所有記錄都已存在。');
+                        fileInput.value = '';
+                        return;
+                    }
+
+                    // 合併記錄
+                    records = records.concat(newRecords);
+                    saveRecords();
+                    
+                    // 更新顯示
+                    updateDataStats();
+                    displayRecords();
+                    
+                    let message = `同步完成！\n\n`;
+                    message += `匯入 ${newRecords.length} 筆新記錄\n`;
+                    message += `跳過 ${duplicates.length} 筆重複記錄\n`;
+                    message += `總記錄數: ${records.length} 筆\n\n`;
+                    
+                    if (syncData.metadata && syncData.metadata.exportTime) {
+                        const exportTime = new Date(syncData.metadata.exportTime);
+                        message += `檔案匯出時間: ${exportTime.toLocaleString('zh-TW')}`;
+                    }
+                    
+                    alert(message);
+                    
+                } catch (error) {
+                    console.error('解析同步檔案失敗:', error);
+                    alert('檔案解析失敗！請確保選擇的是有效的同步檔案。');
+                }
+            };
+            
+            reader.readAsText(file);
+            fileInput.value = '';
         }
 
 
