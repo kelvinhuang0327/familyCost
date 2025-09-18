@@ -954,6 +954,7 @@
                         <button class="btn" onclick="createSampleExcel()">創建示例 Excel</button>
                         <button class="btn" onclick="downloadDataJson()">📁 下載 data.json 備份</button>
                         <button class="btn" onclick="downloadExcelBackup()">📊 下載 Excel 備份</button>
+                        <button class="btn" onclick="manualDataSync()">🔄 手動同步資料</button>
                     </div>
                 </div>
                 
@@ -1171,6 +1172,9 @@
             // 嘗試從檔案讀取資料
             await loadDataFromFile();
             
+            // 檢查並同步資料
+            await syncDataBetweenSources();
+            
             console.log('初始化完成，當前記錄數量:', records.length);
             console.log('記錄內容:', records);
             
@@ -1203,9 +1207,10 @@
                     const data = await response.json();
                     console.log('成功載入 data.json:', data);
                     if (data.records && Array.isArray(data.records)) {
-                        // 如果檔案中有資料，使用檔案的資料
+                        // 如果檔案中有資料，使用檔案的資料並同步到 localStorage
                         records = data.records;
-                        console.log('從 data.json 載入了', records.length, '筆記錄');
+                        localStorage.setItem('familyRecords', JSON.stringify(records));
+                        console.log('從 data.json 載入了', records.length, '筆記錄，並同步到 localStorage');
                         console.log('記錄內容:', records);
                     } else {
                         // 如果檔案中沒有資料，嘗試從 localStorage 載入
@@ -1236,6 +1241,73 @@
                     records = localRecords;
                     console.log('從 localStorage 載入了', records.length, '筆記錄');
                 }
+            }
+        }
+
+        // 同步資料來源
+        async function syncDataBetweenSources() {
+            try {
+                // 檢查 localStorage 中是否有資料
+                const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
+                
+                // 如果 localStorage 有資料但 records 是空的，使用 localStorage 的資料
+                if (localRecords.length > 0 && records.length === 0) {
+                    records = localRecords;
+                    console.log('從 localStorage 同步了', records.length, '筆記錄到記憶體');
+                    
+                    // 同時更新 data.json
+                    await updateDataJsonFile();
+                }
+                // 如果記憶體有資料但 localStorage 是空的，同步到 localStorage
+                else if (records.length > 0 && localRecords.length === 0) {
+                    localStorage.setItem('familyRecords', JSON.stringify(records));
+                    console.log('從記憶體同步了', records.length, '筆記錄到 localStorage');
+                }
+                // 如果兩邊都有資料，比較並使用較新的
+                else if (records.length > 0 && localRecords.length > 0) {
+                    // 比較記錄數量，使用較多的
+                    if (localRecords.length > records.length) {
+                        records = localRecords;
+                        console.log('localStorage 有更多記錄，同步到記憶體');
+                    } else if (records.length > localRecords.length) {
+                        localStorage.setItem('familyRecords', JSON.stringify(records));
+                        console.log('記憶體有更多記錄，同步到 localStorage');
+                    }
+                }
+            } catch (error) {
+                console.warn('資料同步過程中發生錯誤:', error);
+            }
+        }
+
+        // 更新 data.json 檔案
+        async function updateDataJsonFile() {
+            try {
+                const dataToSave = {
+                    records: records,
+                    metadata: {
+                        lastUpdated: new Date().toISOString(),
+                        version: "1.0",
+                        description: "家庭收支記錄資料"
+                    }
+                };
+                
+                // 創建並下載更新的 data.json 檔案
+                const blob = new Blob([JSON.stringify(dataToSave, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'data.json';
+                
+                // 靜默下載
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                console.log('已更新 data.json 檔案');
+            } catch (error) {
+                console.warn('無法更新 data.json 檔案:', error);
             }
         }
 
@@ -2834,6 +2906,29 @@
             XLSX.writeFile(workbook, fileName);
             
             alert(`成功下載 Excel 備份檔案！\n備份了 ${records.length} 筆記錄。\n檔案名: ${fileName}\n\n此檔案可以直接重新匯入系統。`);
+        }
+
+        // 手動同步資料
+        async function manualDataSync() {
+            try {
+                console.log('開始手動同步資料...');
+                
+                // 重新載入 data.json
+                await loadDataFromFile();
+                
+                // 執行資料同步
+                await syncDataBetweenSources();
+                
+                // 更新顯示
+                updateDataStats();
+                displayRecords();
+                
+                alert(`資料同步完成！\n當前記錄數量: ${records.length} 筆\n\n已確保 localStorage 和 data.json 的資料一致性。`);
+                
+            } catch (error) {
+                console.error('手動同步失敗:', error);
+                alert('資料同步失敗，請檢查控制台錯誤訊息。');
+            }
         }
 
 
