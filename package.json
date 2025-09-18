@@ -1,0 +1,28 @@
+{
+  "name": "family-cost-platform",
+  "version": "1.0.0",
+  "description": "A simple family expense management platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "npx serve .",
+    "deploy": "git push origin main"
+  },
+  "keywords": [
+    "family",
+    "expense",
+    "management",
+    "finance",
+    "budget"
+  ],
+  "author": "Kelvin Huang",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kelvinhuang0327/familyCost.git"
+  },
+  "homepage": "https://kelvinhuang0327.github.io/familyCost/",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
