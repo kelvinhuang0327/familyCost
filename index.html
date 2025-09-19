@@ -1442,6 +1442,7 @@
                                 <p><strong>⚠️ 注意：</strong>GitHub 存檔需要 Personal Access Token</p>
                                 <p>請在 GitHub Settings > Developer settings > Personal access tokens 中創建 token</p>
                                 <button onclick="clearGitHubToken()" class="sync-btn github-btn" style="margin-top: 10px;">🔄 重新設定 Token</button>
+                                <button onclick="testGitHubToken()" class="sync-btn github-btn" style="margin-top: 5px;">🧪 測試 Token</button>
                             </div>
                         </div>
                     </div>
@@ -4103,8 +4104,9 @@
                         return null;
                     }
                     
-                    if (!/^[a-zA-Z0-9_]+$/.test(cleanToken)) {
-                        alert('❌ Token 包含無效字符，請重新複製');
+                    // GitHub Token 格式：ghp_ 開頭，包含字母數字和底線
+                    if (!cleanToken.startsWith('ghp_') && !cleanToken.startsWith('gho_') && !cleanToken.startsWith('ghu_') && !cleanToken.startsWith('ghs_') && !cleanToken.startsWith('ghr_')) {
+                        alert('❌ Token 格式不正確，GitHub Token 應該以 ghp_、gho_、ghu_、ghs_ 或 ghr_ 開頭');
                         return null;
                     }
                     
@@ -4121,6 +4123,40 @@
             if (confirm('確定要清除已保存的 GitHub Token 嗎？\n\n清除後需要重新輸入 Token 才能使用 GitHub 存檔功能。')) {
                 localStorage.removeItem('githubToken');
                 alert('✅ GitHub Token 已清除！\n\n下次使用 GitHub 功能時會重新提示輸入 Token。');
+            }
+        }
+
+        // 測試 GitHub Token
+        async function testGitHubToken() {
+            try {
+                const token = getGitHubToken();
+                if (!token) return;
+                
+                const repoInfo = getGitHubRepoInfo();
+                if (!repoInfo) return;
+                
+                // 測試API調用
+                const response = await fetch(
+                    `https://api.github.com/repos/${repoInfo}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    const repoData = await response.json();
+                    alert(`✅ Token 測試成功！\n\n倉庫: ${repoData.full_name}\n權限: ${repoData.permissions ? Object.keys(repoData.permissions).filter(p => repoData.permissions[p]).join(', ') : '未知'}`);
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(`API 錯誤: ${errorData.message}`);
+                }
+                
+            } catch (error) {
+                console.error('Token 測試失敗:', error);
+                alert(`❌ Token 測試失敗！\n\n錯誤: ${error.message}\n\n請檢查 Token 是否正確或倉庫路徑是否正確。`);
             }
         }
 
@@ -4181,7 +4217,7 @@
                 // 更新檔案
                 const updateData = {
                     message: `Update family records - ${now.toLocaleString('zh-TW')}`,
-                    content: btoa(JSON.stringify(dataToSave, null, 2)),
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(dataToSave, null, 2)))),
                     branch: 'main'
                 };
                 
@@ -4498,7 +4534,7 @@
                 // 準備 GitHub API 請求
                 const githubData = {
                     message: `Update family records backup - ${now.toLocaleString('zh-TW')}`,
-                    content: btoa(JSON.stringify(dataToSave, null, 2)), // Base64 編碼
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(dataToSave, null, 2)))), // Base64 編碼
                     branch: 'main' // 或 'master'，根據您的預設分支
                 };
                 
