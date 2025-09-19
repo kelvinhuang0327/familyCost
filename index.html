@@ -1441,6 +1441,7 @@
                             <div style="background: rgba(255,193,7,0.2); padding: 10px; border-radius: 5px; margin-top: 15px;">
                                 <p><strong>⚠️ 注意：</strong>GitHub 存檔需要 Personal Access Token</p>
                                 <p>請在 GitHub Settings > Developer settings > Personal access tokens 中創建 token</p>
+                                <button onclick="clearGitHubToken()" class="sync-btn github-btn" style="margin-top: 10px;">🔄 重新設定 Token</button>
                             </div>
                         </div>
                     </div>
@@ -4089,15 +4090,38 @@
                     '1. 前往 GitHub Settings > Developer settings > Personal access tokens\n' +
                     '2. 創建新 token，選擇 "repo" 權限\n' +
                     '3. 複製 token 並貼到這裡\n\n' +
-                    'Token 將安全地儲存在瀏覽器的 localStorage 中'
+                    'Token 將安全地儲存在瀏覽器的 localStorage 中\n\n' +
+                    '⚠️ 注意：請確保複製完整的Token，不要包含多餘的空格或換行符'
                 );
                 if (newToken) {
-                    localStorage.setItem('githubToken', newToken);
-                    return newToken;
+                    // 清理Token：移除前後空格和換行符
+                    const cleanToken = newToken.trim().replace(/\s/g, '');
+                    
+                    // 驗證Token格式
+                    if (cleanToken.length < 20) {
+                        alert('❌ Token 長度太短，請檢查是否複製完整');
+                        return null;
+                    }
+                    
+                    if (!/^[a-zA-Z0-9_]+$/.test(cleanToken)) {
+                        alert('❌ Token 包含無效字符，請重新複製');
+                        return null;
+                    }
+                    
+                    localStorage.setItem('githubToken', cleanToken);
+                    return cleanToken;
                 }
                 return null;
             }
             return token;
+        }
+
+        // 清除 GitHub Token
+        function clearGitHubToken() {
+            if (confirm('確定要清除已保存的 GitHub Token 嗎？\n\n清除後需要重新輸入 Token 才能使用 GitHub 存檔功能。')) {
+                localStorage.removeItem('githubToken');
+                alert('✅ GitHub Token 已清除！\n\n下次使用 GitHub 功能時會重新提示輸入 Token。');
+            }
         }
 
         // 獲取 GitHub 倉庫信息
