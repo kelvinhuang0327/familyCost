@@ -210,20 +210,44 @@ app.post('/api/token/save', async (req, res) => {
             });
         }
 
+        // 基本格式驗證
+        const cleanToken = token.trim();
+        
+        // 檢查token是否只包含ASCII字符
+        if (!/^[\x00-\x7F]+$/.test(cleanToken)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Token包含非ASCII字符，請檢查輸入'
+            });
+        }
+        
+        // 檢查token長度
+        if (cleanToken.length < 20 || cleanToken.length > 100) {
+            return res.status(400).json({
+                success: false,
+                message: 'Token長度不正確，GitHub Token通常為40個字符'
+            });
+        }
+
+        console.log('🔍 開始驗證Token...');
+        
         // 驗證token有效性
-        const validation = await tokenManager.validateToken(token);
+        const validation = await tokenManager.validateToken(cleanToken);
         if (!validation.valid) {
+            console.log('❌ Token驗證失敗:', validation.error);
             return res.status(400).json({
                 success: false,
                 message: `Token無效: ${validation.error}`
             });
         }
 
+        console.log('✅ Token驗證成功，開始儲存...');
+
         // 儲存token
-        tokenManager.saveToken(token);
+        tokenManager.saveToken(cleanToken);
         
         // 設置Git遠程URL
-        tokenManager.setGitRemote(token);
+        tokenManager.setGitRemote(cleanToken);
 
         res.json({
             success: true,
@@ -232,6 +256,7 @@ app.post('/api/token/save', async (req, res) => {
         });
 
     } catch (error) {
+        console.error('❌ Token儲存過程出錯:', error);
         res.status(500).json({
             success: false,
             message: `Token儲存失敗: ${error.message}`,
