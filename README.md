@@ -52,14 +52,28 @@ familyCost/
 ./push_to_github.sh
 ```
 
+**或使用Token管理界面**：
+- 訪問：http://localhost:8000/token_manager.html
+- 安全地儲存和管理GitHub Token
+
 ### 4. 測試功能
 - Safari測試：http://localhost:8000/test/safari_simple_test.html
 - 同步測試：http://localhost:8000/test/test_sync.html
 
 ## 🔐 GitHub認證設置
 
-### 方法1: Personal Access Token (推薦)
-1. 前往 [GitHub Settings → Developer settings → Personal access tokens](https://github.com/settings/tokens)
+### 方法1: Token管理界面 (推薦)
+1. 啟動服務：`./start_services.sh`
+2. 訪問Token管理界面：http://localhost:8000/token_manager.html
+3. 前往 [GitHub Settings → Personal access tokens](https://github.com/settings/tokens)
+4. 創建新token，權限選擇：
+   - ✅ `repo` (完整倉庫訪問)
+   - ✅ `workflow` (更新GitHub Actions工作流程)
+5. 在管理界面中儲存Token
+6. 運行推送腳本：`./push_to_github.sh`
+
+### 方法2: 手動設置Token
+1. 前往 [GitHub Settings → Personal access tokens](https://github.com/settings/tokens)
 2. 創建新token，權限選擇：
    - ✅ `repo` (完整倉庫訪問)
    - ✅ `workflow` (更新GitHub Actions工作流程)
@@ -68,7 +82,7 @@ familyCost/
    ./push_to_github.sh
    ```
 
-### 方法2: SSH Key
+### 方法3: SSH Key
 1. 生成SSH Key：
    ```bash
    ssh-keygen -t ed25519 -C "your_email@example.com"
@@ -89,6 +103,11 @@ familyCost/
 - 📝 收支記錄管理
 - 📊 數據統計分析
 - 📅 日曆視圖
+- 🔐 GitHub Token安全儲存
+- 🔄 跨瀏覽器數據同步
+- 🍎 Safari兼容性優化
+- 🔍 數據健康檢查
+- 🔧 快速修復功能
 - 👥 成員管理
 - 💾 本地存儲
 - 🔄 跨瀏覽器同步
