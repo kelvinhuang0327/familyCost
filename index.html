@@ -1707,6 +1707,60 @@
             { name: '網路費', amount: 1598, day: 15, member: 'Phuong' }
         ];
 
+        // 標籤頁切換函數（提前定義以確保HTML元素可以調用）
+        function showTab(tabName) {
+            // 隱藏所有標籤內容
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 移除所有標籤的活動狀態
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 顯示選中的標籤內容
+            document.getElementById(tabName).classList.add('active');
+            
+            // 添加選中標籤的活動狀態
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => {
+                if (tab.textContent.includes(tabName === 'dashboard' ? '總覽' : 
+                                           tabName === 'list' ? '列表' :
+                                           tabName === 'calendar' ? '日曆' :
+                                           tabName === 'add' ? '新增' :
+                                           tabName === 'import' ? '匯入' : '')) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // 如果切換到日曆頁面，更新日曆
+            if (tabName === 'calendar') {
+                setTimeout(() => {
+                    updateCalendar();
+                }, 100);
+            }
+            
+            // 如果切換到新增頁面，確保成員選項完整
+            if (tabName === 'add') {
+                setTimeout(() => {
+                    ensureMemberOptions();
+                }, 100);
+            }
+            
+            // 如果切換到圖表頁面，初始化圖表
+            if (tabName === 'charts') {
+                setTimeout(() => {
+                    initializeCharts();
+                }, 100);
+            }
+            
+            // 如果切換到匯入頁面，更新數據統計
+            if (tabName === 'import') {
+                updateDataStats();
+            }
+        }
+
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
@@ -2551,28 +2605,6 @@
             
             alert('✅ GitHub 配置已儲存！\n\n倉庫: ' + repo + '\n分支: ' + branch + '\n檔案: ' + fileName);
         }
-            if (lastSyncReminder !== today && records.length > 0) {
-                // 延遲顯示提醒，讓頁面完全載入
-                setTimeout(() => {
-                    const shouldShowReminder = confirm(
-                        '🌐 跨瀏覽器同步提醒\n\n' +
-                        '檢測到您在不同瀏覽器使用此應用程式。\n\n' +
-                        '為了確保資料一致性，建議您：\n' +
-                        '1. 定期在不同瀏覽器間同步資料\n' +
-                        '2. 使用「匯出/匯入」功能保持資料同步\n\n' +
-                        '是否要查看同步功能？'
-                    );
-                    
-                    if (shouldShowReminder) {
-                        // 切換到匯入頁面
-                        showTab('import');
-                    }
-                    
-                    // 記錄今天已經提醒過
-                    localStorage.setItem('lastSyncReminder', today);
-                }, 3000);
-            }
-        }
         
         function loadGitHubConfig() {
             const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
@@ -3353,59 +3385,6 @@
         // 處理編輯表單主類別變化（已移除自定義功能）
         function handleEditMainCategoryChange() {
             // 編輯表單不再支持自定義主類別
-        }
-
-        function showTab(tabName) {
-            // 隱藏所有標籤內容
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // 移除所有標籤的活動狀態
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // 顯示選中的標籤內容
-            document.getElementById(tabName).classList.add('active');
-            
-            // 添加選中標籤的活動狀態
-            const navTabs = document.querySelectorAll('.nav-tab');
-            navTabs.forEach(tab => {
-                if (tab.textContent.includes(tabName === 'dashboard' ? '總覽' : 
-                                           tabName === 'list' ? '列表' :
-                                           tabName === 'calendar' ? '日曆' :
-                                           tabName === 'add' ? '新增' :
-                                           tabName === 'import' ? '匯入' : '')) {
-                    tab.classList.add('active');
-                }
-            });
-
-            // 如果切換到日曆頁面，更新日曆
-            if (tabName === 'calendar') {
-                setTimeout(() => {
-                    updateCalendar();
-                }, 100);
-            }
-            
-            // 如果切換到新增頁面，確保成員選項完整
-            if (tabName === 'add') {
-                setTimeout(() => {
-                    ensureMemberOptions();
-                }, 100);
-            }
-            
-            // 如果切換到圖表頁面，初始化圖表
-            if (tabName === 'charts') {
-                setTimeout(() => {
-                    initializeCharts();
-                }, 100);
-            }
-            
-            // 如果切換到匯入頁面，更新數據統計
-            if (tabName === 'import') {
-                updateDataStats();
-            }
         }
 
         function updateStats() {
