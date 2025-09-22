@@ -392,7 +392,25 @@ app.use('/api/*', (req, res) => {
 
 // 對於非API請求，返回index.html（SPA路由）
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    const indexPath = path.join(__dirname, 'index.html');
+    console.log('🔍 嘗試發送 index.html:', indexPath);
+    console.log('🔍 當前目錄:', __dirname);
+    console.log('🔍 請求路徑:', req.path);
+    
+    res.sendFile(indexPath, (err) => {
+        if (err) {
+            console.error('❌ 發送 index.html 失敗:', err);
+            res.status(404).json({
+                success: false,
+                message: '找不到 index.html',
+                error: err.message,
+                path: indexPath,
+                dirname: __dirname
+            });
+        } else {
+            console.log('✅ index.html 發送成功');
+        }
+    });
 });
 
 // 啟動服務器
