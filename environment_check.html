@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>環境檢測</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .env-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .env-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .local {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .sit {
+            border-color: #17a2b8;
+            background: #d1ecf1;
+        }
+        .unknown {
+            border-color: #ffc107;
+            background: #fff3cd;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #28a745;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌍 環境檢測工具</h1>
+    
+    <div class="env-section">
+        <h2>📍 當前環境信息</h2>
+        <div id="envInfo" class="env-info">檢測中...</div>
+    </div>
+
+    <div class="env-section">
+        <h2>🔗 API連接測試</h2>
+        <button class="btn" onclick="testApiConnection()">測試API連接</button>
+        <div id="apiTest" class="test-result"></div>
+    </div>
+
+    <div class="env-section">
+        <h2>🔧 Token功能測試</h2>
+        <button class="btn" onclick="testTokenApi()">測試Token API</button>
+        <div id="tokenTest" class="test-result"></div>
+    </div>
+
+    <div class="env-section">
+        <h2>📊 完整診斷</h2>
+        <button class="btn" onclick="runFullDiagnostic()">運行完整診斷</button>
+        <div id="fullDiagnostic" class="test-result"></div>
+    </div>
+
+    <script>
+        // 環境配置（與主應用相同）
+        const ENV_CONFIG = {
+            getEnvironment() {
+                const hostname = window.location.hostname;
+                if (hostname === 'localhost' || hostname === '127.0.0.1') {
+                    return 'local';
+                } else if (hostname.includes('vercel.app') || hostname.includes('github.io')) {
+                    return 'sit';
+                }
+                return 'local';
+            },
+            
+            getApiBase() {
+                const env = this.getEnvironment();
+                if (env === 'sit') {
+                    return window.location.origin + '/api';
+                } else {
+                    return 'http://localhost:3001/api';
+                }
+            },
+            
+            getBackendUrl() {
+                const env = this.getEnvironment();
+                if (env === 'sit') {
+                    return window.location.origin;
+                } else {
+                    return 'http://localhost:3001';
+                }
+            }
+        };
+
+        function updateEnvInfo() {
+            const env = ENV_CONFIG.getEnvironment();
+            const apiBase = ENV_CONFIG.getApiBase();
+            const backendUrl = ENV_CONFIG.getBackendUrl();
+            
+            const info = `環境類型: ${env}
+API地址: ${apiBase}
+後端地址: ${backendUrl}
+當前URL: ${window.location.href}
+主機名: ${window.location.hostname}
+協議: ${window.location.protocol}
+端口: ${window.location.port || '默認'}`;
+
+            const envInfoDiv = document.getElementById('envInfo');
+            envInfoDiv.textContent = info;
+            
+            // 根據環境設置樣式
+            envInfoDiv.className = 'env-info ' + env;
+        }
+
+        async function testApiConnection() {
+            const resultDiv = document.getElementById('apiTest');
+            const apiBase = ENV_CONFIG.getApiBase();
+            
+            try {
+                resultDiv.innerHTML = '🔄 測試API連接...';
+                
+                const response = await fetch(apiBase + '/health');
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `✅ API連接成功
+狀態: ${data.status}
+服務: ${data.service}
+環境: ${data.environment}
+時間: ${data.timestamp}`;
+                resultDiv.className = 'test-result success';
+                
+            } catch (error) {
+                resultDiv.innerHTML = `❌ API連接失敗
+錯誤: ${error.message}
+API地址: ${apiBase}`;
+                resultDiv.className = 'test-result error';
+            }
+        }
+
+        async function testTokenApi() {
+            const resultDiv = document.getElementById('tokenTest');
+            const apiBase = ENV_CONFIG.getApiBase();
+            
+            try {
+                resultDiv.innerHTML = '🔄 測試Token API...';
+                
+                const response = await fetch(apiBase + '/token/status');
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `✅ Token API正常
+成功: ${data.success}
+有Token: ${data.hasToken ? '是' : '否'}
+Token信息: ${data.tokenInfo ? JSON.stringify(data.tokenInfo) : '無'}`;
+                resultDiv.className = 'test-result success';
+                
+            } catch (error) {
+                resultDiv.innerHTML = `❌ Token API失敗
+錯誤: ${error.message}
+API地址: ${apiBase}`;
+                resultDiv.className = 'test-result error';
+            }
+        }
+
+        async function runFullDiagnostic() {
+            const resultDiv = document.getElementById('fullDiagnostic');
+            let results = [];
+            
+            results.push('🔍 開始完整診斷...\n');
+            
+            // 1. 環境信息
+            const env = ENV_CONFIG.getEnvironment();
+            results.push(`📍 環境: ${env}`);
+            results.push(`🔗 API: ${ENV_CONFIG.getApiBase()}`);
+            results.push(`🌐 後端: ${ENV_CONFIG.getBackendUrl()}`);
+            
+            // 2. 測試健康檢查
+            try {
+                const healthResponse = await fetch(ENV_CONFIG.getApiBase() + '/health');
+                const healthData = await healthResponse.json();
+                results.push(`✅ 健康檢查: ${healthData.status}`);
+                results.push(`   服務: ${healthData.service}`);
+                results.push(`   環境: ${healthData.environment}`);
+            } catch (error) {
+                results.push(`❌ 健康檢查: ${error.message}`);
+            }
+            
+            // 3. 測試Token API
+            try {
+                const tokenResponse = await fetch(ENV_CONFIG.getApiBase() + '/token/status');
+                const tokenData = await tokenResponse.json();
+                results.push(`✅ Token API: ${tokenData.success ? '正常' : '異常'}`);
+                results.push(`   Token狀態: ${tokenData.hasToken ? '已儲存' : '未儲存'}`);
+            } catch (error) {
+                results.push(`❌ Token API: ${error.message}`);
+            }
+            
+            // 4. 瀏覽器信息
+            results.push(`\n🌍 瀏覽器信息:`);
+            results.push(`   用戶代理: ${navigator.userAgent}`);
+            results.push(`   語言: ${navigator.language}`);
+            results.push(`   在線: ${navigator.onLine ? '是' : '否'}`);
+            results.push(`   Cookie: ${navigator.cookieEnabled ? '啟用' : '禁用'}`);
+            
+            resultDiv.innerHTML = results.join('\n');
+            resultDiv.className = 'test-result success';
+        }
+
+        // 頁面載入時自動更新環境信息
+        window.addEventListener('load', () => {
+            updateEnvInfo();
+            setTimeout(testApiConnection, 1000);
+        });
+    </script>
+</body>
+</html>
