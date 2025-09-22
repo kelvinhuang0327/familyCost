@@ -1592,13 +1592,77 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- 添加 Chart.js 圖表庫 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 
     <script>
         // 數據存儲
         let records = JSON.parse(localStorage.getItem('familyRecords')) || [];
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
+
+        // 調試函數：顯示記錄詳情
+        function logRecordsDetail(title, recordsArray = records) {
+            console.log(`\n=== ${title} ===`);
+            console.log(`記錄數量: ${recordsArray.length}`);
+            
+            if (recordsArray.length > 0) {
+                console.log('記錄詳情:');
+                recordsArray.forEach((record, index) => {
+                    console.log(`${index + 1}. ${record.member} - ${record.mainCategory} - $${record.amount} - ${record.date} (${record.type})`);
+                });
+                
+                // 統計信息
+                const incomeTotal = recordsArray.filter(r => r.type === 'income').reduce((sum, r) => sum + r.amount, 0);
+                const expenseTotal = recordsArray.filter(r => r.type === 'expense').reduce((sum, r) => sum + r.amount, 0);
+                console.log(`\n統計摘要:`);
+                console.log(`- 收入總額: $${incomeTotal.toLocaleString()}`);
+                console.log(`- 支出總額: $${expenseTotal.toLocaleString()}`);
+                console.log(`- 淨額: $${(incomeTotal - expenseTotal).toLocaleString()}`);
+                
+                // 按成員統計
+                const memberStats = {};
+                recordsArray.forEach(record => {
+                    if (!memberStats[record.member]) {
+                        memberStats[record.member] = { income: 0, expense: 0, count: 0 };
+                    }
+                    memberStats[record.member][record.type] += record.amount;
+                    memberStats[record.member].count++;
+                });
+                
+                console.log(`\n按成員統計:`);
+                Object.keys(memberStats).forEach(member => {
+                    const stats = memberStats[member];
+                    console.log(`${member}: 收入 $${stats.income.toLocaleString()}, 支出 $${stats.expense.toLocaleString()}, 記錄 ${stats.count} 筆`);
+                });
+            } else {
+                console.log('沒有記錄');
+            }
+            console.log('================\n');
+        }
+
+        // 全局調試函數，可在控制台調用
+        window.showRecords = function() {
+            logRecordsDetail('當前所有記錄');
+        };
+        
+        window.showMemberRecords = function(memberName) {
+            if (memberName) {
+                const memberRecords = records.filter(r => r.member === memberName);
+                logRecordsDetail(`${memberName} 的記錄`, memberRecords);
+            } else {
+                console.log('請指定成員名稱，例如：showMemberRecords("Kelvin")');
+                console.log('可用成員:', familyMembers);
+            }
+        };
+        
+        window.showRecordsByType = function(type) {
+            if (type && ['income', 'expense'].includes(type)) {
+                const typeRecords = records.filter(r => r.type === type);
+                logRecordsDetail(`${type} 類型記錄`, typeRecords);
+            } else {
+                console.log('請指定類型，例如：showRecordsByType("income") 或 showRecordsByType("expense")');
+            }
+        };
         
         // 檢查是否有2025年的記錄，如果有則切換到2025年
         function checkAndSwitchTo2025() {
@@ -1672,7 +1736,7 @@
             migrateMemberNames();
             
             console.log('初始化完成，當前記錄數量:', records.length);
-            console.log('記錄內容:', records);
+            logRecordsDetail('初始化完成 - 所有記錄'); // 使用新的調試函數
             
             updateCategoryOptions();
             updateMemberFilterOptions();
@@ -2510,7 +2574,7 @@
                         records = data.records;
                         localStorage.setItem('familyRecords', JSON.stringify(records));
                         console.log('從 data.json 載入了', records.length, '筆記錄，並同步到 localStorage');
-                        console.log('記錄內容:', records);
+                        logRecordsDetail('從 data.json 載入的記錄'); // 使用新的調試函數
                     } else {
                         // 如果檔案中沒有資料，優先使用 localStorage 的資料
                         const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
@@ -3957,9 +4021,9 @@
 
         function saveRecords() {
             try {
-                // 寫入 localStorage
-                localStorage.setItem('familyRecords', JSON.stringify(records));
-                
+            // 寫入 localStorage
+            localStorage.setItem('familyRecords', JSON.stringify(records));
+            
                 // 記錄最後保存時間
                 const saveTime = new Date().toISOString();
                 localStorage.setItem('lastSaveTime', saveTime);
@@ -3973,7 +4037,7 @@
                 // 定期自動備份到 data.json（每3次操作備份一次）
                 if (saveCount % 3 === 0) {
                     console.log(`已進行 ${saveCount} 次操作，自動備份 data.json`);
-                    saveToDataJson();
+                saveToDataJson();
                 }
                 
                 // 創建額外的備份（每10次操作）
