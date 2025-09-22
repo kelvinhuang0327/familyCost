@@ -33,7 +33,7 @@ class TokenManager {
         try {
             const key = this.getOrCreateKey();
             const iv = crypto.randomBytes(16);
-            const cipher = crypto.createCipher(this.algorithm, key);
+            const cipher = crypto.createCipherGCM(this.algorithm, key, iv);
             cipher.setAAD(Buffer.from('github-token', 'utf8'));
             
             let encrypted = cipher.update(token, 'utf8', 'hex');
@@ -58,9 +58,12 @@ class TokenManager {
     decryptToken(encryptedData) {
         try {
             const key = this.getOrCreateKey();
-            const decipher = crypto.createDecipher(this.algorithm, key);
+            const iv = Buffer.from(encryptedData.iv, 'hex');
+            const authTag = Buffer.from(encryptedData.authTag, 'hex');
+            
+            const decipher = crypto.createDecipherGCM(this.algorithm, key, iv);
             decipher.setAAD(Buffer.from('github-token', 'utf8'));
-            decipher.setAuthTag(Buffer.from(encryptedData.authTag, 'hex'));
+            decipher.setAuthTag(authTag);
             
             let decrypted = decipher.update(encryptedData.encrypted, 'hex', 'utf8');
             decrypted += decipher.final('utf8');
