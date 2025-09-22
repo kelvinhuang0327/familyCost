@@ -9,12 +9,22 @@
       "subCategory": "月薪",
       "description": "測試同步功能",
       "date": "2025-09-22"
+    },
+    {
+      "id": "test-sync-2",
+      "member": "Phuong",
+      "type": "expense",
+      "amount": 500,
+      "mainCategory": "食物",
+      "subCategory": "外食",
+      "description": "測試跨瀏覽器同步",
+      "date": "2025-09-22"
     }
   ],
   "metadata": {
-    "lastUpdated": "2025-09-22T06:30:00.000Z",
+    "lastUpdated": "2025-09-22T06:35:00.000Z",
     "version": "1.0",
     "description": "家庭收支記錄資料",
-    "recordCount": 1
+    "recordCount": 2
   }
 }
