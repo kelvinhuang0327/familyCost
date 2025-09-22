@@ -1039,12 +1039,22 @@
       "subCategory": "現金",
       "description": "台新信用卡",
       "date": "2025-09-19"
+    },
+    {
+      "id": "1758526309749xiewwzfn5",
+      "member": "Kelvin",
+      "type": "expense",
+      "amount": 160,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "午餐",
+      "date": "2025-09-22"
     }
   ],
   "metadata": {
-    "lastUpdated": "2025-09-22T06:56:58.399Z",
+    "lastUpdated": "2025-09-22T07:31:58.045Z",
     "version": "1.0",
     "description": "家庭收支記錄資料",
-    "recordCount": 104
+    "recordCount": 105
   }
 }
