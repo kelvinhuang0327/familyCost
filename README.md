@@ -47,9 +47,41 @@ familyCost/
 - 主應用：http://localhost:8000/index.html
 - 後端API：http://localhost:3001
 
-### 3. 測試功能
+### 3. 推送到GitHub
+```bash
+./push_to_github.sh
+```
+
+### 4. 測試功能
 - Safari測試：http://localhost:8000/test/safari_simple_test.html
 - 同步測試：http://localhost:8000/test/test_sync.html
+
+## 🔐 GitHub認證設置
+
+### 方法1: Personal Access Token (推薦)
+1. 前往 [GitHub Settings → Developer settings → Personal access tokens](https://github.com/settings/tokens)
+2. 創建新token，權限選擇：
+   - ✅ `repo` (完整倉庫訪問)
+   - ✅ `workflow` (更新GitHub Actions工作流程)
+3. 運行推送腳本：
+   ```bash
+   ./push_to_github.sh
+   ```
+
+### 方法2: SSH Key
+1. 生成SSH Key：
+   ```bash
+   ssh-keygen -t ed25519 -C "your_email@example.com"
+   ```
+2. 添加公鑰到GitHub：`cat ~/.ssh/id_ed25519.pub`
+3. 更改遠程URL：
+   ```bash
+   git remote set-url origin git@github.com:kelvinhuang0327/familyCost.git
+   ```
+
+### 詳細設置指南
+- 📚 [GitHub設置指南](GITHUB_SETUP_GUIDE.md)
+- 🔧 [自動設置腳本](github_setup.sh)
 
 ## 📊 功能特色
 
