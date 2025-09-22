@@ -690,6 +690,50 @@
                 flex-direction: column;
             }
         }
+
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .token-settings {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .token-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .token-status {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .token-status p {
+            margin: 5px 0;
+        }
+
+        .token-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .token-actions input {
+            flex: 1;
+            min-width: 200px;
+        }
     </style>
 </head>
 <body>
@@ -705,7 +749,7 @@
             <button class="nav-tab" onclick="showTab('calendar')">📅 日曆</button>
             <button class="nav-tab" onclick="showTab('charts')">📈 圖表</button>
             <button class="nav-tab" onclick="showTab('add')">➕ 新增</button>
-            <button class="nav-tab" onclick="showTab('import')">📥 匯入</button>
+            <button class="nav-tab" onclick="showTab('import')">⚙️ 設定</button>
         </div>
 
         <div class="content">
@@ -880,10 +924,32 @@
                 </form>
             </div>
 
-            <!-- 匯入頁面 -->
+            <!-- 設定頁面 -->
             <div id="import" class="tab-content">
+                <!-- GitHub Token 設定 -->
+                <div class="settings-section">
+                    <h3>🔐 GitHub Token 設定</h3>
+                    <p>安全地儲存和管理您的GitHub Personal Access Token</p>
+                    
+                    <div class="token-settings">
+                        <div class="token-card">
+                            <h4>🔑 Token 狀態</h4>
+                            <div class="token-status" id="tokenStatus">
+                                <p>檢查中...</p>
+                            </div>
+                            <div class="token-actions" style="margin-top: 15px;">
+                                <input type="password" id="githubToken" placeholder="輸入GitHub Personal Access Token" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                <button class="btn" onclick="saveGitHubToken()" style="margin-right: 10px;">💾 儲存Token</button>
+                                <button class="btn" onclick="checkTokenStatus()" style="margin-right: 10px;">🔍 檢查狀態</button>
+                                <button class="btn btn-danger" onclick="deleteGitHubToken()" id="deleteTokenBtn" style="display: none;">🗑️ 刪除Token</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 數據匯入匯出 -->
                 <div class="import-section">
-                    <h3>📥 匯入收支記錄</h3>
+                    <h3>📥 數據匯入匯出</h3>
                     <p>支援 CSV 和 Excel 檔案格式</p>
                     
                     <div class="import-options">
@@ -1886,7 +1952,7 @@
                                            tabName === 'list' ? '列表' :
                                            tabName === 'calendar' ? '日曆' :
                                            tabName === 'add' ? '新增' :
-                                           tabName === 'import' ? '匯入' : '')) {
+                                           tabName === 'import' ? '設定' : '')) {
                     tab.classList.add('active');
                 }
             });
@@ -1905,9 +1971,10 @@
                 }, 100);
             }
             
-            // 如果切換到匯入頁面，更新同步狀態
+            // 如果切換到設定頁面，更新同步狀態和Token狀態
             if (tabName === 'import') {
                 updateSyncStatus();
+                checkTokenStatus();
             }
         }
 
@@ -3462,6 +3529,110 @@
                 warnings: warnings,
                 totalRecords: records.length
             };
+        }
+
+        // GitHub Token 管理功能
+        async function checkTokenStatus() {
+            try {
+                const response = await fetch('http://localhost:3001/api/token/status');
+                const data = await response.json();
+                
+                const tokenStatus = document.getElementById('tokenStatus');
+                const deleteBtn = document.getElementById('deleteTokenBtn');
+                
+                if (data.hasToken && data.tokenInfo) {
+                    if (data.tokenInfo.valid) {
+                        tokenStatus.innerHTML = `
+                            <p>✅ <strong>Token已儲存且有效</strong></p>
+                            <p>用戶: <strong>${data.tokenInfo.user}</strong></p>
+                            <p>狀態: Token已加密儲存，可以正常使用</p>
+                        `;
+                        tokenStatus.style.color = '#28a745';
+                        deleteBtn.style.display = 'inline-block';
+                    } else {
+                        tokenStatus.innerHTML = `
+                            <p>❌ <strong>Token無效</strong></p>
+                            <p>錯誤: ${data.tokenInfo.error}</p>
+                            <p>請更新您的Token</p>
+                        `;
+                        tokenStatus.style.color = '#dc3545';
+                        deleteBtn.style.display = 'inline-block';
+                    }
+                } else {
+                    tokenStatus.innerHTML = `
+                        <p>⚠️ <strong>未儲存Token</strong></p>
+                        <p>請輸入您的GitHub Personal Access Token</p>
+                    `;
+                    tokenStatus.style.color = '#ffc107';
+                    deleteBtn.style.display = 'none';
+                }
+                
+            } catch (error) {
+                console.error('檢查Token狀態失敗:', error);
+                const tokenStatus = document.getElementById('tokenStatus');
+                tokenStatus.innerHTML = `
+                    <p>❌ <strong>檢查失敗</strong></p>
+                    <p>錯誤: ${error.message}</p>
+                `;
+                tokenStatus.style.color = '#dc3545';
+            }
+        }
+
+        async function saveGitHubToken() {
+            const token = document.getElementById('githubToken').value.trim();
+            if (!token) {
+                alert('請輸入Token');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3001/api/token/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token: token })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`✅ ${data.message}`);
+                    document.getElementById('githubToken').value = '';
+                    checkTokenStatus();
+                } else {
+                    alert(`❌ ${data.message}`);
+                }
+                
+            } catch (error) {
+                console.error('儲存Token失敗:', error);
+                alert('儲存Token失敗: ' + error.message);
+            }
+        }
+
+        async function deleteGitHubToken() {
+            if (!confirm('確定要刪除儲存的Token嗎？')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/token', {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`✅ ${data.message}`);
+                    checkTokenStatus();
+                } else {
+                    alert(`❌ ${data.message}`);
+                }
+                
+            } catch (error) {
+                console.error('刪除Token失敗:', error);
+                alert('刪除Token失敗: ' + error.message);
+            }
         }
 
         // 快速修復功能

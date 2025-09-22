@@ -1,55 +1,195 @@
-# 家庭收支管理平台ㄅ
-20250918ß
-一個簡單易用的家庭收支管理系統，支援多成員、多類別的收支記錄管理。
+# 🏠 家庭收支管理系統
 
-## 功能特色
+## 📁 目錄結構
 
-- 📊 **總覽儀表板** - 一目了然的收支統計
-- 📋 **記錄管理** - 新增、編輯、刪除收支記錄
-- 📅 **日曆視圖** - 按日期查看收支情況
-- 📈 **圖表分析** - 視覺化收支趨勢
-- 📥 **資料匯入** - 支援CSV和Excel檔案匯入
-- 📤 **資料備份** - 支援JSON和Excel格式備份
-- 🔄 **重複檢查** - 智能防止重複匯入
+```
+familyCost/
+├── data.json                    # 數據文件 (104筆記錄)
+├── node_modules/                # Node.js依賴
+├── package-lock.json           # 依賴鎖定文件
+├── README.md                   # 本文件
+├── PROJECT_SUMMARY.md          # 項目總結
+├── index.html                  # 主應用程式
+├── server.js                   # 後端服務
+├── package.json                # 項目配置
+├── start_services.sh           # 服務啟動腳本
+├── .gitignore                  # Git忽略文件
+├── doc/                        # 文檔目錄
+│   ├── README.md               # 項目說明
+│   ├── README_BACKUP.md        # 備份功能說明
+│   ├── DATA_FLOW_GUIDE.md      # 數據流程指南
+│   ├── SAFARI_FINAL_FIX.md     # Safari修復指南
+│   ├── SAFARI_FETCH_FIX.md     # Safari Fetch修復
+│   ├── SAFARI_FIX.md           # Safari修復說明
+│   ├── SYNC_TROUBLESHOOTING.md # 同步故障排除
+│   ├── MULTI_BROWSER_SYNC.md   # 多瀏覽器同步
+│   ├── CACHE_FIX_GUIDE.md      # 緩存修復指南
+│   ├── CACHE_CLEAR_FIX.md      # 緩存清除修復
+│   └── *.xlsx                  # Excel備份文件
+└── test/                       # 測試目錄
+    ├── safari_*.html           # Safari測試頁面
+    ├── test_sync.html          # 同步測試
+    ├── test_sync.js            # 同步測試腳本
+    ├── debug_sync.html         # 同步調試
+    ├── sync_test.html          # 同步測試
+    ├── test_cache_clear.html   # 緩存清除測試
+    └── test_records_count.html # 記錄數量測試
+```
 
-## 技術特點
+## 🚀 快速開始
 
-- 純前端實現，無需後端服務器
-- 響應式設計，支援各種設備
-- 本地資料存儲，保護隱私
-- 支援多種資料格式匯入匯出
+### 1. 啟動服務
+```bash
+./start_services.sh
+```
 
-## 使用方法
+### 2. 訪問應用
+- 主應用：http://localhost:8000/index.html
+- 後端API：http://localhost:3001
 
-1. 直接在瀏覽器中打開 `index.html`
-2. 開始記錄家庭收支
-3. 使用匯入功能批量添加記錄
-4. 定期備份資料
+### 3. 推送到GitHub
+```bash
+./push_to_github.sh
+```
 
-## 資料結構
+**或使用Token管理界面**：
+- 訪問：http://localhost:8000/token_manager.html
+- 安全地儲存和管理GitHub Token
 
-### 記錄欄位
-- **成員**: Kelvin, Phuong, Ryan, 家用收入, 家用支出
-- **金額**: 正數表示收入，負數表示支出
-- **主類別**: 餐飲、交通費、生活用品等
-- **子類別**: 現金、信用卡
-- **描述**: 記錄詳細說明
-- **日期**: 記錄日期
+### 4. 測試功能
+- Safari測試：http://localhost:8000/test/safari_simple_test.html
+- 同步測試：http://localhost:8000/test/test_sync.html
 
-### 統計計算
-- **現金流**: 家用收入 - 現金支出
-- **總支出**: 所有支出記錄總和
-- **現金支出**: 現金支付的支出總和
-- **信用卡支出**: 信用卡支付的支出總和
+## 🔐 GitHub認證設置
 
-## 部署
+### 方法1: Token管理界面 (推薦)
+1. 啟動服務：`./start_services.sh`
+2. 訪問Token管理界面：http://localhost:8000/token_manager.html
+3. 前往 [GitHub Settings → Personal access tokens](https://github.com/settings/tokens)
+4. 創建新token，權限選擇：
+   - ✅ `repo` (完整倉庫訪問)
+   - ✅ `workflow` (更新GitHub Actions工作流程)
+5. 在管理界面中儲存Token
+6. 運行推送腳本：`./push_to_github.sh`
 
-本專案可部署到任何靜態網站託管服務：
-- GitHub Pages
-- Netlify
-- Vercel
-- 或任何Web服務器
+### 方法2: 手動設置Token
+1. 前往 [GitHub Settings → Personal access tokens](https://github.com/settings/tokens)
+2. 創建新token，權限選擇：
+   - ✅ `repo` (完整倉庫訪問)
+   - ✅ `workflow` (更新GitHub Actions工作流程)
+3. 運行推送腳本：
+   ```bash
+   ./push_to_github.sh
+   ```
 
-## 授權
+### 方法3: SSH Key
+1. 生成SSH Key：
+   ```bash
+   ssh-keygen -t ed25519 -C "your_email@example.com"
+   ```
+2. 添加公鑰到GitHub：`cat ~/.ssh/id_ed25519.pub`
+3. 更改遠程URL：
+   ```bash
+   git remote set-url origin git@github.com:kelvinhuang0327/familyCost.git
+   ```
 
-MIT License
+### 詳細設置指南
+- 📚 [GitHub設置指南](GITHUB_SETUP_GUIDE.md)
+- 🔧 [自動設置腳本](github_setup.sh)
+
+## 📊 功能特色
+
+### ✅ 已實現功能
+- 📝 收支記錄管理
+- 📊 數據統計分析
+- 📅 日曆視圖
+- 🔐 GitHub Token安全儲存
+- 🔄 跨瀏覽器數據同步
+- 🍎 Safari兼容性優化
+- 🔍 數據健康檢查
+- 🔧 快速修復功能
+- 👥 成員管理
+- 💾 本地存儲
+- 🔄 跨瀏覽器同步
+- ☁️ GitHub備份
+- 🍎 Safari兼容
+
+### 🔧 技術架構
+- **前端**：HTML + CSS + JavaScript
+- **後端**：Node.js + Express
+- **數據**：JSON + localStorage
+- **備份**：Git + GitHub
+- **同步**：REST API
+
+## 🎯 測試結果
+
+### Safari兼容性測試 ✅
+```
+[下午2:54:09] HTTP狀態碼: 200
+[下午2:54:09] ✅ Fetch成功
+[下午2:54:09] 記錄數: 104
+[下午2:54:10] 📡 測試XMLHttpRequest...
+[下午2:54:10] ✅ XHR成功
+[下午2:54:10] 記錄數: 104
+```
+
+### 數據統計
+- 📊 總記錄數：104筆
+- 💰 收入記錄：包含工資、房租等
+- 💸 支出記錄：包含餐飲、交通、醫療等
+- 👥 成員：Kelvin、Phuong、Ryan、家用
+
+## 🔍 故障排除
+
+### 常見問題
+1. **Safari無法顯示數據**
+   - 解決方案：使用 `test/safari_simple_test.html` 測試
+   - 參考：`doc/SAFARI_FINAL_FIX.md`
+
+2. **跨瀏覽器同步問題**
+   - 解決方案：檢查後端服務是否運行
+   - 參考：`doc/SYNC_TROUBLESHOOTING.md`
+
+3. **數據不一致**
+   - 解決方案：清除緩存並重新同步
+   - 參考：`doc/CACHE_CLEAR_FIX.md`
+
+## 📚 文檔說明
+
+### 主要文檔
+- `doc/README.md` - 項目詳細說明
+- `doc/DATA_FLOW_GUIDE.md` - 數據流程指南
+- `doc/SAFARI_FINAL_FIX.md` - Safari最終修復指南
+
+### 測試文檔
+- `test/safari_simple_test.html` - Safari基本測試
+- `test/safari_data_test.html` - Safari數據測試
+- `test/test_sync.html` - 同步功能測試
+
+## 🎉 項目狀態
+
+### ✅ 已完成
+- [x] 基本收支管理功能
+- [x] 跨瀏覽器數據同步
+- [x] Safari兼容性修復
+- [x] GitHub自動備份
+- [x] 目錄結構整理
+- [x] 完整測試套件
+
+### 🔄 進行中
+- [ ] GitHub認證設置
+- [ ] 性能優化
+- [ ] 用戶體驗改善
+
+## 📞 支持
+
+如有問題，請參考：
+1. `doc/` 目錄下的相關文檔
+2. `test/` 目錄下的測試頁面
+3. 控制台日誌輸出
+
+---
+
+**最後更新**：2025-09-22  
+**版本**：v1.0  
+**狀態**：✅ 生產就緒
