@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIT環境限制說明</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .limitation-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #dc3545;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #17a2b8;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .solution {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-success:hover {
+            background: #1e7e34;
+        }
+    </style>
+</head>
+<body>
+    <h1>⚠️ SIT環境限制說明</h1>
+    
+    <div class="limitation-section">
+        <h2>🚫 當前問題</h2>
+        <div class="error">
+            <h3>GitHub Pages 不支持 Node.js 後端</h3>
+            <p><strong>問題:</strong> 您當前使用的是 GitHub Pages (kelvinhuang0327.github.io)，但 GitHub Pages 只支持靜態網站，不支持 Node.js 後端服務。</p>
+            <p><strong>結果:</strong> Token 儲存、數據同步等需要後端 API 的功能無法使用。</p>
+        </div>
+    </div>
+
+    <div class="limitation-section">
+        <h2>📋 受影響的功能</h2>
+        <div class="warning">
+            <h3>無法使用的功能:</h3>
+            <ul>
+                <li>❌ Token 儲存和管理</li>
+                <li>❌ 自動備份到 GitHub</li>
+                <li>❌ 數據同步</li>
+                <li>❌ 跨瀏覽器數據共享</li>
+                <li>❌ 數據健康檢查</li>
+            </ul>
+            
+            <h3>仍可使用的功能:</h3>
+            <ul>
+                <li>✅ 查看數據 (只讀)</li>
+                <li>✅ 數據統計和圖表</li>
+                <li>✅ 日曆視圖</li>
+                <li>✅ 數據匯入 (CSV/Excel)</li>
+                <li>✅ 數據匯出</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="limitation-section">
+        <h2>💡 解決方案</h2>
+        <div class="solution">
+            <h3>方案 1: 使用本地環境 (推薦)</h3>
+            <p>在本地運行完整的應用，包括後端服務：</p>
+            <ol>
+                <li>確保 Node.js 已安裝</li>
+                <li>運行 <code>node server.js</code> 啟動後端</li>
+                <li>訪問 <a href="http://localhost:8000">http://localhost:8000</a></li>
+            </ol>
+            <a href="http://localhost:8000" class="btn btn-success">🚀 切換到本地環境</a>
+        </div>
+
+        <div class="info">
+            <h3>方案 2: 部署到 Vercel</h3>
+            <p>Vercel 支持 Node.js 後端，可以完整運行所有功能：</p>
+            <ol>
+                <li>將代碼推送到 GitHub</li>
+                <li>在 Vercel 中連接 GitHub 倉庫</li>
+                <li>配置環境變量</li>
+                <li>部署到 Vercel</li>
+            </ol>
+        </div>
+
+        <div class="info">
+            <h3>方案 3: 使用其他雲端平台</h3>
+            <p>其他支持 Node.js 的平台：</p>
+            <ul>
+                <li><strong>Railway:</strong> railway.app</li>
+                <li><strong>Render:</strong> render.com</li>
+                <li><strong>Heroku:</strong> heroku.com</li>
+                <li><strong>Netlify Functions:</strong> netlify.com</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="limitation-section">
+        <h2>🔧 快速修復</h2>
+        <div class="warning">
+            <h3>如果您想繼續使用 GitHub Pages:</h3>
+            <p>可以修改應用為純前端版本，但會失去以下功能：</p>
+            <ul>
+                <li>Token 管理</li>
+                <li>自動備份</li>
+                <li>數據同步</li>
+            </ul>
+            <p><strong>注意:</strong> 數據只會保存在瀏覽器的 localStorage 中，不會自動備份到 GitHub。</p>
+        </div>
+    </div>
+
+    <div class="limitation-section">
+        <h2>📞 需要幫助？</h2>
+        <div class="info">
+            <p>如果您需要幫助設置本地環境或部署到其他平台，請：</p>
+            <ul>
+                <li>查看項目的 README.md 文件</li>
+                <li>使用 <code>start_services.sh</code> 腳本啟動本地服務</li>
+                <li>參考 <code>DEPLOYMENT_GUIDE.md</code> 部署指南</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 檢測當前環境
+        function detectEnvironment() {
+            const hostname = window.location.hostname;
+            let env = 'unknown';
+            
+            if (hostname === 'localhost' || hostname === '127.0.0.1') {
+                env = 'local';
+            } else if (hostname.includes('github.io')) {
+                env = 'github-pages';
+            } else if (hostname.includes('vercel.app')) {
+                env = 'vercel';
+            }
+            
+            return env;
+        }
+
+        // 頁面載入時顯示環境信息
+        window.addEventListener('load', function() {
+            const env = detectEnvironment();
+            const envInfo = document.createElement('div');
+            envInfo.className = 'limitation-section';
+            envInfo.innerHTML = `
+                <h2>🌍 當前環境檢測</h2>
+                <div class="info">
+                    <p><strong>環境類型:</strong> ${env}</p>
+                    <p><strong>URL:</strong> ${window.location.href}</p>
+                    <p><strong>主機名:</strong> ${window.location.hostname}</p>
+                </div>
+            `;
+            document.body.insertBefore(envInfo, document.body.firstChild);
+        });
+    </script>
+</body>
+</html>

@@ -33,7 +33,7 @@ class TokenManager {
         try {
             const key = this.getOrCreateKey();
             const iv = crypto.randomBytes(16);
-            const cipher = crypto.createCipher(this.algorithm, key);
+            const cipher = crypto.createCipherGCM(this.algorithm, key, iv);
             cipher.setAAD(Buffer.from('github-token', 'utf8'));
             
             let encrypted = cipher.update(token, 'utf8', 'hex');
@@ -58,9 +58,12 @@ class TokenManager {
     decryptToken(encryptedData) {
         try {
             const key = this.getOrCreateKey();
-            const decipher = crypto.createDecipher(this.algorithm, key);
+            const iv = Buffer.from(encryptedData.iv, 'hex');
+            const authTag = Buffer.from(encryptedData.authTag, 'hex');
+            
+            const decipher = crypto.createDecipherGCM(this.algorithm, key, iv);
             decipher.setAAD(Buffer.from('github-token', 'utf8'));
-            decipher.setAuthTag(Buffer.from(encryptedData.authTag, 'hex'));
+            decipher.setAuthTag(authTag);
             
             let decrypted = decipher.update(encryptedData.encrypted, 'hex', 'utf8');
             decrypted += decipher.final('utf8');
@@ -142,10 +145,26 @@ class TokenManager {
     // 驗證token有效性 (通過GitHub API)
     async validateToken(token) {
         try {
+            // 清理和驗證token格式
+            const cleanToken = token.trim();
+            
+            // 檢查token是否只包含ASCII字符
+            if (!/^[\x00-\x7F]+$/.test(cleanToken)) {
+                console.log('❌ Token包含非ASCII字符');
+                return { valid: false, error: 'Token包含非ASCII字符' };
+            }
+            
+            // 檢查token長度
+            if (cleanToken.length < 20 || cleanToken.length > 100) {
+                console.log('❌ Token長度不正確');
+                return { valid: false, error: 'Token長度不正確' };
+            }
+            
             const response = await fetch('https://api.github.com/user', {
                 headers: {
-                    'Authorization': `token ${token}`,
-                    'User-Agent': 'familyCost-app'
+                    'Authorization': `Bearer ${cleanToken}`,
+                    'User-Agent': 'familyCost-app',
+                    'Accept': 'application/vnd.github.v3+json'
                 }
             });
 
@@ -154,8 +173,8 @@ class TokenManager {
                 console.log(`✅ Token有效，用戶: ${userData.login}`);
                 return { valid: true, user: userData.login };
             } else {
-                console.log('❌ Token無效');
-                return { valid: false, error: response.statusText };
+                console.log(`❌ Token無效: ${response.status} ${response.statusText}`);
+                return { valid: false, error: `${response.status} ${response.statusText}` };
             }
         } catch (error) {
             console.error('❌ Token驗證失敗:', error.message);
