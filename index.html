@@ -1003,13 +1003,19 @@
                     <p>安全地儲存和管理您的GitHub Personal Access Token</p>
                     
                     <!-- 環境限制提示 -->
-                    <div id="envLimitationNotice" class="env-notice" style="display: none;">
-                        <div class="notice-content">
-                            <h4>⚠️ 環境限制</h4>
-                            <p>當前環境不支持後端服務，Token 儲存功能無法使用。</p>
-                            <p>建議：<a href="http://localhost:8000" target="_blank">切換到本地環境</a> 或 <a href="github_pages_info.html" target="_blank">查看詳細說明</a></p>
-                        </div>
-                    </div>
+        <div id="envLimitationNotice" class="env-notice" style="display: none;">
+            <div class="notice-content">
+                <h4>⚠️ GitHub Pages 環境限制</h4>
+                <p>GitHub Pages 只支持靜態網站，不支持 Node.js 後端服務。</p>
+                <p>Token 儲存和數據同步功能無法使用。</p>
+                <p>建議：</p>
+                <ul>
+                    <li><a href="http://localhost:8000" target="_blank">使用本地環境</a> (完全功能)</li>
+                    <li><a href="https://family-cost.vercel.app" target="_blank">使用 Vercel 環境</a> (雲端完整功能)</li>
+                    <li><a href="github_pages_info.html" target="_blank">查看詳細說明</a></li>
+                </ul>
+            </div>
+        </div>
                     
                     <div class="token-settings">
                         <div class="token-card">
@@ -1677,8 +1683,10 @@
                 const hostname = window.location.hostname;
                 if (hostname === 'localhost' || hostname === '127.0.0.1') {
                     return 'local';
-                } else if (hostname.includes('vercel.app') || hostname.includes('github.io')) {
-                    return 'sit';
+                } else if (hostname.includes('vercel.app')) {
+                    return 'vercel'; // Vercel 環境
+                } else if (hostname.includes('github.io')) {
+                    return 'sit'; // GitHub Pages 環境
                 }
                 return 'local'; // 默認本地環境
             },
@@ -1686,20 +1694,24 @@
             // 獲取API基礎URL
             getApiBase() {
                 const env = this.getEnvironment();
-                if (env === 'sit') {
-                    return window.location.origin + '/api';
+                if (env === 'vercel') {
+                    return window.location.origin + '/api'; // Vercel 支持後端
+                } else if (env === 'sit') {
+                    return window.location.origin + '/api'; // GitHub Pages 不支持後端
                 } else {
-                    return 'ENV_CONFIG.getApiBase()';
+                    return 'http://localhost:3001/api'; // 本地環境
                 }
             },
             
             // 獲取後端URL
             getBackendUrl() {
                 const env = this.getEnvironment();
-                if (env === 'sit') {
-                    return window.location.origin;
+                if (env === 'vercel') {
+                    return window.location.origin; // Vercel 支持後端
+                } else if (env === 'sit') {
+                    return window.location.origin; // GitHub Pages 不支持後端
                 } else {
-                    return 'ENV_CONFIG.getBackendUrl()';
+                    return 'http://localhost:3001'; // 本地環境
                 }
             }
         };
@@ -1708,12 +1720,17 @@
         function checkEnvironmentLimitations() {
             const env = ENV_CONFIG.getEnvironment();
             const limitationNotice = document.getElementById('envLimitationNotice');
-            
+
             if (env === 'sit' && limitationNotice) {
                 limitationNotice.style.display = 'block';
-                console.log('⚠️ SIT環境限制：後端功能不可用');
+                console.log('⚠️ GitHub Pages 環境限制：後端功能不可用');
             } else if (limitationNotice) {
                 limitationNotice.style.display = 'none';
+                if (env === 'vercel') {
+                    console.log('✅ Vercel 環境：後端功能完全可用');
+                } else if (env === 'local') {
+                    console.log('✅ 本地環境：後端功能完全可用');
+                }
             }
         }
 
