@@ -375,8 +375,8 @@ app.use((error, req, res, next) => {
     });
 });
 
-// 404處理
-app.use((req, res) => {
+// 404處理 - 僅處理API請求
+app.use('/api/*', (req, res) => {
     res.status(404).json({
         success: false,
         message: 'API端點不存在',
@@ -388,6 +388,11 @@ app.use((req, res) => {
             'POST /api/sync'
         ]
     });
+});
+
+// 對於非API請求，返回index.html（SPA路由）
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // 啟動服務器
