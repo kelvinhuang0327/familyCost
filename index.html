@@ -32,7 +32,18 @@
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
             padding: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .header-main {
             text-align: center;
+            flex: 1;
         }
 
         .header h1 {
@@ -43,6 +54,31 @@
         .header p {
             font-size: 1.1em;
             opacity: 0.9;
+        }
+
+        .version-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            font-size: 0.9em;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .version-label {
+            font-size: 0.8em;
+            opacity: 0.9;
+            margin-bottom: 2px;
+        }
+
+        .version-number {
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
         }
 
         .nav-tabs {
@@ -739,8 +775,16 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>💰 家庭收支平台</h1>
-            <p>輕鬆管理您的家庭財務</p>
+            <div class="header-content">
+                <div class="header-main">
+                    <h1>💰 家庭收支平台</h1>
+                    <p>輕鬆管理您的家庭財務</p>
+                </div>
+                <div class="version-info">
+                    <span class="version-label">版本</span>
+                    <span class="version-number" id="versionNumber">載入中...</span>
+                </div>
+            </div>
         </div>
 
         <div class="nav-tabs">
@@ -1590,9 +1634,34 @@
             }
         }
 
+        // 載入版本信息
+        async function loadVersionInfo() {
+            try {
+                const response = await fetch('version.json');
+                const versionData = await response.json();
+                
+                const versionElement = document.getElementById('versionNumber');
+                if (versionElement) {
+                    versionElement.textContent = versionData.version;
+                    versionElement.title = `建構時間: ${versionData.buildTime}\nCommit: ${versionData.commitHash || 'N/A'}`;
+                }
+                
+                console.log('✅ 版本信息已載入:', versionData.version);
+            } catch (error) {
+                console.error('❌ 載入版本信息失敗:', error);
+                const versionElement = document.getElementById('versionNumber');
+                if (versionElement) {
+                    versionElement.textContent = '載入失敗';
+                }
+            }
+        }
+
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 DOM已載入，開始初始化...');
+            
+            // 載入版本信息
+            loadVersionInfo();
             
             // 檢測並修復Safari
             const isSafari = detectAndFixSafari();

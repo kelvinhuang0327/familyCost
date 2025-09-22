@@ -17,7 +17,9 @@
     "deploy:local": "git push origin main",
     "deploy:sit": "git push origin sit",
     "test-api": "curl http://localhost:3001/api/health",
-    "test-api:sit": "curl https://family-cost-sit.vercel.app/api/health"
+    "test-api:sit": "curl https://family-cost-sit.vercel.app/api/health",
+    "version:update": "node update_version.js",
+    "version:show": "cat version.json"
   },
   "keywords": [
     "family",
