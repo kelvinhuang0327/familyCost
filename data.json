@@ -1,18 +1,18 @@
 {
   "records": [
     {
-      "id": "test-1758522004486",
-      "member": "測試",
+      "id": "test-sync-1",
+      "member": "Kelvin",
       "type": "income",
-      "amount": 100,
-      "mainCategory": "測試",
-      "subCategory": "現金",
-      "description": "同步測試",
+      "amount": 1000,
+      "mainCategory": "工資",
+      "subCategory": "月薪",
+      "description": "測試同步功能",
       "date": "2025-09-22"
     }
   ],
   "metadata": {
-    "lastUpdated": "2025-09-22T06:20:04.486Z",
+    "lastUpdated": "2025-09-22T06:30:00.000Z",
     "version": "1.0",
     "description": "家庭收支記錄資料",
     "recordCount": 1
