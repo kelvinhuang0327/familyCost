@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>環境檢測器</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .env-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .env-info h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+        }
+        
+        .error {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid #f44336;
+            color: #f44336;
+        }
+        
+        .warning {
+            background: rgba(255, 152, 0, 0.3);
+            border: 1px solid #FF9800;
+            color: #FF9800;
+        }
+        
+        .info {
+            background: rgba(33, 150, 243, 0.3);
+            border: 1px solid #2196F3;
+            color: #2196F3;
+        }
+        
+        .test-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        .test-button:hover {
+            background: #45a049;
+        }
+        
+        .test-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .recommendations {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .recommendations h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+        
+        .recommendations ul {
+            padding-left: 20px;
+        }
+        
+        .recommendations li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .recommendations a {
+            color: #81C784;
+            text-decoration: none;
+        }
+        
+        .recommendations a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 環境檢測器</h1>
+        
+        <div class="env-info">
+            <h3>📍 當前環境信息</h3>
+            <div id="envDetails"></div>
+        </div>
+        
+        <div class="env-info">
+            <h3>🧪 後端連接測試</h3>
+            <button class="test-button" onclick="testBackend()">測試後端連接</button>
+            <button class="test-button" onclick="testTokenAPI()">測試 Token API</button>
+            <div id="testResults"></div>
+        </div>
+        
+        <div class="recommendations">
+            <h3>💡 建議</h3>
+            <div id="recommendations"></div>
+        </div>
+    </div>
+
+    <script>
+        // 檢測環境
+        function detectEnvironment() {
+            const hostname = window.location.hostname;
+            const protocol = window.location.protocol;
+            const port = window.location.port;
+            
+            let env = 'unknown';
+            let description = '';
+            let backendUrl = '';
+            let features = [];
+            
+            if (hostname === 'localhost' || hostname === '127.0.0.1') {
+                env = 'local';
+                description = '本地開發環境';
+                backendUrl = 'http://localhost:3001';
+                features = ['✅ 完整後端支持', '✅ Token 儲存', '✅ 數據同步', '✅ 所有功能'];
+            } else if (hostname.includes('vercel.app')) {
+                env = 'vercel';
+                description = 'Vercel 雲端環境';
+                backendUrl = window.location.origin;
+                features = ['✅ 完整後端支持', '✅ Token 儲存', '✅ 數據同步', '✅ 所有功能'];
+            } else if (hostname.includes('github.io')) {
+                env = 'github-pages';
+                description = 'GitHub Pages 靜態環境';
+                backendUrl = '不支持後端';
+                features = ['❌ 無後端支持', '❌ Token 儲存不可用', '❌ 數據同步不可用', '⚠️ 僅靜態展示'];
+            } else {
+                env = 'other';
+                description = '其他環境';
+                backendUrl = '未知';
+                features = ['❓ 需要檢測'];
+            }
+            
+            return {
+                env,
+                description,
+                hostname,
+                protocol,
+                port,
+                backendUrl,
+                features,
+                fullUrl: window.location.href
+            };
+        }
+        
+        // 測試後端連接
+        async function testBackend() {
+            const env = detectEnvironment();
+            const resultsDiv = document.getElementById('testResults');
+            
+            resultsDiv.innerHTML = '<div class="status info">🔄 正在測試後端連接...</div>';
+            
+            try {
+                let testUrl;
+                if (env.env === 'local') {
+                    testUrl = 'http://localhost:3001/api/health';
+                } else if (env.env === 'vercel') {
+                    testUrl = window.location.origin + '/api/health';
+                } else {
+                    testUrl = env.backendUrl + '/api/health';
+                }
+                
+                const response = await fetch(testUrl);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultsDiv.innerHTML = `
+                        <div class="status success">✅ 後端連接成功！</div>
+                        <div class="status info">
+                            <strong>服務狀態:</strong> ${data.status}<br>
+                            <strong>環境:</strong> ${data.environment}<br>
+                            <strong>版本:</strong> ${data.version}<br>
+                            <strong>時間:</strong> ${new Date(data.timestamp).toLocaleString()}
+                        </div>
+                    `;
+                } else {
+                    resultsDiv.innerHTML = `
+                        <div class="status error">❌ 後端連接失敗</div>
+                        <div class="status warning">HTTP 狀態: ${response.status}</div>
+                    `;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="status error">❌ 後端連接失敗</div>
+                    <div class="status warning">錯誤: ${error.message}</div>
+                `;
+            }
+        }
+        
+        // 測試 Token API
+        async function testTokenAPI() {
+            const env = detectEnvironment();
+            const resultsDiv = document.getElementById('testResults');
+            
+            resultsDiv.innerHTML = '<div class="status info">🔄 正在測試 Token API...</div>';
+            
+            try {
+                let testUrl;
+                if (env.env === 'local') {
+                    testUrl = 'http://localhost:3001/api/token/status';
+                } else if (env.env === 'vercel') {
+                    testUrl = window.location.origin + '/api/token/status';
+                } else {
+                    testUrl = env.backendUrl + '/api/token/status';
+                }
+                
+                const response = await fetch(testUrl);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultsDiv.innerHTML = `
+                        <div class="status success">✅ Token API 可用！</div>
+                        <div class="status info">
+                            <strong>Token 狀態:</strong> ${data.hasToken ? '已儲存' : '未儲存'}<br>
+                            <strong>用戶:</strong> ${data.tokenInfo ? data.tokenInfo.user : 'N/A'}<br>
+                            <strong>創建時間:</strong> ${data.tokenInfo ? new Date(data.tokenInfo.createdAt).toLocaleString() : 'N/A'}
+                        </div>
+                    `;
+                } else {
+                    resultsDiv.innerHTML = `
+                        <div class="status error">❌ Token API 不可用</div class="status warning">HTTP 狀態: ${response.status}</div>
+                    `;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="status error">❌ Token API 不可用</div>
+                    <div class="status warning">錯誤: ${error.message}</div>
+                `;
+            }
+        }
+        
+        // 生成建議
+        function generateRecommendations() {
+            const env = detectEnvironment();
+            const recommendationsDiv = document.getElementById('recommendations');
+            
+            let recommendations = [];
+            
+            if (env.env === 'local') {
+                recommendations = [
+                    '<li>✅ <strong>本地環境</strong> - 所有功能完全可用</li>',
+                    '<li>🎯 建議繼續使用本地環境進行開發和測試</li>',
+                    '<li>💡 如需雲端部署，可考慮 <a href="https://family-cost.vercel.app" target="_blank">Vercel 環境</a></li>'
+                ];
+            } else if (env.env === 'vercel') {
+                recommendations = [
+                    '<li>✅ <strong>Vercel 環境</strong> - 雲端完整功能</li>',
+                    '<li>🎯 所有後端功能都可用，包括 Token 儲存</li>',
+                    '<li>💡 如需本地開發，可訪問 <a href="http://localhost:8000" target="_blank">本地環境</a></li>'
+                ];
+            } else if (env.env === 'github-pages') {
+                recommendations = [
+                    '<li>❌ <strong>GitHub Pages 環境</strong> - 功能受限</li>',
+                    '<li>⚠️ 不支持後端服務，Token 儲存功能不可用</li>',
+                    '<li>💡 建議使用 <a href="http://localhost:8000" target="_blank">本地環境</a> 或 <a href="https://family-cost.vercel.app" target="_blank">Vercel 環境</a></li>'
+                ];
+            } else {
+                recommendations = [
+                    '<li>❓ <strong>未知環境</strong> - 需要進一步檢測</li>',
+                    '<li>💡 建議使用 <a href="http://localhost:8000" target="_blank">本地環境</a> 或 <a href="https://family-cost.vercel.app" target="_blank">Vercel 環境</a></li>'
+                ];
+            }
+            
+            recommendationsDiv.innerHTML = '<ul>' + recommendations.join('') + '</ul>';
+        }
+        
+        // 頁面載入時執行
+        window.onload = function() {
+            const env = detectEnvironment();
+            
+            document.getElementById('envDetails').innerHTML = `
+                <div class="status info">
+                    <strong>環境類型:</strong> ${env.description}<br>
+                    <strong>主機名:</strong> ${env.hostname}<br>
+                    <strong>協議:</strong> ${env.protocol}<br>
+                    <strong>端口:</strong> ${env.port || '默認'}<br>
+                    <strong>完整URL:</strong> ${env.fullUrl}<br>
+                    <strong>後端URL:</strong> ${env.backendUrl}
+                </div>
+                <div class="status ${env.env === 'local' || env.env === 'vercel' ? 'success' : 'warning'}">
+                    <strong>功能支持:</strong><br>
+                    ${env.features.join('<br>')}
+                </div>
+            `;
+            
+            generateRecommendations();
+        };
+    </script>
+</body>
+</html>
