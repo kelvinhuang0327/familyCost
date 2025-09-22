@@ -2,12 +2,12 @@
   "name": "family-cost-platform",
   "version": "1.0.0",
   "description": "A simple family expense management platform",
-  "main": "index.html",
+  "main": "server.js",
   "scripts": {
-    "start": "python -m http.server 8000",
+    "start": "node server.js",
+    "dev": "node server.js",
     "serve": "npx serve .",
     "server": "node server.js",
-    "dev": "node server.js",
     "backup": "node server.js",
     "deploy": "git push origin main",
     "test-api": "curl http://localhost:3001/api/health"
@@ -30,6 +30,9 @@
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "node-fetch": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "devDependencies": {
     "serve": "^14.2.1"
