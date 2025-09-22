@@ -4,9 +4,13 @@ const { exec } = require('child_process');
 const util = require('util');
 const fs = require('fs').promises;
 const path = require('path');
+const TokenManager = require('./token_manager');
 
 const app = express();
 const PORT = 3001;
+
+// 初始化Token管理器
+const tokenManager = new TokenManager();
 
 // 中間件
 app.use(cors());
@@ -175,6 +179,103 @@ app.get('/api/git-status', async (req, res) => {
     }
 });
 
+// Token管理API
+app.post('/api/token/save', async (req, res) => {
+    try {
+        const { token } = req.body;
+        
+        if (!token) {
+            return res.status(400).json({
+                success: false,
+                message: 'Token不能為空'
+            });
+        }
+
+        // 驗證token有效性
+        const validation = await tokenManager.validateToken(token);
+        if (!validation.valid) {
+            return res.status(400).json({
+                success: false,
+                message: `Token無效: ${validation.error}`
+            });
+        }
+
+        // 儲存token
+        tokenManager.saveToken(token);
+        
+        // 設置Git遠程URL
+        tokenManager.setGitRemote(token);
+
+        res.json({
+            success: true,
+            message: `Token已儲存，用戶: ${validation.user}`,
+            user: validation.user
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: `Token儲存失敗: ${error.message}`,
+            error: error.message
+        });
+    }
+});
+
+app.get('/api/token/status', async (req, res) => {
+    try {
+        const hasToken = tokenManager.hasToken();
+        let tokenInfo = null;
+
+        if (hasToken) {
+            const token = tokenManager.loadToken();
+            if (token) {
+                const validation = await tokenManager.validateToken(token);
+                tokenInfo = {
+                    exists: true,
+                    valid: validation.valid,
+                    user: validation.user || null,
+                    error: validation.error || null
+                };
+            }
+        }
+
+        res.json({
+            success: true,
+            hasToken: hasToken,
+            tokenInfo: tokenInfo
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: `Token狀態檢查失敗: ${error.message}`,
+            error: error.message
+        });
+    }
+});
+
+app.delete('/api/token', async (req, res) => {
+    try {
+        tokenManager.deleteToken();
+        
+        // 重置Git遠程URL
+        const { execSync } = require('child_process');
+        execSync('git remote set-url origin https://github.com/kelvinhuang0327/familyCost.git', { stdio: 'pipe' });
+
+        res.json({
+            success: true,
+            message: 'Token已刪除'
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: `Token刪除失敗: ${error.message}`,
+            error: error.message
+        });
+    }
+});
+
 // 手動同步
 app.post('/api/sync', async (req, res) => {
     try {
@@ -256,6 +357,9 @@ app.listen(PORT, () => {
     console.log('   GET  /api/restore    - 從GitHub還原');
     console.log('   GET  /api/git-status - 獲取Git狀態');
     console.log('   POST /api/sync       - 手動同步');
+    console.log('   POST /api/token/save - 儲存GitHub Token');
+    console.log('   GET  /api/token/status - 檢查Token狀態');
+    console.log('   DELETE /api/token    - 刪除Token');
     console.log('按 Ctrl+C 停止服務');
 });
 
