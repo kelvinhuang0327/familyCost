@@ -3505,10 +3505,13 @@
             const totalAmount = memberIncome - memberExpense;
             
             // 更新標籤頁狀態
+            console.log('更新標籤頁狀態為 member');
             updateFilterTabs('member');
             
             // 顯示成員記錄
-            displayRecords(memberRecords, `${member} 的記錄 (共 ${memberRecords.length} 筆，$${totalAmount.toLocaleString()})`);
+            const title = `${member} 的記錄 (共 ${memberRecords.length} 筆，$${totalAmount.toLocaleString()})`;
+            console.log('準備顯示記錄，標題:', title);
+            displayRecords(memberRecords, title);
         }
 
         function updateMemberStats() {
@@ -3763,8 +3766,11 @@
                     console.log('設置總收入為active:', tabs[4].textContent);
                 }
             } else if (activeType === 'member') {
-                // 成員記錄不顯示任何標籤頁為 active
-                console.log('成員記錄：清除所有標籤頁的 active 狀態');
+                // 成員記錄顯示全部記錄標籤頁為 active
+                if (tabs[0]) {
+                    tabs[0].classList.add('active');
+                    console.log('設置全部記錄為active:', tabs[0].textContent);
+                }
             }
         }
 
@@ -3834,15 +3840,27 @@
                 </div>
             `;
             
-            document.getElementById('recentRecords').innerHTML = recordsHtml;
+            const recentRecordsElement = document.getElementById('recentRecords');
+            if (recentRecordsElement) {
+                recentRecordsElement.innerHTML = recordsHtml;
+                console.log('記錄已更新到 recentRecords 元素');
+            } else {
+                console.error('找不到 recentRecords 元素');
+            }
         }
 
         function updateRecentRecords() {
+            // 檢查當前是否正在顯示成員記錄，如果是則不覆蓋
+            const container = document.getElementById('recentRecords');
+            if (container && container.innerHTML.includes('的記錄')) {
+                console.log('當前正在顯示成員記錄，跳過 updateRecentRecords');
+                return;
+            }
+            
             const recentRecords = records
                 .sort((a, b) => new Date(b.date) - new Date(a.date))
                 .slice(0, 5);
             
-            const container = document.getElementById('recentRecords');
             container.innerHTML = '';
             
             if (recentRecords.length === 0) {
