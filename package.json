@@ -4,7 +4,7 @@
   "description": "A simple family expense management platform",
   "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=local node server.js",
+    "start": "NODE_ENV=production node server.js",
     "start:local": "NODE_ENV=local node server.js",
     "start:sit": "NODE_ENV=sit node server.js",
     "dev": "NODE_ENV=local node server.js",
@@ -19,7 +19,9 @@
     "test-api": "curl http://localhost:3001/api/health",
     "test-api:sit": "curl https://family-cost-sit.vercel.app/api/health",
     "version:update": "node update_version.js",
-    "version:show": "cat version.json"
+    "version:show": "cat version.json",
+    "build": "echo 'No build step required for Vercel'",
+    "vercel-build": "echo 'Vercel build completed'"
   },
   "keywords": [
     "family",
