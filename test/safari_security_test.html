@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safari安全測試</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-card {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🍎 Safari安全測試</h1>
+    
+    <div class="test-card">
+        <h3>📊 測試結果</h3>
+        <div id="result">
+            <p>記錄數: <span id="recordCount">0</span></p>
+            <p>狀態: <span id="status">等待測試...</span></p>
+            <p>方法: <span id="method">-</span></p>
+        </div>
+    </div>
+
+    <div class="test-card">
+        <h3>🔧 測試控制</h3>
+        <button class="btn" onclick="testDirectURL()">🌐 直接URL</button>
+        <button class="btn" onclick="testRelativePath()">📁 相對路徑</button>
+        <button class="btn" onclick="testFullURL()">🔗 完整URL</button>
+        <button class="btn" onclick="testBackendAPI()">🚀 後端API</button>
+        <button class="btn" onclick="clearLog()">🗑️ 清除日誌</button>
+    </div>
+
+    <div class="test-card">
+        <h3>📝 操作日誌</h3>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `status ${type}`;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        function updateResult(count, status, method) {
+            document.getElementById('recordCount').textContent = count;
+            document.getElementById('status').textContent = status;
+            document.getElementById('method').textContent = method;
+        }
+
+        async function testDirectURL() {
+            log('🌐 測試直接URL...', 'info');
+            
+            try {
+                const response = await fetch('http://localhost:8000/data.json');
+                log(`HTTP狀態碼: ${response.status}`, 'info');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ 直接URL成功`, 'success');
+                    log(`記錄數: ${data.records ? data.records.length : 0}`, 'info');
+                    updateResult(data.records ? data.records.length : 0, '直接URL成功', 'fetch');
+                } else {
+                    log(`❌ 直接URL失敗: ${response.status}`, 'error');
+                    updateResult(0, '直接URL失敗', 'fetch');
+                }
+            } catch (error) {
+                log(`❌ 直接URL錯誤: ${error.message}`, 'error');
+                updateResult(0, '直接URL錯誤', 'fetch');
+            }
+        }
+
+        async function testRelativePath() {
+            log('📁 測試相對路徑...', 'info');
+            
+            try {
+                const response = await fetch('./data.json');
+                log(`HTTP狀態碼: ${response.status}`, 'info');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ 相對路徑成功`, 'success');
+                    log(`記錄數: ${data.records ? data.records.length : 0}`, 'info');
+                    updateResult(data.records ? data.records.length : 0, '相對路徑成功', 'fetch');
+                } else {
+                    log(`❌ 相對路徑失敗: ${response.status}`, 'error');
+                    updateResult(0, '相對路徑失敗', 'fetch');
+                }
+            } catch (error) {
+                log(`❌ 相對路徑錯誤: ${error.message}`, 'error');
+                updateResult(0, '相對路徑錯誤', 'fetch');
+            }
+        }
+
+        async function testFullURL() {
+            log('🔗 測試完整URL...', 'info');
+            
+            try {
+                const fullURL = window.location.origin + '/data.json';
+                log(`完整URL: ${fullURL}`, 'info');
+                
+                const response = await fetch(fullURL);
+                log(`HTTP狀態碼: ${response.status}`, 'info');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ 完整URL成功`, 'success');
+                    log(`記錄數: ${data.records ? data.records.length : 0}`, 'info');
+                    updateResult(data.records ? data.records.length : 0, '完整URL成功', 'fetch');
+                } else {
+                    log(`❌ 完整URL失敗: ${response.status}`, 'error');
+                    updateResult(0, '完整URL失敗', 'fetch');
+                }
+            } catch (error) {
+                log(`❌ 完整URL錯誤: ${error.message}`, 'error');
+                updateResult(0, '完整URL錯誤', 'fetch');
+            }
+        }
+
+        async function testBackendAPI() {
+            log('🚀 測試後端API...', 'info');
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/health');
+                log(`HTTP狀態碼: ${response.status}`, 'info');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ 後端API成功`, 'success');
+                    log(`API響應: ${JSON.stringify(data)}`, 'info');
+                    updateResult(1, '後端API成功', 'fetch');
+                } else {
+                    log(`❌ 後端API失敗: ${response.status}`, 'error');
+                    updateResult(0, '後端API失敗', 'fetch');
+                }
+            } catch (error) {
+                log(`❌ 後端API錯誤: ${error.message}`, 'error');
+                updateResult(0, '後端API錯誤', 'fetch');
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Safari安全測試頁面已載入', 'info');
+            log(`🌐 用戶代理: ${navigator.userAgent}`, 'info');
+            log(`📍 當前URL: ${window.location.href}`, 'info');
+            log(`🏠 原始URL: ${window.location.origin}`, 'info');
+            
+            // 自動執行測試
+            setTimeout(() => {
+                testFullURL();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

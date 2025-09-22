@@ -6,7 +6,11 @@
   "scripts": {
     "start": "python -m http.server 8000",
     "serve": "npx serve .",
-    "deploy": "git push origin main"
+    "server": "node server.js",
+    "dev": "node server.js",
+    "backup": "node server.js",
+    "deploy": "git push origin main",
+    "test-api": "curl http://localhost:3001/api/health"
   },
   "keywords": [
     "family",
@@ -22,6 +26,11 @@
     "url": "https://github.com/kelvinhuang0327/familyCost.git"
   },
   "homepage": "https://kelvinhuang0327.github.io/familyCost/",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "node-fetch": "^3.3.2"
+  },
   "devDependencies": {
     "serve": "^14.2.1"
   }
