@@ -1,7 +1,7 @@
 {
   "records": [
     {
-      "id": "1758523317584xtwfrtp3h",
+      "id": "17585242128014xobdvcjc",
       "member": "Kelvin",
       "type": "expense",
       "amount": 350,
@@ -11,7 +11,7 @@
       "date": "2025-09-21"
     },
     {
-      "id": "1758523317584ew12s69ro",
+      "id": "1758524212801luhber68p",
       "member": "Kelvin",
       "type": "expense",
       "amount": 130,
@@ -21,7 +21,7 @@
       "date": "2025-09-01"
     },
     {
-      "id": "1758523317584y3088ey4f",
+      "id": "1758524212801k6b5b6i91",
       "member": "Kelvin",
       "type": "expense",
       "amount": 100,
@@ -31,7 +31,7 @@
       "date": "2025-09-02"
     },
     {
-      "id": "1758523317584yagqj81po",
+      "id": "1758524212801eyapccx9u",
       "member": "Kelvin",
       "type": "expense",
       "amount": 110,
@@ -41,7 +41,7 @@
       "date": "2025-09-03"
     },
     {
-      "id": "1758523317584x6f0anwjb",
+      "id": "1758524212801xgpdrb09a",
       "member": "Kelvin",
       "type": "expense",
       "amount": 130,
@@ -51,7 +51,7 @@
       "date": "2025-09-04"
     },
     {
-      "id": "1758523317584h83vazy4v",
+      "id": "1758524212801v3kms677x",
       "member": "Kelvin",
       "type": "expense",
       "amount": 120,
@@ -61,7 +61,7 @@
       "date": "2025-09-04"
     },
     {
-      "id": "1758523317584fdheu906d",
+      "id": "1758524212801l5hiezwyg",
       "member": "Kelvin",
       "type": "expense",
       "amount": 145,
@@ -71,7 +71,7 @@
       "date": "2025-09-05"
     },
     {
-      "id": "1758523317584wk59ci0j5",
+      "id": "1758524212801c10byrue4",
       "member": "Kelvin",
       "type": "expense",
       "amount": 110,
@@ -81,7 +81,7 @@
       "date": "2025-09-05"
     },
     {
-      "id": "17585233175840fi9kpil0",
+      "id": "175852421280121dn7y7ne",
       "member": "Kelvin",
       "type": "expense",
       "amount": 966,
@@ -91,7 +91,7 @@
       "date": "2025-09-06"
     },
     {
-      "id": "1758523317584549dhmbgu",
+      "id": "1758524212801vux91acaw",
       "member": "Kelvin",
       "type": "income",
       "amount": 966,
@@ -101,7 +101,7 @@
       "date": "2025-09-06"
     },
     {
-      "id": "1758523317584nn7yd63m4",
+      "id": "1758524212801w9iyue9j5",
       "member": "Kelvin",
       "type": "expense",
       "amount": 100,
@@ -111,7 +111,7 @@
       "date": "2025-09-06"
     },
     {
-      "id": "1758523317584n4wg3v57r",
+      "id": "17585242128011tceivvii",
       "member": "Kelvin",
       "type": "expense",
       "amount": 150,
@@ -121,7 +121,7 @@
       "date": "2025-09-09"
     },
     {
-      "id": "17585233175845n36w0cer",
+      "id": "1758524212801ca467ad4s",
       "member": "Kelvin",
       "type": "expense",
       "amount": 140,
@@ -131,7 +131,7 @@
       "date": "2025-09-10"
     },
     {
-      "id": "1758523317584v4m9i4r77",
+      "id": "1758524212801h1ehnkqmc",
       "member": "Kelvin",
       "type": "expense",
       "amount": 150,
@@ -141,7 +141,7 @@
       "date": "2025-09-11"
     },
     {
-      "id": "1758523317584z90l63vdc",
+      "id": "17585242128013u31a785y",
       "member": "Kelvin",
       "type": "expense",
       "amount": 283,
@@ -151,7 +151,7 @@
       "date": "2025-09-12"
     },
     {
-      "id": "1758523317584eoe917ecr",
+      "id": "1758524212801hwowdxfz6",
       "member": "Kelvin",
       "type": "expense",
       "amount": 350,
@@ -161,7 +161,7 @@
       "date": "2025-09-13"
     },
     {
-      "id": "1758523317584c2ifakrsq",
+      "id": "1758524212801pstb8m446",
       "member": "Kelvin",
       "type": "expense",
       "amount": 185,
@@ -171,7 +171,7 @@
       "date": "2025-09-14"
     },
     {
-      "id": "1758523317584pfn0bmmya",
+      "id": "1758524212801n0co3xyeu",
       "member": "Kelvin",
       "type": "expense",
       "amount": 1979,
@@ -181,7 +181,7 @@
       "date": "2025-09-15"
     },
     {
-      "id": "175852331758474208z2jv",
+      "id": "17585242128016etd18q56",
       "member": "Kelvin",
       "type": "expense",
       "amount": 242,
@@ -191,7 +191,7 @@
       "date": "2025-09-15"
     },
     {
-      "id": "1758523317585f7vbf4jyo",
+      "id": "17585242128016g2j5grkk",
       "member": "Kelvin",
       "type": "expense",
       "amount": 150,
@@ -201,7 +201,7 @@
       "date": "2025-09-15"
     },
     {
-      "id": "1758523317585vi97bm423",
+      "id": "1758524212801fgaq1ihqs",
       "member": "Kelvin",
       "type": "expense",
       "amount": 145,
@@ -211,7 +211,7 @@
       "date": "2025-09-16"
     },
     {
-      "id": "1758523317585fpzppddga",
+      "id": "1758524212801qjaaysc5k",
       "member": "Kelvin",
       "type": "expense",
       "amount": 160,
@@ -221,7 +221,7 @@
       "date": "2025-09-17"
     },
     {
-      "id": "1758523317585wdzp8ud3g",
+      "id": "1758524212801efre3chcd",
       "member": "Kelvin",
       "type": "expense",
       "amount": 92,
@@ -231,7 +231,7 @@
       "date": "2025-09-17"
     },
     {
-      "id": "1758523317585h97t8np3t",
+      "id": "1758524212801a74ocwxxj",
       "member": "Kelvin",
       "type": "expense",
       "amount": 160,
@@ -241,7 +241,7 @@
       "date": "2025-09-18"
     },
     {
-      "id": "1758523317585zjizea3mv",
+      "id": "1758524212801jwcj8fpqx",
       "member": "Kelvin",
       "type": "expense",
       "amount": 76,
@@ -251,7 +251,7 @@
       "date": "2025-09-19"
     },
     {
-      "id": "1758523317585zl7c9nq48",
+      "id": "17585242128011vxyvdna8",
       "member": "Kelvin",
       "type": "expense",
       "amount": 120,
@@ -261,7 +261,7 @@
       "date": "2025-09-19"
     },
     {
-      "id": "1758523317585jr1l2b15k",
+      "id": "1758524212801e41wm3ud5",
       "member": "Phuong",
       "type": "expense",
       "amount": 350,
@@ -271,7 +271,7 @@
       "date": "2025-09-21"
     },
     {
-      "id": "1758523317585wbdxveiu9",
+      "id": "1758524212801qk32pctch",
       "member": "Phuong",
       "type": "expense",
       "amount": 2580,
@@ -281,7 +281,7 @@
       "date": "2025-09-21"
     },
     {
-      "id": "1758523317585sdk1kasdl",
+      "id": "1758524212801vazecjcb8",
       "member": "Phuong",
       "type": "expense",
       "amount": 65,
@@ -291,7 +291,7 @@
       "date": "2025-09-03"
     },
     {
-      "id": "1758523317585bt3zhvckh",
+      "id": "17585242128011bpk80tlu",
       "member": "Phuong",
       "type": "expense",
       "amount": 1598,
@@ -301,7 +301,7 @@
       "date": "2025-09-03"
     },
     {
-      "id": "1758523317585hhrdbgofl",
+      "id": "1758524212801w1xpzdkjn",
       "member": "Phuong",
       "type": "expense",
       "amount": 480,
@@ -311,7 +311,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585krm8ym4n6",
+      "id": "175852421280112joqacai",
       "member": "Phuong",
       "type": "expense",
       "amount": 64,
@@ -321,7 +321,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "17585233175858q60e2aux",
+      "id": "1758524212801m0uptwh99",
       "member": "Phuong",
       "type": "expense",
       "amount": 290,
@@ -331,7 +331,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "1758523317585i43gmfcvn",
+      "id": "17585242128014kc2k5thk",
       "member": "Phuong",
       "type": "expense",
       "amount": 150,
@@ -341,7 +341,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "1758523317585pfhklpb9x",
+      "id": "1758524212801851e1oni4",
       "member": "Phuong",
       "type": "expense",
       "amount": 260,
@@ -351,7 +351,7 @@
       "date": "2025-09-11"
     },
     {
-      "id": "1758523317585l0o7rxqxj",
+      "id": "17585242128019oj0iy96m",
       "member": "Ryan",
       "type": "expense",
       "amount": 350,
@@ -361,7 +361,7 @@
       "date": "2025-09-21"
     },
     {
-      "id": "1758523317585r1nzt91iq",
+      "id": "1758524212801e7wbvhq4k",
       "member": "Ryan",
       "type": "expense",
       "amount": 576,
@@ -371,7 +371,7 @@
       "date": "2025-09-21"
     },
     {
-      "id": "1758523317585nr5k023pt",
+      "id": "1758524212801g4mweb554",
       "member": "Ryan",
       "type": "expense",
       "amount": 300,
@@ -381,7 +381,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585l6ttuhbe9",
+      "id": "17585242128014biibr6hv",
       "member": "Ryan",
       "type": "expense",
       "amount": 120,
@@ -391,7 +391,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "1758523317585nw0o8cyjv",
+      "id": "1758524212801f7u86y393",
       "member": "Ryan",
       "type": "expense",
       "amount": 24,
@@ -401,7 +401,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "1758523317585xwg9j3853",
+      "id": "1758524212801bavkyysq6",
       "member": "Ryan",
       "type": "expense",
       "amount": 17906,
@@ -411,7 +411,7 @@
       "date": "2025-09-09"
     },
     {
-      "id": "1758523317585grueozni2",
+      "id": "1758524212802kqieqeu43",
       "member": "Ryan",
       "type": "expense",
       "amount": 888,
@@ -421,7 +421,7 @@
       "date": "2025-09-11"
     },
     {
-      "id": "1758523317585r2j1r287w",
+      "id": "1758524212802w01eskzjr",
       "member": "Ryan",
       "type": "expense",
       "amount": 280,
@@ -431,7 +431,7 @@
       "date": "2025-09-11"
     },
     {
-      "id": "1758523317585rsy6elplz",
+      "id": "1758524212802uwfp0gzbq",
       "member": "Ryan",
       "type": "expense",
       "amount": 1000,
@@ -441,7 +441,7 @@
       "date": "2025-09-13"
     },
     {
-      "id": "1758523317585mmnhj2c4e",
+      "id": "1758524212802zpv2c4lms",
       "member": "Ryan",
       "type": "expense",
       "amount": 350,
@@ -451,7 +451,7 @@
       "date": "2025-09-13"
     },
     {
-      "id": "1758523317585u6kutojnd",
+      "id": "1758524212802rav4gjgte",
       "member": "Ryan",
       "type": "expense",
       "amount": 208,
@@ -461,7 +461,7 @@
       "date": "2025-09-15"
     },
     {
-      "id": "17585233175857ry4npsq8",
+      "id": "17585242128025wrc7osec",
       "member": "Ryan",
       "type": "expense",
       "amount": 71,
@@ -471,7 +471,7 @@
       "date": "2025-09-15"
     },
     {
-      "id": "1758523317585cuagw0sgn",
+      "id": "17585242128021j86ay803",
       "member": "Ryan",
       "type": "expense",
       "amount": 97,
@@ -481,7 +481,7 @@
       "date": "2025-09-16"
     },
     {
-      "id": "1758523317585ng6qj3wy5",
+      "id": "17585242128024njm3u4dr",
       "member": "Ryan",
       "type": "income",
       "amount": 850,
@@ -491,7 +491,7 @@
       "date": "2025-09-18"
     },
     {
-      "id": "1758523317585leyhlzm4v",
+      "id": "1758524212802ewhm1wvle",
       "member": "Ryan",
       "type": "expense",
       "amount": 93,
@@ -501,7 +501,7 @@
       "date": "2025-09-19"
     },
     {
-      "id": "175852331758595jczss1s",
+      "id": "1758524212802581tyqrey",
       "member": "家用",
       "type": "expense",
       "amount": 260,
@@ -511,7 +511,7 @@
       "date": "2025-09-20"
     },
     {
-      "id": "1758523317585koai7kwfb",
+      "id": "1758524212802diln43dcg",
       "member": "家用",
       "type": "expense",
       "amount": 210,
@@ -521,7 +521,7 @@
       "date": "2025-09-20"
     },
     {
-      "id": "1758523317585au8or1dmc",
+      "id": "1758524212802yzo4fzbdz",
       "member": "家用",
       "type": "expense",
       "amount": 273,
@@ -531,7 +531,7 @@
       "date": "2025-09-21"
     },
     {
-      "id": "1758523317585fxcx8cr17",
+      "id": "17585242128024h5l9qzqd",
       "member": "家用",
       "type": "expense",
       "amount": 27,
@@ -541,7 +541,7 @@
       "date": "2025-09-21"
     },
     {
-      "id": "1758523317585yh0f6gkmk",
+      "id": "17585242128027uaxm4c13",
       "member": "家用",
       "type": "expense",
       "amount": 185,
@@ -551,7 +551,7 @@
       "date": "2025-09-21"
     },
     {
-      "id": "17585233175859538e6sln",
+      "id": "1758524212802b9lz6p8b9",
       "member": "家用",
       "type": "expense",
       "amount": 175,
@@ -561,7 +561,7 @@
       "date": "2025-09-21"
     },
     {
-      "id": "1758523317585sq1p6ujee",
+      "id": "1758524212802qjk14v5mj",
       "member": "家用",
       "type": "expense",
       "amount": 169,
@@ -571,7 +571,7 @@
       "date": "2025-09-20"
     },
     {
-      "id": "175852331758521r8pr04n",
+      "id": "1758524212802pzyds072y",
       "member": "家用",
       "type": "income",
       "amount": 20000,
@@ -581,7 +581,7 @@
       "date": "2025-09-03"
     },
     {
-      "id": "1758523317585igxvtbsi5",
+      "id": "1758524212802cx4nkfhp8",
       "member": "家用",
       "type": "expense",
       "amount": 7050,
@@ -591,7 +591,7 @@
       "date": "2025-09-03"
     },
     {
-      "id": "1758523317585n5yh1v8tc",
+      "id": "1758524212802sgyy9etic",
       "member": "家用",
       "type": "expense",
       "amount": 5092,
@@ -601,7 +601,7 @@
       "date": "2025-09-03"
     },
     {
-      "id": "1758523317585s3dqc8qhv",
+      "id": "17585242128024qh3bpve5",
       "member": "家用",
       "type": "expense",
       "amount": 185,
@@ -611,7 +611,7 @@
       "date": "2025-09-04"
     },
     {
-      "id": "1758523317585u2awrxixu",
+      "id": "1758524212802zrwgz9xuw",
       "member": "家用",
       "type": "income",
       "amount": 15000,
@@ -621,7 +621,7 @@
       "date": "2025-09-05"
     },
     {
-      "id": "1758523317585c9j1ulezt",
+      "id": "1758524212802e8f3d3ktj",
       "member": "家用",
       "type": "expense",
       "amount": 79,
@@ -631,7 +631,7 @@
       "date": "2025-09-06"
     },
     {
-      "id": "175852331758526bdzk6qg",
+      "id": "1758524212802znu4wgayf",
       "member": "家用",
       "type": "expense",
       "amount": 107,
@@ -641,7 +641,7 @@
       "date": "2025-09-06"
     },
     {
-      "id": "1758523317585t4b65qt7g",
+      "id": "1758524212802uj9p0estt",
       "member": "家用",
       "type": "expense",
       "amount": 185,
@@ -651,7 +651,7 @@
       "date": "2025-09-06"
     },
     {
-      "id": "1758523317585wlnfpukwm",
+      "id": "1758524212802zeyaj0x4s",
       "member": "家用",
       "type": "expense",
       "amount": 80,
@@ -661,7 +661,7 @@
       "date": "2025-09-06"
     },
     {
-      "id": "1758523317585yhhop2my9",
+      "id": "17585242128021vv8uasa4",
       "member": "家用",
       "type": "expense",
       "amount": 109,
@@ -671,7 +671,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "17585233175851fc6v1sri",
+      "id": "1758524212802eaj5f5gi2",
       "member": "家用",
       "type": "expense",
       "amount": 90,
@@ -681,7 +681,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585zr9f87mkq",
+      "id": "17585242128024cksd6cdw",
       "member": "家用",
       "type": "expense",
       "amount": 175,
@@ -691,7 +691,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585y00msa8qa",
+      "id": "17585242128027fq7eoh8j",
       "member": "家用",
       "type": "expense",
       "amount": 375,
@@ -701,7 +701,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585qvcw5i2vl",
+      "id": "17585242128026ikp36bnt",
       "member": "家用",
       "type": "expense",
       "amount": 68,
@@ -711,7 +711,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "17585233175858m0mngu98",
+      "id": "1758524212802o78i94mkq",
       "member": "家用",
       "type": "expense",
       "amount": 90,
@@ -721,7 +721,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585n5udvt95d",
+      "id": "17585242128024wtvswrn5",
       "member": "家用",
       "type": "expense",
       "amount": 175,
@@ -731,7 +731,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585qec0k1au1",
+      "id": "1758524212802y809k3lq5",
       "member": "家用",
       "type": "expense",
       "amount": 125,
@@ -741,7 +741,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585nwb6vtdvl",
+      "id": "1758524212802lb2cp2371",
       "member": "家用",
       "type": "expense",
       "amount": 92,
@@ -751,7 +751,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585am2e5amkg",
+      "id": "1758524212802qsuqbokwg",
       "member": "家用",
       "type": "expense",
       "amount": 310,
@@ -761,7 +761,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585f2xrxosyu",
+      "id": "1758524212802zoainhoqg",
       "member": "家用",
       "type": "expense",
       "amount": 109,
@@ -771,7 +771,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585kvtqwnls4",
+      "id": "1758524212802v363ufwfa",
       "member": "家用",
       "type": "expense",
       "amount": 569,
@@ -781,7 +781,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585tvtlskvz2",
+      "id": "1758524212802e2jcvh00i",
       "member": "家用",
       "type": "expense",
       "amount": 164,
@@ -791,7 +791,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585b390t2moz",
+      "id": "1758524212802tdlmeoass",
       "member": "家用",
       "type": "expense",
       "amount": 68,
@@ -801,7 +801,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585zzv1vmjy3",
+      "id": "1758524212802inbc48ulv",
       "member": "家用",
       "type": "expense",
       "amount": 55,
@@ -811,7 +811,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "1758523317585gkuu720s5",
+      "id": "1758524212802djskgncdr",
       "member": "家用",
       "type": "expense",
       "amount": 250,
@@ -821,7 +821,7 @@
       "date": "2025-09-07"
     },
     {
-      "id": "175852331758550z6o7ae1",
+      "id": "1758524212802ow3niv2x8",
       "member": "家用",
       "type": "expense",
       "amount": 21454,
@@ -831,7 +831,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "1758523317585ebee7qikv",
+      "id": "17585242128027oz9um7b3",
       "member": "家用",
       "type": "expense",
       "amount": 60,
@@ -841,7 +841,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "1758523317585pshy016tb",
+      "id": "1758524212802np3f12tz5",
       "member": "家用",
       "type": "expense",
       "amount": 375,
@@ -851,7 +851,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "1758523317585kaezq0n6s",
+      "id": "1758524212802unyaj5js9",
       "member": "家用",
       "type": "expense",
       "amount": 375,
@@ -861,7 +861,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "17585233175850trgj5t2o",
+      "id": "1758524212802vrxy8z195",
       "member": "家用",
       "type": "expense",
       "amount": 175,
@@ -871,7 +871,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "17585233175850ta03xf26",
+      "id": "1758524212802798cgfsh6",
       "member": "家用",
       "type": "expense",
       "amount": 339,
@@ -881,7 +881,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "175852331758558u6gjkhv",
+      "id": "17585242128025k798d7tq",
       "member": "家用",
       "type": "expense",
       "amount": 50,
@@ -891,7 +891,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "17585233175850is6vspnq",
+      "id": "175852421280213gcab7lw",
       "member": "家用",
       "type": "expense",
       "amount": 60,
@@ -901,7 +901,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "1758523317585klbwd502s",
+      "id": "1758524212802tv7kuu18a",
       "member": "家用",
       "type": "expense",
       "amount": 185,
@@ -911,7 +911,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "1758523317585fs19aeyeg",
+      "id": "1758524212802sz6i2ikix",
       "member": "家用",
       "type": "expense",
       "amount": 46,
@@ -921,7 +921,7 @@
       "date": "2025-09-08"
     },
     {
-      "id": "175852331758515fkqvg0p",
+      "id": "1758524212802xjdl1qs3g",
       "member": "家用",
       "type": "income",
       "amount": 15000,
@@ -931,7 +931,7 @@
       "date": "2025-09-09"
     },
     {
-      "id": "1758523317585t7gx3upi4",
+      "id": "1758524212802rfvhkyctj",
       "member": "家用",
       "type": "expense",
       "amount": 153,
@@ -941,7 +941,7 @@
       "date": "2025-09-11"
     },
     {
-      "id": "1758523317585871f2d9qv",
+      "id": "175852421280235pr9mio2",
       "member": "家用",
       "type": "expense",
       "amount": 210,
@@ -951,7 +951,7 @@
       "date": "2025-09-13"
     },
     {
-      "id": "1758523317585e4lcc6flc",
+      "id": "1758524212802fvxkc7m3q",
       "member": "家用",
       "type": "expense",
       "amount": 91,
@@ -961,7 +961,7 @@
       "date": "2025-09-13"
     },
     {
-      "id": "1758523317585yqyppa0c8",
+      "id": "1758524212802hrl0im6kg",
       "member": "家用",
       "type": "expense",
       "amount": 79,
@@ -971,7 +971,7 @@
       "date": "2025-09-13"
     },
     {
-      "id": "1758523317585w60r076z5",
+      "id": "1758524212802shsfs273f",
       "member": "家用",
       "type": "expense",
       "amount": 2826,
@@ -981,7 +981,7 @@
       "date": "2025-09-13"
     },
     {
-      "id": "1758523317585rep5ndai4",
+      "id": "175852421280207ujm3vvn",
       "member": "家用",
       "type": "expense",
       "amount": 185,
@@ -991,7 +991,7 @@
       "date": "2025-09-14"
     },
     {
-      "id": "1758523317585s6s7iv5w2",
+      "id": "1758524212802fh0qcajfr",
       "member": "家用",
       "type": "income",
       "amount": 93004,
@@ -1001,7 +1001,7 @@
       "date": "2025-09-15"
     },
     {
-      "id": "1758523317585y27jza3si",
+      "id": "1758524212802jj2ka0rtt",
       "member": "家用",
       "type": "income",
       "amount": 1458,
@@ -1011,7 +1011,7 @@
       "date": "2025-09-19"
     },
     {
-      "id": "1758523317585sem6dkzg7",
+      "id": "1758524212802xcucii3xj",
       "member": "家用",
       "type": "expense",
       "amount": 35000,
@@ -1021,7 +1021,7 @@
       "date": "2025-09-19"
     },
     {
-      "id": "1758523317585ervix7k4e",
+      "id": "1758524212802ti1vz2y8a",
       "member": "家用",
       "type": "expense",
       "amount": 27000,
@@ -1031,7 +1031,7 @@
       "date": "2025-09-19"
     },
     {
-      "id": "1758523317585l2l2hjbn1",
+      "id": "1758524212802vu09iwxy3",
       "member": "家用",
       "type": "expense",
       "amount": 26618,
@@ -1042,7 +1042,7 @@
     }
   ],
   "metadata": {
-    "lastUpdated": "2025-09-22T06:42:15.925Z",
+    "lastUpdated": "2025-09-22T06:56:58.399Z",
     "version": "1.0",
     "description": "家庭收支記錄資料",
     "recordCount": 104
