@@ -3483,8 +3483,43 @@
             updateMemberStats();
         }
 
+        // 顯示成員詳細記錄
+        function showMemberRecords(member) {
+            console.log('showMemberRecords 被調用，成員:', member);
+            const memberRecords = records.filter(record => record.member === member);
+            console.log('成員記錄數量:', memberRecords.length);
+            
+            if (memberRecords.length === 0) {
+                alert(`${member} 目前沒有任何記錄。`);
+                return;
+            }
+            
+            // 計算成員餘額（與 updateMemberStats 邏輯一致）
+            const memberIncome = memberRecords
+                .filter(record => record.type === 'income')
+                .reduce((sum, record) => sum + record.amount, 0);
+            const memberExpense = memberRecords
+                .filter(record => record.type === 'expense')
+                .reduce((sum, record) => sum + record.amount, 0);
+            
+            const totalAmount = memberIncome - memberExpense;
+            
+            // 更新標籤頁狀態
+            updateFilterTabs('member');
+            
+            // 顯示成員記錄
+            displayRecords(memberRecords, `${member} 的記錄 (共 ${memberRecords.length} 筆，$${totalAmount.toLocaleString()})`);
+        }
+
         function updateMemberStats() {
+            console.log('updateMemberStats 被調用');
             const memberStatsContainer = document.getElementById('memberStats');
+            
+            if (!memberStatsContainer) {
+                console.error('找不到 memberStats 元素');
+                return;
+            }
+            
             memberStatsContainer.innerHTML = '';
 
             console.log('updateMemberStats: 總記錄數', records.length);
@@ -3529,37 +3564,15 @@
                 
                 // 添加點擊事件
                 memberCard.addEventListener('click', () => {
+                    console.log('成員統計卡片被點擊:', member);
                     showMemberRecords(member);
                 });
                 
                 memberStatsContainer.appendChild(memberCard);
+                console.log(`已添加 ${member} 的統計卡片`);
             });
-        }
-
-        // 顯示成員詳細記錄
-        function showMemberRecords(member) {
-            const memberRecords = records.filter(record => record.member === member);
             
-            if (memberRecords.length === 0) {
-                alert(`${member} 目前沒有任何記錄。`);
-                return;
-            }
-            
-            // 計算成員餘額（與 updateMemberStats 邏輯一致）
-            const memberIncome = memberRecords
-                .filter(record => record.type === 'income')
-                .reduce((sum, record) => sum + record.amount, 0);
-            const memberExpense = memberRecords
-                .filter(record => record.type === 'expense')
-                .reduce((sum, record) => sum + record.amount, 0);
-            
-            const totalAmount = memberIncome - memberExpense;
-            
-            // 更新標籤頁狀態
-            updateFilterTabs('member');
-            
-            // 顯示成員記錄
-            displayRecords(memberRecords, `${member} 的記錄 (共 ${memberRecords.length} 筆，$${totalAmount.toLocaleString()})`);
+            console.log('updateMemberStats 完成，總共創建了', familyMembers.length, '個成員卡片');
         }
 
         // 顯示總支出記錄
