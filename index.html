@@ -1007,7 +1007,7 @@
                         <div class="notice-content">
                             <h4>⚠️ 環境限制</h4>
                             <p>當前環境不支持後端服務，Token 儲存功能無法使用。</p>
-                            <p>建議：<a href="http://localhost:8000" target="_blank">切換到本地環境</a> 或 <a href="sit_limitations.html" target="_blank">查看解決方案</a></p>
+                            <p>建議：<a href="http://localhost:8000" target="_blank">切換到本地環境</a> 或 <a href="github_pages_info.html" target="_blank">查看詳細說明</a></p>
                         </div>
                     </div>
                     
@@ -3791,11 +3791,12 @@
                     errorMessage += '\n\n🔍 診斷建議:\n';
                     
                     if (env === 'sit') {
-                        errorMessage += '⚠️ SIT環境限制:\n';
-                        errorMessage += '1. GitHub Pages 不支持 Node.js 後端\n';
-                        errorMessage += '2. Token 儲存功能無法使用\n';
-                        errorMessage += '3. 建議使用本地環境或部署到 Vercel\n';
-                        errorMessage += '4. 查看 sit_limitations.html 了解詳情';
+                        errorMessage += '⚠️ GitHub Pages 環境限制:\n';
+                        errorMessage += '1. GitHub Pages 只支持靜態網站\n';
+                        errorMessage += '2. 不支持 Node.js 後端 API\n';
+                        errorMessage += '3. Token 儲存和數據同步功能不可用\n';
+                        errorMessage += '4. 建議使用本地環境: http://localhost:8000\n';
+                        errorMessage += '5. 或部署到 Vercel 等支持後端的平台';
                     } else {
                         errorMessage += '1. 檢查後端服務是否運行 (ENV_CONFIG.getBackendUrl())\n';
                         errorMessage += '2. 檢查瀏覽器是否阻止了跨域請求\n';
