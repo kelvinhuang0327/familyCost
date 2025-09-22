@@ -1382,7 +1382,8 @@
                             <button onclick="forceSync()" style="padding: 5px 10px; background: rgba(255,193,7,0.3); border: none; border-radius: 3px; color: white; cursor: pointer; margin-right: 10px;">強制同步</button>
                             <button onclick="fixMemberOptions()" style="padding: 5px 10px; background: rgba(40,167,69,0.3); border: none; border-radius: 3px; color: white; cursor: pointer; margin-right: 10px;">修復成員選項</button>
                             <button onclick="checkDataAnomalies()" style="padding: 5px 10px; background: rgba(220,53,69,0.3); border: none; border-radius: 3px; color: white; cursor: pointer; margin-right: 10px;">檢查數據異常</button>
-                            <button onclick="removeDuplicateRecords()" style="padding: 5px 10px; background: rgba(108,117,125,0.3); border: none; border-radius: 3px; color: white; cursor: pointer;">清理重複記錄</button>
+                            <button onclick="removeDuplicateRecords()" style="padding: 5px 10px; background: rgba(108,117,125,0.3); border: none; border-radius: 3px; color: white; cursor: pointer; margin-right: 10px;">清理重複記錄</button>
+                            <button onclick="migrateCategoryNames()" style="padding: 5px 10px; background: rgba(255,193,7,0.3); border: none; border-radius: 3px; color: white; cursor: pointer;">遷移類別名稱</button>
                         </div>
                         
                         <h4>🔄 多種同步方案</h4>
@@ -1696,7 +1697,7 @@
                 '楊梅': [],
                 '交通': [],
                 '其他支出': [],
-                '健康': ['牙醫', '診所', '藥品', '健檢'],
+                '醫療': ['牙醫', '診所', '藥品', '健檢'],
                 '禮物': [],
                 '學費': [],
                 '現金流支出': []
@@ -1734,6 +1735,9 @@
             
             // 遷移舊的成員名稱
             migrateMemberNames();
+            
+            // 遷移支出類別名稱
+            migrateCategoryNames();
             
             console.log('初始化完成，當前記錄數量:', records.length);
             logRecordsDetail('初始化完成 - 所有記錄'); // 使用新的調試函數
@@ -2387,6 +2391,27 @@
                 saveRecords(); // 保存遷移後的數據
             } else {
                 console.log('沒有需要遷移的記錄');
+            }
+        }
+
+        // 遷移支出類別名稱
+        function migrateCategoryNames() {
+            console.log('開始遷移支出類別名稱...');
+            let migratedCount = 0;
+            
+            records.forEach(record => {
+                if (record.mainCategory === '健康') {
+                    record.mainCategory = '醫療';
+                    migratedCount++;
+                    console.log(`遷移支出類別: 健康 -> 醫療 (記錄ID: ${record.id})`);
+                }
+            });
+            
+            if (migratedCount > 0) {
+                console.log(`遷移完成: 更新了 ${migratedCount} 筆記錄的支出類別`);
+                saveRecords(); // 保存遷移後的數據
+            } else {
+                console.log('沒有需要遷移的支出類別');
             }
         }
 
