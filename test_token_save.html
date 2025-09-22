@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token儲存測試</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .error {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔐 Token儲存測試</h1>
+    
+    <div class="test-section">
+        <h2>1. 後端健康檢查</h2>
+        <button class="btn" onclick="testHealth()">測試後端連接</button>
+        <div id="healthResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Token儲存測試</h2>
+        <input type="password" id="testToken" placeholder="輸入測試Token">
+        <button class="btn" onclick="testTokenSave()">測試Token儲存</button>
+        <div id="saveResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Token狀態檢查</h2>
+        <button class="btn" onclick="testTokenStatus()">檢查Token狀態</button>
+        <div id="statusResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. 網絡診斷</h2>
+        <button class="btn" onclick="testNetwork()">網絡診斷</button>
+        <div id="networkResult" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        
+        async function testHealth() {
+            const resultDiv = document.getElementById('healthResult');
+            try {
+                console.log('測試後端健康檢查...');
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = 'result success';
+            } catch (error) {
+                console.error('健康檢查失敗:', error);
+                resultDiv.textContent = `錯誤: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testTokenSave() {
+            const resultDiv = document.getElementById('saveResult');
+            const token = document.getElementById('testToken').value.trim();
+            
+            if (!token) {
+                resultDiv.textContent = '請輸入測試Token';
+                resultDiv.className = 'result error';
+                return;
+            }
+
+            try {
+                console.log('測試Token儲存...');
+                const response = await fetch(`${API_BASE}/token/save`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token: token })
+                });
+                
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = data.success ? 'result success' : 'result error';
+            } catch (error) {
+                console.error('Token儲存失敗:', error);
+                resultDiv.textContent = `錯誤: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testTokenStatus() {
+            const resultDiv = document.getElementById('statusResult');
+            try {
+                console.log('測試Token狀態...');
+                const response = await fetch(`${API_BASE}/token/status`);
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = 'result success';
+            } catch (error) {
+                console.error('Token狀態檢查失敗:', error);
+                resultDiv.textContent = `錯誤: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testNetwork() {
+            const resultDiv = document.getElementById('networkResult');
+            let results = [];
+
+            try {
+                // 測試基本連接
+                results.push('1. 測試基本連接...');
+                const healthResponse = await fetch(`${API_BASE}/health`);
+                if (healthResponse.ok) {
+                    results.push('✅ 基本連接正常');
+                } else {
+                    results.push(`❌ 基本連接失敗: ${healthResponse.status}`);
+                }
+
+                // 測試CORS
+                results.push('\n2. 測試CORS...');
+                try {
+                    const corsResponse = await fetch(`${API_BASE}/health`, {
+                        method: 'OPTIONS'
+                    });
+                    results.push('✅ CORS預檢請求正常');
+                } catch (corsError) {
+                    results.push(`⚠️ CORS預檢請求: ${corsError.message}`);
+                }
+
+                // 測試POST請求
+                results.push('\n3. 測試POST請求...');
+                try {
+                    const postResponse = await fetch(`${API_BASE}/token/status`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    });
+                    results.push(`✅ POST請求正常: ${postResponse.status}`);
+                } catch (postError) {
+                    results.push(`❌ POST請求失敗: ${postError.message}`);
+                }
+
+                resultDiv.textContent = results.join('\n');
+                resultDiv.className = 'result success';
+
+            } catch (error) {
+                results.push(`❌ 網絡診斷失敗: ${error.message}`);
+                resultDiv.textContent = results.join('\n');
+                resultDiv.className = 'result error';
+            }
+        }
+
+        // 頁面載入時自動執行健康檢查
+        window.addEventListener('load', testHealth);
+    </script>
+</body>
+</html>

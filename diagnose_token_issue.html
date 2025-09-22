@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token問題診斷</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .diagnostic-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-danger {
+            background: #dc3545;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .error {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+        .warning {
+            border-color: #ffc107;
+            background: #fff3cd;
+        }
+        .info {
+            border-color: #17a2b8;
+            background: #d1ecf1;
+        }
+        .step {
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 4px solid #007bff;
+            background: #f8f9fa;
+        }
+        .solution {
+            margin: 10px 0;
+            padding: 15px;
+            border-left: 4px solid #28a745;
+            background: #d4edda;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Token儲存問題診斷工具</h1>
+    
+    <div class="diagnostic-section">
+        <h2>📋 診斷步驟</h2>
+        <div class="step">
+            <strong>步驟 1:</strong> 檢查後端服務狀態
+            <button class="btn" onclick="checkBackend()">檢查後端</button>
+            <div id="backendResult" class="result"></div>
+        </div>
+        
+        <div class="step">
+            <strong>步驟 2:</strong> 測試Token API連接
+            <button class="btn" onclick="testTokenAPI()">測試API</button>
+            <div id="apiResult" class="result"></div>
+        </div>
+        
+        <div class="step">
+            <strong>步驟 3:</strong> 檢查瀏覽器網絡設置
+            <button class="btn" onclick="checkBrowser()">檢查瀏覽器</button>
+            <div id="browserResult" class="result"></div>
+        </div>
+        
+        <div class="step">
+            <strong>步驟 4:</strong> 測試Token儲存
+            <input type="password" id="testToken" placeholder="輸入測試Token" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+            <button class="btn" onclick="testTokenSave()">測試儲存</button>
+            <div id="saveResult" class="result"></div>
+        </div>
+    </div>
+
+    <div class="diagnostic-section">
+        <h2>🛠️ 常見解決方案</h2>
+        <div class="solution">
+            <h3>方案 1: 重啟後端服務</h3>
+            <p>在終端中執行以下命令：</p>
+            <div class="result">
+# 停止現有服務
+pkill -f "node server.js"
+
+# 重新啟動服務
+node server.js
+            </div>
+        </div>
+        
+        <div class="solution">
+            <h3>方案 2: 檢查端口佔用</h3>
+            <p>檢查3001端口是否被其他程序佔用：</p>
+            <div class="result">
+lsof -i :3001
+            </div>
+        </div>
+        
+        <div class="solution">
+            <h3>方案 3: 清除瀏覽器緩存</h3>
+            <p>清除瀏覽器緩存和Cookie，然後重新載入頁面</p>
+        </div>
+        
+        <div class="solution">
+            <h3>方案 4: 使用測試頁面</h3>
+            <p>打開 <a href="test_token_save.html" target="_blank">test_token_save.html</a> 進行詳細測試</p>
+        </div>
+    </div>
+
+    <div class="diagnostic-section">
+        <h2>📊 診斷結果</h2>
+        <button class="btn btn-success" onclick="runFullDiagnostic()">運行完整診斷</button>
+        <div id="fullResult" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        
+        async function checkBackend() {
+            const resultDiv = document.getElementById('backendResult');
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                resultDiv.textContent = `✅ 後端服務正常\n${JSON.stringify(data, null, 2)}`;
+                resultDiv.className = 'result success';
+            } catch (error) {
+                resultDiv.textContent = `❌ 後端服務不可用\n錯誤: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testTokenAPI() {
+            const resultDiv = document.getElementById('apiResult');
+            try {
+                const response = await fetch(`${API_BASE}/token/status`);
+                const data = await response.json();
+                resultDiv.textContent = `✅ Token API正常\n${JSON.stringify(data, null, 2)}`;
+                resultDiv.className = 'result success';
+            } catch (error) {
+                resultDiv.textContent = `❌ Token API不可用\n錯誤: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        function checkBrowser() {
+            const resultDiv = document.getElementById('browserResult');
+            let info = [];
+            
+            info.push(`瀏覽器: ${navigator.userAgent}`);
+            info.push(`語言: ${navigator.language}`);
+            info.push(`平台: ${navigator.platform}`);
+            info.push(`Cookie啟用: ${navigator.cookieEnabled}`);
+            info.push(`在線狀態: ${navigator.onLine}`);
+            
+            // 測試fetch API
+            try {
+                fetch('http://localhost:3001/api/health').then(() => {
+                    info.push('✅ Fetch API 可用');
+                }).catch(() => {
+                    info.push('❌ Fetch API 被阻止');
+                });
+            } catch (e) {
+                info.push('❌ Fetch API 不可用');
+            }
+            
+            resultDiv.textContent = info.join('\n');
+            resultDiv.className = 'result info';
+        }
+
+        async function testTokenSave() {
+            const resultDiv = document.getElementById('saveResult');
+            const token = document.getElementById('testToken').value.trim();
+            
+            if (!token) {
+                resultDiv.textContent = '請輸入測試Token';
+                resultDiv.className = 'result warning';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/token/save`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token: token })
+                });
+                
+                const data = await response.json();
+                resultDiv.textContent = `回應: ${JSON.stringify(data, null, 2)}`;
+                resultDiv.className = data.success ? 'result success' : 'result error';
+            } catch (error) {
+                resultDiv.textContent = `❌ 儲存失敗\n錯誤: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function runFullDiagnostic() {
+            const resultDiv = document.getElementById('fullResult');
+            let results = [];
+            
+            results.push('🔍 開始完整診斷...\n');
+            
+            // 1. 檢查後端
+            try {
+                const healthResponse = await fetch(`${API_BASE}/health`);
+                const healthData = await healthResponse.json();
+                results.push('✅ 後端服務: 正常');
+                results.push(`   環境: ${healthData.environment}`);
+                results.push(`   版本: ${healthData.version}`);
+            } catch (error) {
+                results.push(`❌ 後端服務: 失敗 (${error.message})`);
+            }
+            
+            // 2. 檢查Token API
+            try {
+                const tokenResponse = await fetch(`${API_BASE}/token/status`);
+                const tokenData = await tokenResponse.json();
+                results.push('✅ Token API: 正常');
+                results.push(`   Token狀態: ${tokenData.hasToken ? '已儲存' : '未儲存'}`);
+            } catch (error) {
+                results.push(`❌ Token API: 失敗 (${error.message})`);
+            }
+            
+            // 3. 檢查網絡
+            results.push('\n🌐 網絡檢查:');
+            results.push(`   在線狀態: ${navigator.onLine ? '在線' : '離線'}`);
+            results.push(`   Cookie: ${navigator.cookieEnabled ? '啟用' : '禁用'}`);
+            
+            // 4. 檢查瀏覽器
+            results.push('\n🌍 瀏覽器信息:');
+            results.push(`   用戶代理: ${navigator.userAgent}`);
+            results.push(`   語言: ${navigator.language}`);
+            
+            resultDiv.textContent = results.join('\n');
+            resultDiv.className = 'result info';
+        }
+
+        // 頁面載入時自動檢查
+        window.addEventListener('load', () => {
+            setTimeout(checkBackend, 1000);
+        });
+    </script>
+</body>
+</html>
