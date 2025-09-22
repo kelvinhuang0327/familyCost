@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token格式檢查工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .checker-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .error {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+        .warning {
+            border-color: #ffc107;
+            background: #fff3cd;
+        }
+        .info {
+            border-color: #17a2b8;
+            background: #d1ecf1;
+        }
+        .char-analysis {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Token格式檢查工具</h1>
+    
+    <div class="checker-section">
+        <h2>📝 輸入Token</h2>
+        <div class="input-group">
+            <label for="tokenInput">GitHub Personal Access Token:</label>
+            <textarea id="tokenInput" placeholder="請輸入您的GitHub Token..."></textarea>
+        </div>
+        <button class="btn" onclick="checkTokenFormat()">檢查格式</button>
+        <button class="btn" onclick="clearInput()">清除</button>
+    </div>
+
+    <div class="checker-section">
+        <h2>📊 檢查結果</h2>
+        <div id="checkResult" class="result">等待檢查...</div>
+    </div>
+
+    <div class="checker-section">
+        <h2>🔬 字符分析</h2>
+        <div id="charAnalysis" class="char-analysis">等待分析...</div>
+    </div>
+
+    <div class="checker-section">
+        <h2>💡 常見問題解決</h2>
+        <div class="info">
+            <h3>❌ "Cannot convert argument to a ByteString" 錯誤</h3>
+            <p><strong>原因:</strong> Token中包含非ASCII字符（如中文、特殊符號等）</p>
+            <p><strong>解決方法:</strong></p>
+            <ul>
+                <li>檢查Token是否包含空格、換行符或其他不可見字符</li>
+                <li>確保Token只包含英文字母和數字</li>
+                <li>重新複製Token，避免複製到額外的字符</li>
+            </ul>
+            
+            <h3>✅ 正確的Token格式</h3>
+            <ul>
+                <li>長度：通常40個字符</li>
+                <li>字符：只包含 a-z, A-Z, 0-9</li>
+                <li>無空格：Token前後不能有空格</li>
+                <li>無換行：Token不能包含換行符</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function checkTokenFormat() {
+            const token = document.getElementById('tokenInput').value;
+            const resultDiv = document.getElementById('checkResult');
+            const analysisDiv = document.getElementById('charAnalysis');
+            
+            if (!token) {
+                resultDiv.textContent = '請輸入Token';
+                resultDiv.className = 'result error';
+                return;
+            }
+
+            let results = [];
+            let isValid = true;
+            let issues = [];
+
+            // 基本檢查
+            results.push('🔍 Token格式檢查結果:\n');
+
+            // 1. 長度檢查
+            const length = token.length;
+            results.push(`📏 長度: ${length} 字符`);
+            if (length < 20 || length > 100) {
+                issues.push('長度不正確');
+                isValid = false;
+            } else if (length === 40) {
+                results.push('   ✅ 長度正確 (標準GitHub Token長度)');
+            } else {
+                results.push('   ⚠️ 長度異常 (GitHub Token通常為40字符)');
+            }
+
+            // 2. ASCII字符檢查
+            const asciiRegex = /^[\x00-\x7F]+$/;
+            const isAscii = asciiRegex.test(token);
+            results.push(`🔤 ASCII字符: ${isAscii ? '是' : '否'}`);
+            if (!isAscii) {
+                issues.push('包含非ASCII字符');
+                isValid = false;
+            } else {
+                results.push('   ✅ 只包含ASCII字符');
+            }
+
+            // 3. 字符類型檢查
+            const hasLetters = /[a-zA-Z]/.test(token);
+            const hasNumbers = /[0-9]/.test(token);
+            const hasSpecial = /[^a-zA-Z0-9]/.test(token);
+            
+            results.push(`📝 字符類型:`);
+            results.push(`   字母: ${hasLetters ? '有' : '無'}`);
+            results.push(`   數字: ${hasNumbers ? '有' : '無'}`);
+            results.push(`   特殊字符: ${hasSpecial ? '有' : '無'}`);
+
+            if (hasSpecial) {
+                issues.push('包含特殊字符');
+                isValid = false;
+            }
+
+            // 4. 空格檢查
+            const hasSpaces = /\s/.test(token);
+            results.push(`🚫 空格: ${hasSpaces ? '有' : '無'}`);
+            if (hasSpaces) {
+                issues.push('包含空格');
+                isValid = false;
+            }
+
+            // 5. 換行符檢查
+            const hasNewlines = /[\r\n]/.test(token);
+            results.push(`📄 換行符: ${hasNewlines ? '有' : '無'}`);
+            if (hasNewlines) {
+                issues.push('包含換行符');
+                isValid = false;
+            }
+
+            // 6. 前後空白檢查
+            const trimmed = token.trim();
+            const hasLeadingTrailing = trimmed.length !== token.length;
+            results.push(`✂️ 前後空白: ${hasLeadingTrailing ? '有' : '無'}`);
+            if (hasLeadingTrailing) {
+                issues.push('前後有空白字符');
+                isValid = false;
+            }
+
+            // 總結
+            results.push(`\n📋 總結:`);
+            if (isValid) {
+                results.push('✅ Token格式正確');
+                resultDiv.className = 'result success';
+            } else {
+                results.push('❌ Token格式有問題');
+                results.push(`問題: ${issues.join(', ')}`);
+                resultDiv.className = 'result error';
+            }
+
+            resultDiv.textContent = results.join('\n');
+
+            // 字符分析
+            analyzeCharacters(token, analysisDiv);
+        }
+
+        function analyzeCharacters(token, analysisDiv) {
+            let analysis = [];
+            analysis.push('🔬 字符分析:\n');
+
+            for (let i = 0; i < Math.min(token.length, 50); i++) {
+                const char = token[i];
+                const code = char.charCodeAt(0);
+                const isAscii = code >= 0 && code <= 127;
+                const isPrintable = code >= 32 && code <= 126;
+                
+                let status = '';
+                if (!isAscii) {
+                    status = ' ❌ 非ASCII';
+                } else if (!isPrintable) {
+                    status = ' ⚠️ 不可見';
+                } else {
+                    status = ' ✅';
+                }
+
+                analysis.push(`${i.toString().padStart(2, '0')}: '${char}' (${code})${status}`);
+            }
+
+            if (token.length > 50) {
+                analysis.push(`... (還有 ${token.length - 50} 個字符)`);
+            }
+
+            analysisDiv.textContent = analysis.join('\n');
+        }
+
+        function clearInput() {
+            document.getElementById('tokenInput').value = '';
+            document.getElementById('checkResult').textContent = '等待檢查...';
+            document.getElementById('checkResult').className = 'result';
+            document.getElementById('charAnalysis').textContent = '等待分析...';
+        }
+
+        // 自動檢查輸入
+        document.getElementById('tokenInput').addEventListener('input', function() {
+            const token = this.value;
+            if (token.length > 0) {
+                setTimeout(checkTokenFormat, 500); // 延遲500ms檢查
+            }
+        });
+    </script>
+</body>
+</html>
