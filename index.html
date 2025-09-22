@@ -81,6 +81,33 @@
             font-size: 0.9em;
         }
 
+        .env-notice {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .env-notice .notice-content h4 {
+            margin: 0 0 10px 0;
+            color: #856404;
+        }
+
+        .env-notice .notice-content p {
+            margin: 5px 0;
+            color: #856404;
+        }
+
+        .env-notice .notice-content a {
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+        .env-notice .notice-content a:hover {
+            color: #0056b3;
+        }
+
         .nav-tabs {
             display: flex;
             background: #f8f9fa;
@@ -975,6 +1002,15 @@
                     <h3>🔐 GitHub Token 設定</h3>
                     <p>安全地儲存和管理您的GitHub Personal Access Token</p>
                     
+                    <!-- 環境限制提示 -->
+                    <div id="envLimitationNotice" class="env-notice" style="display: none;">
+                        <div class="notice-content">
+                            <h4>⚠️ 環境限制</h4>
+                            <p>當前環境不支持後端服務，Token 儲存功能無法使用。</p>
+                            <p>建議：<a href="http://localhost:8000" target="_blank">切換到本地環境</a> 或 <a href="sit_limitations.html" target="_blank">查看解決方案</a></p>
+                        </div>
+                    </div>
+                    
                     <div class="token-settings">
                         <div class="token-card">
                             <h4>🔑 Token 狀態</h4>
@@ -1668,6 +1704,19 @@
             }
         };
 
+        // 檢查環境限制
+        function checkEnvironmentLimitations() {
+            const env = ENV_CONFIG.getEnvironment();
+            const limitationNotice = document.getElementById('envLimitationNotice');
+            
+            if (env === 'sit' && limitationNotice) {
+                limitationNotice.style.display = 'block';
+                console.log('⚠️ SIT環境限制：後端功能不可用');
+            } else if (limitationNotice) {
+                limitationNotice.style.display = 'none';
+            }
+        }
+
         // 載入版本信息
         async function loadVersionInfo() {
             try {
@@ -1683,6 +1732,9 @@
                 console.log('✅ 版本信息已載入:', versionData.version);
                 console.log('🌍 當前環境:', ENV_CONFIG.getEnvironment());
                 console.log('🔗 API地址:', ENV_CONFIG.getApiBase());
+                
+                // 檢查環境限制
+                checkEnvironmentLimitations();
             } catch (error) {
                 console.error('❌ 載入版本信息失敗:', error);
                 const versionElement = document.getElementById('versionNumber');
@@ -3735,11 +3787,21 @@
                 let errorMessage = `儲存Token失敗: ${error.message}`;
                 
                 if (error.message.includes('Load failed') || error.message.includes('Failed to fetch')) {
+                    const env = ENV_CONFIG.getEnvironment();
                     errorMessage += '\n\n🔍 診斷建議:\n';
-                    errorMessage += '1. 檢查後端服務是否運行 (ENV_CONFIG.getBackendUrl())\n';
-                    errorMessage += '2. 檢查瀏覽器是否阻止了跨域請求\n';
-                    errorMessage += '3. 嘗試刷新頁面後重試\n';
-                    errorMessage += '4. 檢查防火牆設置';
+                    
+                    if (env === 'sit') {
+                        errorMessage += '⚠️ SIT環境限制:\n';
+                        errorMessage += '1. GitHub Pages 不支持 Node.js 後端\n';
+                        errorMessage += '2. Token 儲存功能無法使用\n';
+                        errorMessage += '3. 建議使用本地環境或部署到 Vercel\n';
+                        errorMessage += '4. 查看 sit_limitations.html 了解詳情';
+                    } else {
+                        errorMessage += '1. 檢查後端服務是否運行 (ENV_CONFIG.getBackendUrl())\n';
+                        errorMessage += '2. 檢查瀏覽器是否阻止了跨域請求\n';
+                        errorMessage += '3. 嘗試刷新頁面後重試\n';
+                        errorMessage += '4. 檢查防火牆設置';
+                    }
                 }
                 
                 alert(errorMessage);
