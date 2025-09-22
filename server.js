@@ -5,12 +5,24 @@ const util = require('util');
 const fs = require('fs').promises;
 const path = require('path');
 const TokenManager = require('./token_manager');
+const { getConfig, getEnvironment } = require('./config');
 
 const app = express();
-const PORT = 3001;
+
+// 獲取環境配置
+const config = getConfig();
+const environment = getEnvironment();
+const PORT = config.port;
 
 // 初始化Token管理器
 const tokenManager = new TokenManager();
+
+// 環境信息
+console.log(`🌍 環境: ${environment.toUpperCase()}`);
+console.log(`🔧 配置: ${config.name}`);
+console.log(`📡 端口: ${PORT}`);
+console.log(`🔗 前端URL: ${config.frontendUrl}`);
+console.log(`🔗 後端URL: ${config.backendUrl}`);
 
 // 中間件
 app.use(cors());
@@ -25,7 +37,14 @@ app.get('/api/health', (req, res) => {
         status: 'ok',
         timestamp: new Date().toISOString(),
         service: 'family-cost-backup-service',
-        version: '1.0.0'
+        version: '1.0.0',
+        environment: environment,
+        config: {
+            name: config.name,
+            frontendUrl: config.frontendUrl,
+            backendUrl: config.backendUrl,
+            features: config.features
+        }
     });
 });
 
