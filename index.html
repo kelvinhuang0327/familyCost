@@ -843,8 +843,7 @@
                                 <option value="Kelvin">Kelvin</option>
                                 <option value="Phuong">Phuong</option>
                                 <option value="Ryan">Ryan</option>
-                                <option value="家用收入">家用收入</option>
-                                <option value="家用支出">家用支出</option>
+                                <option value="家用">家用</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -892,7 +891,7 @@
                             <h4>📄 CSV 檔案匯入</h4>
                             <p>請確保 CSV 檔案包含以下欄位：</p>
                             <ul>
-                                <li>成員 (Kelvin, Phuong, Ryan, 家用收入, 家用支出)</li>
+                                <li>成員 (Kelvin, Phuong, Ryan, 家用)</li>
                                 <li>金額 (正數=收入, 負數=支出)</li>
                                 <li>主類別</li>
                                 <li>付款方式 (信用卡/現金)</li>
@@ -907,7 +906,7 @@
                             <h4>📊 Excel 檔案匯入</h4>
                             <p>請確保 Excel 檔案包含以下欄位：</p>
                             <ul>
-                                <li>成員 (Kelvin, Phuong, Ryan, 家用收入, 家用支出)</li>
+                                <li>成員 (Kelvin, Phuong, Ryan, 家用)</li>
                                 <li>金額 (正數=收入, 負數=支出)</li>
                                 <li>主類別</li>
                                 <li>付款方式 (信用卡/現金)</li>
@@ -983,8 +982,7 @@
                                 <option value="Kelvin">Kelvin</option>
                                 <option value="Phuong">Phuong</option>
                                 <option value="Ryan">Ryan</option>
-                                <option value="家用收入">家用收入</option>
-                                <option value="家用支出">家用支出</option>
+                                <option value="家用">家用</option>
                             </select>
                                 <select id="deleteTypeFilter">
                                     <option value="">所有類型</option>
@@ -1052,8 +1050,7 @@
                             <option value="Kelvin">Kelvin</option>
                             <option value="Phuong">Phuong</option>
                             <option value="Ryan">Ryan</option>
-                            <option value="家用收入">家用收入</option>
-                            <option value="家用支出">家用支出</option>
+                            <option value="家用">家用</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -1151,12 +1148,12 @@
         };
 
         // 家庭成員
-        const familyMembers = ['Kelvin', 'Phuong', 'Ryan', '家用收入', '家用支出'];
+        const familyMembers = ['Kelvin', 'Phuong', 'Ryan', '家用'];
 
         // 固定支出提醒
         const recurringExpenses = [
-            { name: '房租', amount: 15000, day: 1, member: '家用支出' },
-            { name: '房貸', amount: 21454, day: 1, member: '家用支出' },
+            { name: '房租', amount: 15000, day: 1, member: '家用' },
+            { name: '房貸', amount: 21454, day: 1, member: '家用' },
             { name: '手機費', amount: 1200, day: 15, member: 'Kelvin' },
             { name: '網路費', amount: 1598, day: 15, member: 'Phuong' }
         ];
@@ -1265,7 +1262,7 @@
                 },
                 {
                     id: 'sample-3',
-                    member: '家用收入',
+                    member: '家用',
                     type: 'income',
                     amount: 50000,
                     mainCategory: '薪資',
@@ -1275,7 +1272,7 @@
                 },
                 {
                     id: 'sample-4',
-                    member: '家用支出',
+                    member: '家用',
                     type: 'expense',
                     amount: 15000,
                     mainCategory: '居住',
@@ -1458,7 +1455,7 @@
             
             // 計算家用收入（現金流）
             const householdIncome = records
-                .filter(record => record.member === '家用收入')
+                .filter(record => record.member === '家用' && record.type === 'income')
                 .reduce((sum, record) => sum + record.amount, 0);
             
             // 現金流 = 家用收入 - 現金支出
@@ -1553,7 +1550,7 @@
             
             // 暫時移除日期篩選，顯示所有支出記錄
             const expenseRecords = records.filter(record => {
-                const isExpense = record.member !== '家用收入';
+                const isExpense = record.type === 'expense';
                 console.log(`記錄 ${record.id}: 成員=${record.member}, 是支出=${isExpense}`);
                 return isExpense;
             });
@@ -1608,7 +1605,7 @@
             const currentYear = new Date().getFullYear();
             const incomeRecords = records.filter(record => {
                 const recordDate = new Date(record.date);
-                return record.member === '家用收入' && 
+                return record.member === '家用' && record.type === 'income' && 
                        recordDate.getMonth() === currentMonth && 
                        recordDate.getFullYear() === currentYear;
             });
@@ -1629,8 +1626,8 @@
                        recordDate.getFullYear() === currentYear;
             });
             
-            const totalIncome = allRecords.filter(r => r.member === '家用收入').reduce((sum, record) => sum + record.amount, 0);
-            const totalExpense = allRecords.filter(r => r.member !== '家用收入').reduce((sum, record) => sum + record.amount, 0);
+            const totalIncome = allRecords.filter(r => r.member === '家用' && r.type === 'income').reduce((sum, record) => sum + record.amount, 0);
+            const totalExpense = allRecords.filter(r => r.member === '家用' && r.type === 'expense').reduce((sum, record) => sum + record.amount, 0);
             const netAmount = totalIncome - totalExpense;
             
             updateFilterTabs('all');
@@ -3425,8 +3422,8 @@
                 }
             });
             
-            // 按照指定順序排列：Kelvin、Phuong、Ryan、家用支出、家用收入
-            const orderedMembers = ['Kelvin', 'Phuong', 'Ryan', '家用支出', '家用收入'];
+            // 按照指定順序排列：Kelvin、Phuong、Ryan、家用
+            const orderedMembers = ['Kelvin', 'Phuong', 'Ryan', '家用'];
             const labels = orderedMembers.filter(member => memberTotals[member]);
             const income = labels.map(member => memberTotals[member].income);
             const expense = labels.map(member => memberTotals[member].expense);
