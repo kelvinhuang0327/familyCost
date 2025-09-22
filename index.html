@@ -1304,63 +1304,85 @@
                 </div>
                 
                 <div class="sync-section">
-                    <h3>🌐 跨瀏覽器同步</h3>
-                    <p><strong>⚠️ 重要提醒：</strong>不同瀏覽器的資料是獨立的，需要手動同步才能保持一致！</p>
-                    <div style="background: rgba(255, 193, 7, 0.2); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
-                        <h4 style="color: #ffc107; margin: 0 0 10px 0;">💡 快速同步步驟：</h4>
-                        <ol style="margin: 0; padding-left: 20px; color: white;">
-                            <li>在<strong>當前瀏覽器</strong>中點擊「📤 一鍵匯出」</li>
-                            <li>下載生成的檔案</li>
-                            <li>在<strong>其他瀏覽器</strong>中點擊「📥 一鍵匯入」</li>
-                            <li>選擇剛才下載的檔案</li>
-                            <li>完成！資料已同步</li>
-                        </ol>
-                    </div>
-                    <div class="sync-instructions">
-                        <div class="sync-step">
-                            <h4>📤 一鍵匯出</h4>
-                            <p>下載當前瀏覽器的所有資料</p>
-                            <button class="btn btn-primary" onclick="exportForSync()" style="font-size: 16px; padding: 12px 24px;">📤 匯出資料</button>
+                    <h3>🐙 GitHub 資料存檔</h3>
+                    <p><strong>🔧 GitHub API 設定：</strong>設定您的 GitHub 倉庫和 API Token 來儲存資料</p>
+                    
+                    <!-- GitHub API 設定區域 -->
+                    <div class="github-config" style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h4 style="color: white; margin-bottom: 15px;">⚙️ API 設定</h4>
+                        
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label style="color: white; display: block; margin-bottom: 5px;">GitHub 倉庫路徑 (username/repository)</label>
+                            <input type="text" id="githubRepo" placeholder="例如: kelvin/familyCost" 
+                                   style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background: white; color: black;">
                         </div>
-                        <div class="sync-step">
-                            <h4>📥 一鍵匯入</h4>
-                            <p>匯入其他瀏覽器的資料檔案</p>
-                            <input type="file" id="syncFile" accept=".json,.xlsx" style="display: none;" onchange="importSyncFile()">
-                            <button class="btn btn-success" onclick="document.getElementById('syncFile').click()" style="font-size: 16px; padding: 12px 24px;">📥 匯入資料</button>
+                        
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label style="color: white; display: block; margin-bottom: 5px;">Personal Access Token</label>
+                            <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" 
+                                   style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background: white; color: black;">
                         </div>
-                    </div>
-                    <div class="sync-recovery">
-                        <h4>🔄 資料恢復</h4>
-                        <p>如果資料意外丟失，可以嘗試從自動備份恢復</p>
-                        <button class="btn btn-warning" onclick="manualRestoreFromBackup()">從備份恢復資料</button>
-                        <button class="btn btn-info" onclick="showBackupInfo()">查看備份資訊</button>
+                        
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label style="color: white; display: block; margin-bottom: 5px;">分支名稱</label>
+                            <input type="text" id="githubBranch" placeholder="main" value="main"
+                                   style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background: white; color: black;">
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label style="color: white; display: block; margin-bottom: 5px;">檔案名稱</label>
+                            <input type="text" id="githubFileName" placeholder="data.json" value="data.json"
+                                   style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background: white; color: black;">
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button onclick="saveGitHubConfig()" class="btn btn-primary" style="padding: 10px 20px;">💾 儲存設定</button>
+                            <button onclick="loadGitHubConfig()" class="btn btn-info" style="padding: 10px 20px;">📥 載入設定</button>
+                            <button onclick="testGitHubConnection()" class="btn btn-success" style="padding: 10px 20px;">🧪 測試連接</button>
+                        </div>
                     </div>
                     
-                    <div class="sync-recovery">
-                        <h4>🔧 資料修復</h4>
-                        <p>如果總收入顯示不正確，可以嘗試修復收入記錄</p>
-                        <button class="btn btn-danger" onclick="fixIncomeRecords()">修復收入記錄</button>
-                        <p class="fix-info">此功能會統一收入記錄的識別邏輯，確保總收入正確顯示</p>
+                    <!-- GitHub 操作區域 -->
+                    <div class="github-actions" style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h4 style="color: white; margin-bottom: 15px;">🚀 資料操作</h4>
+                        
+                        <div class="sync-instructions">
+                            <div class="sync-step">
+                                <h5>📁 檔案操作</h5>
+                                <p>直接操作 GitHub 倉庫中的檔案</p>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                                    <button onclick="uploadToGitHub()" class="sync-btn github-btn">📤 上傳到 GitHub</button>
+                                    <button onclick="downloadFromGitHub()" class="sync-btn github-btn">📥 從 GitHub 下載</button>
+                                    <button onclick="syncWithGitHub()" class="sync-btn github-btn">🔄 同步資料</button>
+                                </div>
+                            </div>
+                            
+                            <div class="sync-step">
+                                <h5>📝 Issue 操作</h5>
+                                <p>將資料儲存為 GitHub Issue</p>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                                    <button onclick="createBackupIssue()" class="sync-btn github-btn">📝 創建備份 Issue</button>
+                                    <button onclick="listBackupIssues()" class="sync-btn github-btn">📋 查看備份列表</button>
+                                </div>
+                            </div>
+                            
+                            <div class="sync-step">
+                                <h5>🏷️ Release 操作</h5>
+                                <p>創建版本發布來存檔重要資料</p>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                                    <button onclick="createBackupRelease()" class="sync-btn github-btn">🏷️ 創建版本備份</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="sync-recovery">
-                        <h4>💰 退費記錄說明</h4>
-                        <div class="refund-instructions">
-                            <p><strong>如何記錄退費（如牙醫退費）：</strong></p>
-                            <ol>
-                                <li>選擇成員：Ryan</li>
-                                <li>輸入金額：正數（例如：500）</li>
-                                <li>選擇主類別：💰 退費</li>
-                                <li>選擇付款方式：現金</li>
-                                <li>描述：牙醫退費（或其他退費說明）</li>
-                            </ol>
-                            <p class="refund-benefit">
-                                <strong>效果：</strong><br>
-                                ✅ 現金流會增加（正的現金流）<br>
-                                ✅ Ryan 的餘額會增加<br>
-                                ✅ 不會影響家用統計<br>
-                                ✅ 正確反映退費的會計性質
-                            </p>
+                    <!-- 狀態顯示區域 -->
+                    <div class="github-status" style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                        <h4 style="color: white; margin-bottom: 10px;">📊 狀態資訊</h4>
+                        <div id="githubStatus" style="color: white; font-size: 14px;">
+                            <p>API 設定: <span id="configStatus">未設定</span></p>
+                            <p>最後操作: <span id="lastOperation">無</span></p>
+                            <p>倉庫狀態: <span id="repoStatus">未連接</span></p>
                         </div>
                     </div>
                     <div class="sync-tips">
@@ -1416,36 +1438,6 @@
                             </div>
                         </div>
                         
-                        <h4>🌐 GitHub 存檔機制</h4>
-                        <div class="github-tips">
-                            <p><strong>GitHub 提供多種存檔機制：</strong></p>
-                            <div style="margin: 15px 0;">
-                                <h5>📁 檔案存檔 (推薦)</h5>
-                                <p>直接更新 GitHub 倉庫中的 data.json 檔案</p>
-                                <button onclick="saveToGitHubFile()" class="sync-btn github-btn">📁 存檔到 GitHub</button>
-                                <button onclick="loadFromGitHubFile()" class="sync-btn github-btn">📥 從 GitHub 載入</button>
-                            </div>
-                            
-                            <div style="margin: 15px 0;">
-                                <h5>📝 Issue 存檔</h5>
-                                <p>將資料作為 Issue 提交到倉庫</p>
-                                <button onclick="saveToGitHubIssue()" class="sync-btn github-btn">📝 存檔為 Issue</button>
-                                <button onclick="loadFromGitHubIssues()" class="sync-btn github-btn">📋 從 Issues 載入</button>
-                            </div>
-                            
-                            <div style="margin: 15px 0;">
-                                <h5>🏷️ Release 存檔</h5>
-                                <p>創建版本發布來存檔重要資料</p>
-                                <button onclick="createGitHubRelease()" class="sync-btn github-btn">🏷️ 創建版本存檔</button>
-                            </div>
-                            
-                            <div style="background: rgba(255,193,7,0.2); padding: 10px; border-radius: 5px; margin-top: 15px;">
-                                <p><strong>⚠️ 注意：</strong>GitHub 存檔需要 Personal Access Token</p>
-                                <p>請在 GitHub Settings > Developer settings > Personal access tokens 中創建 token</p>
-                                <button onclick="clearGitHubToken()" class="sync-btn github-btn" style="margin-top: 10px;">🔄 重新設定 Token</button>
-                                <button onclick="testGitHubToken()" class="sync-btn github-btn" style="margin-top: 5px;">🧪 測試 Token</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
@@ -1718,7 +1710,6 @@
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
-            checkCrossBrowserSync();
         });
 
         async function initializeApp() {
@@ -1822,6 +1813,9 @@
             
             // 更新調試信息顯示
             updateDebugInfo();
+            
+            // 載入 GitHub 配置
+            loadGitHubConfig();
         }
 
         // 檢查並修復資料同步問題
@@ -2519,13 +2513,44 @@
             }
         }
 
-        // 檢查跨瀏覽器同步狀態
-        function checkCrossBrowserSync() {
-            // 檢查是否已經提醒過用戶
-            const lastSyncReminder = localStorage.getItem('lastSyncReminder');
-            const today = new Date().toDateString();
+        // GitHub 配置管理函數
+        function saveGitHubConfig() {
+            const repo = document.getElementById('githubRepo').value.trim();
+            const token = document.getElementById('githubToken').value.trim();
+            const branch = document.getElementById('githubBranch').value.trim() || 'main';
+            const fileName = document.getElementById('githubFileName').value.trim() || 'data.json';
             
-            // 如果今天還沒有提醒過，且用戶有記錄，則顯示提醒
+            if (!repo || !token) {
+                alert('❌ 請填寫完整的 GitHub 倉庫路徑和 Token！');
+                return;
+            }
+            
+            // 驗證倉庫格式
+            if (!/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+$/.test(repo)) {
+                alert('❌ 倉庫路徑格式不正確！請使用格式：username/repository');
+                return;
+            }
+            
+            // 驗證Token格式
+            if (!token.startsWith('ghp_') && !token.startsWith('gho_') && !token.startsWith('ghu_') && !token.startsWith('ghs_') && !token.startsWith('ghr_')) {
+                alert('❌ Token 格式不正確！GitHub Token 應該以 ghp_、gho_、ghu_、ghs_ 或 ghr_ 開頭');
+                return;
+            }
+            
+            // 儲存配置到 localStorage
+            const config = {
+                repo: repo,
+                token: token,
+                branch: branch,
+                fileName: fileName,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('githubConfig', JSON.stringify(config));
+            updateGitHubStatus();
+            
+            alert('✅ GitHub 配置已儲存！\n\n倉庫: ' + repo + '\n分支: ' + branch + '\n檔案: ' + fileName);
+        }
             if (lastSyncReminder !== today && records.length > 0) {
                 // 延遲顯示提醒，讓頁面完全載入
                 setTimeout(() => {
@@ -2546,6 +2571,295 @@
                     // 記錄今天已經提醒過
                     localStorage.setItem('lastSyncReminder', today);
                 }, 3000);
+            }
+        }
+        
+        function loadGitHubConfig() {
+            const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+            
+            if (config.repo) document.getElementById('githubRepo').value = config.repo;
+            if (config.token) document.getElementById('githubToken').value = config.token;
+            if (config.branch) document.getElementById('githubBranch').value = config.branch;
+            if (config.fileName) document.getElementById('githubFileName').value = config.fileName;
+            
+            updateGitHubStatus();
+        }
+        
+        function getGitHubConfig() {
+            const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+            if (!config.repo || !config.token) {
+                alert('❌ 請先設定 GitHub 配置！');
+                return null;
+            }
+            return config;
+        }
+        
+        function updateGitHubStatus() {
+            const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+            const configStatus = document.getElementById('configStatus');
+            const repoStatus = document.getElementById('repoStatus');
+            
+            if (config.repo && config.token) {
+                configStatus.textContent = '已設定';
+                configStatus.style.color = '#28a745';
+                repoStatus.textContent = config.repo;
+                repoStatus.style.color = '#28a745';
+            } else {
+                configStatus.textContent = '未設定';
+                configStatus.style.color = '#ffc107';
+                repoStatus.textContent = '未連接';
+                repoStatus.style.color = '#dc3545';
+            }
+        }
+
+        async function testGitHubConnection() {
+            const config = getGitHubConfig();
+            if (!config) return;
+            
+            try {
+                const response = await fetch(
+                    `https://api.github.com/repos/${config.repo}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${config.token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    const repoData = await response.json();
+                    alert(`✅ GitHub 連接測試成功！\n\n倉庫: ${repoData.full_name}\n分支: ${config.branch}\n檔案: ${config.fileName}`);
+                    document.getElementById('lastOperation').textContent = `連接測試成功 - ${new Date().toLocaleString('zh-TW')}`;
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(`API 錯誤: ${errorData.message}`);
+                }
+                
+            } catch (error) {
+                console.error('GitHub 連接測試失敗:', error);
+                alert(`❌ GitHub 連接測試失敗！\n\n錯誤: ${error.message}`);
+                document.getElementById('lastOperation').textContent = `連接測試失敗 - ${new Date().toLocaleString('zh-TW')}`;
+            }
+        }
+
+        // GitHub 操作函數
+        async function uploadToGitHub() {
+            const config = getGitHubConfig();
+            if (!config) return;
+            
+            try {
+                const dataToSave = {
+                    records: records,
+                    metadata: {
+                        lastUpdated: new Date().toISOString(),
+                        version: "1.0",
+                        recordCount: records.length
+                    }
+                };
+                
+                const updateData = {
+                    message: `Update family records - ${new Date().toLocaleString('zh-TW')}`,
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(dataToSave, null, 2)))),
+                    branch: config.branch
+                };
+                
+                const response = await fetch(
+                    `https://api.github.com/repos/${config.repo}/contents/${config.fileName}`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${config.token}`,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/vnd.github.v3+json'
+                        },
+                        body: JSON.stringify(updateData)
+                    }
+                );
+                
+                if (response.ok) {
+                    alert(`✅ 資料上傳到 GitHub 成功！\n\n記錄數量: ${records.length} 筆`);
+                    document.getElementById('lastOperation').textContent = `上傳成功 - ${new Date().toLocaleString('zh-TW')}`;
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(`GitHub API 錯誤: ${errorData.message}`);
+                }
+                
+            } catch (error) {
+                console.error('GitHub 上傳失敗:', error);
+                alert(`❌ GitHub 上傳失敗！\n\n錯誤: ${error.message}`);
+            }
+        }
+        
+        async function downloadFromGitHub() {
+            const config = getGitHubConfig();
+            if (!config) return;
+            
+            try {
+                const response = await fetch(
+                    `https://api.github.com/repos/${config.repo}/contents/${config.fileName}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${config.token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    const fileData = await response.json();
+                    const content = JSON.parse(atob(fileData.content));
+                    
+                    if (content.records && Array.isArray(content.records)) {
+                        records = content.records;
+                        localStorage.setItem('familyRecords', JSON.stringify(records));
+                        
+                        updateStats();
+                        updateMemberStats();
+                        updateAllRecords();
+                        
+                        alert(`✅ 從 GitHub 下載成功！\n\n記錄數量: ${records.length} 筆`);
+                        document.getElementById('lastOperation').textContent = `下載成功 - ${new Date().toLocaleString('zh-TW')}`;
+                    } else {
+                        alert('❌ GitHub 檔案格式不正確！');
+                    }
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(`GitHub API 錯誤: ${errorData.message}`);
+                }
+                
+            } catch (error) {
+                console.error('從 GitHub 下載失敗:', error);
+                alert(`❌ 從 GitHub 下載失敗！\n\n錯誤: ${error.message}`);
+            }
+        }
+        
+        async function syncWithGitHub() {
+            if (confirm('同步操作將從 GitHub 下載最新資料並覆蓋本地資料。\n\n確定要繼續嗎？')) {
+                await downloadFromGitHub();
+            }
+        }
+        
+        async function createBackupIssue() {
+            const config = getGitHubConfig();
+            if (!config) return;
+            
+            try {
+                const now = new Date();
+                const issueTitle = `家庭收支記錄備份 - ${now.toLocaleString('zh-TW')}`;
+                const issueBody = `## 家庭收支記錄備份\n\n**備份時間:** ${now.toLocaleString('zh-TW')}\n**記錄數量:** ${records.length} 筆\n\n### 記錄摘要\n\`\`\`json\n${JSON.stringify(records, null, 2)}\n\`\`\`\n\n---\n*此 Issue 由家庭收支管理系統自動創建*`;
+                
+                const response = await fetch(
+                    `https://api.github.com/repos/${config.repo}/issues`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `token ${config.token}`,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/vnd.github.v3+json'
+                        },
+                        body: JSON.stringify({
+                            title: issueTitle,
+                            body: issueBody,
+                            labels: ['backup', 'family-records']
+                        })
+                    }
+                );
+                
+                if (response.ok) {
+                    const issueData = await response.json();
+                    alert(`✅ GitHub Issue 備份成功！\n\nIssue #${issueData.number}\n記錄數量: ${records.length} 筆`);
+                    document.getElementById('lastOperation').textContent = `創建備份 Issue - ${now.toLocaleString('zh-TW')}`;
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(`GitHub API 錯誤: ${errorData.message}`);
+                }
+                
+            } catch (error) {
+                console.error('GitHub Issue 創建失敗:', error);
+                alert(`❌ GitHub Issue 創建失敗！\n\n錯誤: ${error.message}`);
+            }
+        }
+        
+        async function listBackupIssues() {
+            const config = getGitHubConfig();
+            if (!config) return;
+            
+            try {
+                const response = await fetch(
+                    `https://api.github.com/repos/${config.repo}/issues?labels=backup,family-records&state=all`,
+                    {
+                        headers: {
+                            'Authorization': `token ${config.token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    const issues = await response.json();
+                    
+                    if (issues.length === 0) {
+                        alert('❌ 沒有找到備份 Issue！');
+                        return;
+                    }
+                    
+                    const backupList = issues.map(issue => 
+                        `#${issue.number} - ${issue.title} (${new Date(issue.created_at).toLocaleString('zh-TW')})`
+                    ).join('\n');
+                    
+                    alert(`找到 ${issues.length} 個備份 Issue：\n\n${backupList}`);
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(`GitHub API 錯誤: ${errorData.message}`);
+                }
+                
+            } catch (error) {
+                console.error('GitHub Issues 載入失敗:', error);
+                alert(`❌ GitHub Issues 載入失敗！\n\n錯誤: ${error.message}`);
+            }
+        }
+        
+        async function createBackupRelease() {
+            const config = getGitHubConfig();
+            if (!config) return;
+            
+            try {
+                const now = new Date();
+                const tagName = `v${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
+                const releaseName = `家庭收支記錄備份 - ${now.toLocaleString('zh-TW')}`;
+                
+                const response = await fetch(
+                    `https://api.github.com/repos/${config.repo}/releases`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `token ${config.token}`,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/vnd.github.v3+json'
+                        },
+                        body: JSON.stringify({
+                            tag_name: tagName,
+                            name: releaseName,
+                            body: `家庭收支記錄備份 - 記錄數量: ${records.length} 筆`,
+                            draft: false,
+                            prerelease: false
+                        })
+                    }
+                );
+                
+                if (response.ok) {
+                    const releaseData = await response.json();
+                    alert(`✅ GitHub Release 備份成功！\n\nRelease: ${releaseData.tag_name}\n記錄數量: ${records.length} 筆`);
+                    document.getElementById('lastOperation').textContent = `創建備份 Release - ${now.toLocaleString('zh-TW')}`;
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(`GitHub API 錯誤: ${errorData.message}`);
+                }
+                
+            } catch (error) {
+                console.error('GitHub Release 創建失敗:', error);
+                alert(`❌ GitHub Release 創建失敗！\n\n錯誤: ${error.message}`);
             }
         }
 
@@ -4170,7 +4484,128 @@
             }
         }
 
-        // 獲取 GitHub Token
+        // GitHub 配置管理
+        function saveGitHubConfig() {
+            const repo = document.getElementById('githubRepo').value.trim();
+            const token = document.getElementById('githubToken').value.trim();
+            const branch = document.getElementById('githubBranch').value.trim() || 'main';
+            const fileName = document.getElementById('githubFileName').value.trim() || 'data.json';
+            
+            if (!repo || !token) {
+                alert('❌ 請填寫完整的 GitHub 倉庫路徑和 Token！');
+                return;
+            }
+            
+            // 驗證倉庫格式
+            if (!/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+$/.test(repo)) {
+                alert('❌ 倉庫路徑格式不正確！請使用格式：username/repository');
+                return;
+            }
+            
+            // 驗證Token格式
+            if (!token.startsWith('ghp_') && !token.startsWith('gho_') && !token.startsWith('ghu_') && !token.startsWith('ghs_') && !token.startsWith('ghr_')) {
+                alert('❌ Token 格式不正確！GitHub Token 應該以 ghp_、gho_、ghu_、ghs_ 或 ghr_ 開頭');
+                return;
+            }
+            
+            // 儲存配置到 localStorage
+            const config = {
+                repo: repo,
+                token: token,
+                branch: branch,
+                fileName: fileName,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('githubConfig', JSON.stringify(config));
+            updateGitHubStatus();
+            
+            alert('✅ GitHub 配置已儲存！\n\n倉庫: ' + repo + '\n分支: ' + branch + '\n檔案: ' + fileName);
+        }
+        
+        function loadGitHubConfig() {
+            const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+            
+            if (config.repo) document.getElementById('githubRepo').value = config.repo;
+            if (config.token) document.getElementById('githubToken').value = config.token;
+            if (config.branch) document.getElementById('githubBranch').value = config.branch;
+            if (config.fileName) document.getElementById('githubFileName').value = config.fileName;
+            
+            updateGitHubStatus();
+            
+            if (Object.keys(config).length > 0) {
+                alert('✅ GitHub 配置已載入！');
+            } else {
+                alert('❌ 沒有找到已儲存的配置！');
+            }
+        }
+        
+        function getGitHubConfig() {
+            const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+            if (!config.repo || !config.token) {
+                alert('❌ 請先設定 GitHub 配置！\n\n點擊「📥 載入設定」或重新填寫配置。');
+                return null;
+            }
+            return config;
+        }
+        
+        function updateGitHubStatus() {
+            const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+            const configStatus = document.getElementById('configStatus');
+            const repoStatus = document.getElementById('repoStatus');
+            
+            if (config.repo && config.token) {
+                configStatus.textContent = '已設定';
+                configStatus.style.color = '#28a745';
+                repoStatus.textContent = config.repo;
+                repoStatus.style.color = '#28a745';
+            } else {
+                configStatus.textContent = '未設定';
+                configStatus.style.color = '#ffc107';
+                repoStatus.textContent = '未連接';
+                repoStatus.style.color = '#dc3545';
+            }
+        }
+
+        // 測試 GitHub 連接
+        async function testGitHubConnection() {
+            const config = getGitHubConfig();
+            if (!config) return;
+            
+            try {
+                const response = await fetch(
+                    `https://api.github.com/repos/${config.repo}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${config.token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    const repoData = await response.json();
+                    const permissions = Object.keys(repoData.permissions).filter(p => repoData.permissions[p]);
+                    
+                    alert(`✅ GitHub 連接測試成功！\n\n倉庫: ${repoData.full_name}\n權限: ${permissions.join(', ')}\n分支: ${config.branch}\n檔案: ${config.fileName}`);
+                    
+                    // 更新狀態
+                    document.getElementById('lastOperation').textContent = `連接測試成功 - ${new Date().toLocaleString('zh-TW')}`;
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(`API 錯誤: ${errorData.message}`);
+                }
+                
+            } catch (error) {
+                console.error('GitHub 連接測試失敗:', error);
+                alert(`❌ GitHub 連接測試失敗！\n\n錯誤: ${error.message}\n\n請檢查倉庫路徑和 Token 是否正確。`);
+                
+                // 更新狀態
+                document.getElementById('lastOperation').textContent = `連接測試失敗 - ${new Date().toLocaleString('zh-TW')}`;
+            }
+        }
+
+        // 獲取 GitHub Token (保持向後兼容)
         function getGitHubToken() {
             const token = localStorage.getItem('githubToken');
             if (!token) {
