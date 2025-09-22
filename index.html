@@ -3654,7 +3654,19 @@
                 return;
             }
 
+            console.log('🔄 開始儲存Token...');
+            
             try {
+                // 先測試後端連接
+                console.log('🔍 測試後端連接...');
+                const healthResponse = await fetch('http://localhost:3001/api/health');
+                if (!healthResponse.ok) {
+                    throw new Error(`後端服務不可用: ${healthResponse.status}`);
+                }
+                console.log('✅ 後端連接正常');
+
+                // 儲存Token
+                console.log('💾 儲存Token到後端...');
                 const response = await fetch('http://localhost:3001/api/token/save', {
                     method: 'POST',
                     headers: {
@@ -3663,7 +3675,14 @@
                     body: JSON.stringify({ token: token })
                 });
                 
+                console.log('📡 收到回應:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP錯誤: ${response.status} ${response.statusText}`);
+                }
+                
                 const data = await response.json();
+                console.log('📊 回應數據:', data);
                 
                 if (data.success) {
                     alert(`✅ ${data.message}`);
@@ -3674,8 +3693,20 @@
                 }
                 
             } catch (error) {
-                console.error('儲存Token失敗:', error);
-                alert('儲存Token失敗: ' + error.message);
+                console.error('❌ 儲存Token失敗:', error);
+                
+                // 詳細的錯誤診斷
+                let errorMessage = `儲存Token失敗: ${error.message}`;
+                
+                if (error.message.includes('Load failed') || error.message.includes('Failed to fetch')) {
+                    errorMessage += '\n\n🔍 診斷建議:\n';
+                    errorMessage += '1. 檢查後端服務是否運行 (http://localhost:3001)\n';
+                    errorMessage += '2. 檢查瀏覽器是否阻止了跨域請求\n';
+                    errorMessage += '3. 嘗試刷新頁面後重試\n';
+                    errorMessage += '4. 檢查防火牆設置';
+                }
+                
+                alert(errorMessage);
             }
         }
 
