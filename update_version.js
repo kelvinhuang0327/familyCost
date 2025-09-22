@@ -15,7 +15,7 @@ function getCurrentTimestamp() {
     const minute = String(now.getMinutes()).padStart(2, '0');
     const second = String(now.getSeconds()).padStart(2, '0');
     
-    return `${year}-${month}-${day}-${hour}-${minute}-${second}`;
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
 // 獲取Git commit hash
