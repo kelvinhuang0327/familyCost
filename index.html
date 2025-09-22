@@ -3781,6 +3781,10 @@
             console.log('標題:', title);
             console.log('記錄內容:', recordsToShow);
             
+            // 檢查 DOM 元素是否存在
+            const recentRecordsElement = document.getElementById('recentRecords');
+            console.log('recentRecords 元素:', recentRecordsElement);
+            
             if (recordsToShow.length === 0) {
                 console.log('沒有記錄要顯示，顯示空狀態');
                 document.getElementById('recentRecords').innerHTML = `
