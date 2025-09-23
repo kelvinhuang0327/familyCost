@@ -1273,7 +1273,7 @@
         async function syncFromServer() {
             try {
                 console.log('🔄 開始檢查服務器數據...');
-                const response = await fetch('ENV_CONFIG.getApiBase()/restore');
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/restore');
                 if (response.ok) {
                     const result = await response.json();
                     console.log('📡 服務器響應:', result);
@@ -1473,7 +1473,7 @@
                 console.log('開始自動備份到GitHub...');
                 
                 // 直接調用後端API備份
-                const response = await fetch('ENV_CONFIG.getApiBase()/backup', {
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/backup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1511,7 +1511,7 @@
                 console.log('檢查GitHub上的最新數據...');
                 
                 // 直接調用後端API檢查
-                const response = await fetch('ENV_CONFIG.getApiBase()/restore');
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/restore');
                 
                 if (response.ok) {
                     const result = await response.json();
@@ -1811,7 +1811,7 @@
             // 檢查是否有GitHub更新，但不要覆蓋已載入的數據
             console.log('🔍 檢查GitHub更新...');
             try {
-                const response = await fetch('ENV_CONFIG.getApiBase()/restore');
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/restore');
                 if (response.ok) {
                     const result = await response.json();
                     if (result.hasNewData) {
@@ -3708,7 +3708,7 @@
         // GitHub Token 管理功能
         async function checkTokenStatus() {
             try {
-                const response = await fetch('ENV_CONFIG.getApiBase()/token/status');
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/token/status');
                 const data = await response.json();
                 
                 const tokenStatus = document.getElementById('tokenStatus');
@@ -3764,7 +3764,7 @@
             try {
                 // 先測試後端連接
                 console.log('🔍 測試後端連接...');
-                const healthResponse = await fetch('ENV_CONFIG.getApiBase()/health');
+                const healthResponse = await fetch(ENV_CONFIG.getApiBase() + '/health');
                 if (!healthResponse.ok) {
                     throw new Error(`後端服務不可用: ${healthResponse.status}`);
                 }
@@ -3772,7 +3772,7 @@
 
                 // 儲存Token
                 console.log('💾 儲存Token到後端...');
-                const response = await fetch('ENV_CONFIG.getApiBase()/token/save', {
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/token/save', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -3832,7 +3832,7 @@
             }
             
             try {
-                const response = await fetch('ENV_CONFIG.getApiBase()/token', {
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/token', {
                     method: 'DELETE'
                 });
                 
