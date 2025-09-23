@@ -1,51 +1,30 @@
 {
-  "name": "family-cost-platform",
+  "name": "family-cost",
   "version": "1.0.0",
-  "description": "A simple family expense management platform",
+  "description": "家庭收支管理平台",
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=production node server.js",
-    "start:local": "NODE_ENV=local node server.js",
-    "start:sit": "NODE_ENV=sit node server.js",
     "dev": "NODE_ENV=local node server.js",
-    "dev:local": "NODE_ENV=local node server.js",
-    "dev:sit": "NODE_ENV=sit node server.js",
-    "serve": "npx serve .",
-    "server": "node server.js",
-    "backup": "node server.js",
-    "deploy": "git push origin main",
-    "deploy:local": "git push origin main",
-    "deploy:sit": "git push origin sit",
-    "test-api": "curl http://localhost:3001/api/health",
-    "test-api:sit": "curl https://family-cost-sit.vercel.app/api/health",
+    "build": "echo 'No build step required'",
+    "vercel-build": "echo 'Vercel build completed'",
     "version:update": "node update_version.js",
-    "version:show": "cat version.json",
-    "build": "echo 'No build step required for Vercel'",
-    "vercel-build": "echo 'Vercel build completed'"
+    "version:show": "cat version.json"
   },
-  "keywords": [
-    "family",
-    "expense",
-    "management",
-    "finance",
-    "budget"
-  ],
-  "author": "Kelvin Huang",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kelvinhuang0327/familyCost.git"
-  },
-  "homepage": "https://kelvinhuang0327.github.io/familyCost/",
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.21.2",
-    "node-fetch": "^3.3.2"
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "devDependencies": {
-    "serve": "^14.2.1"
-  }
+  "keywords": [
+    "family",
+    "finance",
+    "management",
+    "nodejs",
+    "express"
+  ],
+  "author": "kelvinhuang0327",
+  "license": "MIT"
 }
