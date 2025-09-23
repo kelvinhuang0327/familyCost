@@ -1647,7 +1647,7 @@
             
             try {
                 const timestamp = new Date().getTime();
-                const url = `assets/data/data.json?t=${timestamp}`;
+                const url = `data/data.json?t=${timestamp}`;
                 console.log(`使用強制刷新URL: ${url}`);
                 
                 const response = await fetch(url);
@@ -1745,7 +1745,7 @@
         // 載入版本信息
         async function loadVersionInfo() {
             try {
-                const response = await fetch('assets/data/version.json');
+                const response = await fetch('data/version.json');
                 const versionData = await response.json();
                 
                 const versionElement = document.getElementById('versionNumber');
@@ -1871,7 +1871,7 @@
                 // 方法1: 使用fetch (帶時間戳強制刷新)
                 try {
                     const timestamp = new Date().getTime();
-                    const url = `assets/data/data.json?t=${timestamp}`;
+                    const url = `data/data.json?t=${timestamp}`;
                     console.log(`使用URL: ${url}`);
                     
                     const response = await fetch(url);
@@ -1887,7 +1887,7 @@
                     // 方法2: 使用XMLHttpRequest (帶時間戳強制刷新)
                     try {
                         const timestamp = new Date().getTime();
-                        const url = `assets/data/data.json?t=${timestamp}`;
+                        const url = `data/data.json?t=${timestamp}`;
                         console.log(`使用XHR URL: ${url}`);
                         
                         data = await new Promise((resolve, reject) => {
