@@ -27,9 +27,20 @@ console.log(`🔗 後端URL: ${config.backendUrl}`);
 // 中間件
 app.use(cors());
 app.use(express.json());
-app.use(express.static('src/frontend'));
+app.use(express.static(path.join(__dirname, '../frontend')));
+app.use('/assets', express.static(path.join(__dirname, '../../assets')));
 
 const execAsync = util.promisify(exec);
+
+// 錯誤處理中間件
+app.use((err, req, res, next) => {
+    console.error('❌ 服務器錯誤:', err);
+    res.status(500).json({
+        success: false,
+        message: '服務器內部錯誤',
+        error: process.env.NODE_ENV === 'development' ? err.message : 'Internal Server Error'
+    });
+});
 
 // 健康檢查
 app.get('/api/health', (req, res) => {
@@ -453,6 +464,8 @@ app.listen(PORT, () => {
     console.log('🚀 家庭收支備份服務已啟動');
     console.log(`📡 服務地址: http://localhost:${PORT}`);
     console.log(`📁 工作目錄: ${__dirname}`);
+    console.log(`📁 前端目錄: ${path.join(__dirname, '../frontend')}`);
+    console.log(`📁 資源目錄: ${path.join(__dirname, '../../assets')}`);
     console.log('📋 可用API:');
     console.log('   GET  /api/health     - 健康檢查');
     console.log('   POST /api/backup     - 備份到GitHub');
