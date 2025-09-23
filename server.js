@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+
+// 家庭收支管理平台 - 主服務器文件
 const express = require('express');
 const cors = require('cors');
 const { exec } = require('child_process');
@@ -7,8 +10,8 @@ const path = require('path');
 
 // 添加錯誤處理
 try {
-    const TokenManager = require('./backend/token_manager');
-    const { getConfig, getEnvironment } = require('./config/config');
+    const TokenManager = require('./app/backend/token_manager');
+    const { getConfig, getEnvironment } = require('./app/config/config');
     
     console.log('✅ 所有模組載入成功');
 } catch (error) {
@@ -16,33 +19,10 @@ try {
     process.exit(1);
 }
 
-const TokenManager = require('./backend/token_manager');
-const { getConfig, getEnvironment } = require('./config/config');
+const TokenManager = require('./app/backend/token_manager');
+const { getConfig, getEnvironment } = require('./app/config/config');
 
 const app = express();
-
-// 啟動前的檢查
-console.log('🔍 啟動前檢查...');
-console.log('📁 當前工作目錄:', process.cwd());
-console.log('📁 __dirname:', __dirname);
-console.log('📁 前端目錄:', path.join(__dirname, 'frontend'));
-console.log('📁 資源目錄:', path.join(__dirname, 'assets'));
-
-// 檢查關鍵文件是否存在
-const frontendPath = path.join(__dirname, 'frontend/index.html');
-const assetsPath = path.join(__dirname, 'assets/data/data.json');
-
-fs.access(frontendPath).then(() => {
-    console.log('✅ 前端文件存在:', frontendPath);
-}).catch(() => {
-    console.error('❌ 前端文件不存在:', frontendPath);
-});
-
-fs.access(assetsPath).then(() => {
-    console.log('✅ 數據文件存在:', assetsPath);
-}).catch(() => {
-    console.error('❌ 數據文件不存在:', assetsPath);
-});
 
 // 獲取環境配置
 const config = getConfig();
@@ -62,8 +42,8 @@ console.log(`🔗 後端URL: ${config.backendUrl}`);
 // 中間件
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'frontend')));
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use(express.static(path.join(__dirname, 'app/frontend')));
+app.use('/data', express.static(path.join(__dirname, 'data')));
 
 const execAsync = util.promisify(exec);
 
@@ -102,7 +82,7 @@ app.post('/api/backup', async (req, res) => {
         console.log(`📦 收到備份請求: ${count}筆記錄`);
         
         // 更新data.json
-        const dataJsonPath = path.join(__dirname, 'assets/data/data.json');
+        const dataJsonPath = path.join(__dirname, 'data/data.json');
         const data = {
             records: records,
             metadata: {
@@ -130,7 +110,7 @@ app.post('/api/backup', async (req, res) => {
             }
             
             // 添加變更
-            await execAsync('git add assets/data/data.json');
+            await execAsync('git add data/data.json');
             console.log('📁 已添加 data.json 到暫存區');
             
             // 提交變更
@@ -164,12 +144,10 @@ app.post('/api/backup', async (req, res) => {
             });
             
         } catch (gitError) {
-            console.warn('⚠️ Git操作失敗:', gitError.message);
-            
-            res.json({
+            console.error('❌ Git操作失敗:', gitError);
+            res.status(500).json({
                 success: false,
-                message: `本地備份成功，但GitHub同步失敗: ${gitError.message}`,
-                timestamp: timestamp,
+                message: `Git操作失敗: ${gitError.message}`,
                 error: gitError.message
             });
         }
@@ -258,10 +236,10 @@ app.get('/api/git-status', async (req, res) => {
             success: true,
             status: status.trim(),
             recentCommits: log.trim().split('\n'),
-            hasChanges: status.trim().length > 0
+            timestamp: new Date().toISOString()
         });
-        
     } catch (error) {
+        console.error('❌ 獲取Git狀態失敗:', error);
         res.status(500).json({
             success: false,
             message: `獲取Git狀態失敗: ${error.message}`,
@@ -270,141 +248,14 @@ app.get('/api/git-status', async (req, res) => {
     }
 });
 
-// Token管理API
-app.post('/api/token/save', async (req, res) => {
-    try {
-        const { token } = req.body;
-        
-        if (!token) {
-            return res.status(400).json({
-                success: false,
-                message: 'Token不能為空'
-            });
-        }
-
-        // 基本格式驗證
-        const cleanToken = token.trim();
-        
-        // 檢查token是否只包含ASCII字符
-        if (!/^[\x00-\x7F]+$/.test(cleanToken)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Token包含非ASCII字符，請檢查輸入'
-            });
-        }
-        
-        // 檢查token長度
-        if (cleanToken.length < 20 || cleanToken.length > 100) {
-            return res.status(400).json({
-                success: false,
-                message: 'Token長度不正確，GitHub Token通常為40個字符'
-            });
-        }
-
-        console.log('🔍 開始驗證Token...');
-        
-        // 驗證token有效性
-        const validation = await tokenManager.validateToken(cleanToken);
-        if (!validation.valid) {
-            console.log('❌ Token驗證失敗:', validation.error);
-            return res.status(400).json({
-                success: false,
-                message: `Token無效: ${validation.error}`
-            });
-        }
-
-        console.log('✅ Token驗證成功，開始儲存...');
-
-        // 儲存token
-        tokenManager.saveToken(cleanToken);
-        
-        // 設置Git遠程URL
-        tokenManager.setGitRemote(cleanToken);
-
-        res.json({
-            success: true,
-            message: `Token已儲存，用戶: ${validation.user}`,
-            user: validation.user
-        });
-
-    } catch (error) {
-        console.error('❌ Token儲存過程出錯:', error);
-        res.status(500).json({
-            success: false,
-            message: `Token儲存失敗: ${error.message}`,
-            error: error.message
-        });
-    }
-});
-
-app.get('/api/token/status', async (req, res) => {
-    try {
-        const hasToken = tokenManager.hasToken();
-        let tokenInfo = null;
-
-        if (hasToken) {
-            const token = tokenManager.loadToken();
-            if (token) {
-                const validation = await tokenManager.validateToken(token);
-                tokenInfo = {
-                    exists: true,
-                    valid: validation.valid,
-                    user: validation.user || null,
-                    error: validation.error || null
-                };
-            }
-        }
-
-        res.json({
-            success: true,
-            hasToken: hasToken,
-            tokenInfo: tokenInfo
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: `Token狀態檢查失敗: ${error.message}`,
-            error: error.message
-        });
-    }
-});
-
-app.delete('/api/token', async (req, res) => {
-    try {
-        tokenManager.deleteToken();
-        
-        // 重置Git遠程URL
-        const { execSync } = require('child_process');
-        execSync('git remote set-url origin https://github.com/kelvinhuang0327/familyCost.git', { stdio: 'pipe' });
-
-        res.json({
-            success: true,
-            message: 'Token已刪除'
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: `Token刪除失敗: ${error.message}`,
-            error: error.message
-        });
-    }
-});
-
-// 手動同步
+// 手動同步API
 app.post('/api/sync', async (req, res) => {
     try {
-        console.log('🔄 手動同步到GitHub...');
+        console.log('🔄 開始手動同步...');
         
-        // 檢查是否有變更
-        const { stdout: status } = await execAsync('git status --porcelain');
-        if (!status.trim()) {
-            return res.json({
-                success: true,
-                message: '沒有變更需要同步'
-            });
-        }
+        // 拉取最新變更
+        await execAsync('git pull origin main');
+        console.log('📥 已拉取最新變更');
         
         // 添加所有變更
         await execAsync('git add .');
@@ -438,6 +289,7 @@ app.post('/api/sync', async (req, res) => {
         });
         
     } catch (error) {
+        console.error('❌ 手動同步失敗:', error);
         res.status(500).json({
             success: false,
             message: `手動同步失敗: ${error.message}`,
@@ -446,14 +298,57 @@ app.post('/api/sync', async (req, res) => {
     }
 });
 
-// 錯誤處理中間件
-app.use((error, req, res, next) => {
-    console.error('❌ 服務器錯誤:', error);
-    res.status(500).json({
-        success: false,
-        message: '服務器內部錯誤',
-        error: error.message
-    });
+// Token管理API
+app.post('/api/token/save', async (req, res) => {
+    try {
+        const { token } = req.body;
+        if (!token) {
+            return res.status(400).json({ success: false, message: 'Token不能為空' });
+        }
+
+        const cleanToken = token.trim();
+        if (!/^[\x00-\x7F]+$/.test(cleanToken)) {
+            return res.status(400).json({ success: false, message: 'Token包含非ASCII字符，請檢查輸入' });
+        }
+        if (cleanToken.length < 20 || cleanToken.length > 100) {
+            return res.status(400).json({ success: false, message: 'Token長度不正確，GitHub Token通常為40個字符' });
+        }
+
+        console.log('🔍 開始驗證Token...');
+        const validation = await tokenManager.validateToken(cleanToken);
+        if (!validation.valid) {
+            return res.status(400).json({ success: false, message: `Token無效: ${validation.error}` });
+        }
+
+        console.log('✅ Token驗證成功，開始儲存...');
+        tokenManager.saveToken(cleanToken);
+        tokenManager.setGitRemote(cleanToken);
+        res.json({ success: true, message: `Token已儲存，用戶: ${validation.user}`, user: validation.user });
+    } catch (error) {
+        console.error('❌ Token儲存失敗:', error);
+        res.status(500).json({ success: false, message: `Token儲存失敗: ${error.message}`, error: error.message });
+    }
+});
+
+app.get('/api/token/status', (req, res) => {
+    try {
+        const hasToken = tokenManager.hasToken();
+        const tokenInfo = hasToken ? tokenManager.getTokenInfo() : null;
+        res.json({ success: true, hasToken, tokenInfo });
+    } catch (error) {
+        console.error('❌ Token狀態檢查失敗:', error);
+        res.status(500).json({ success: false, message: `Token狀態檢查失敗: ${error.message}`, error: error.message });
+    }
+});
+
+app.delete('/api/token', (req, res) => {
+    try {
+        tokenManager.deleteToken();
+        res.json({ success: true, message: 'Token已刪除' });
+    } catch (error) {
+        console.error('❌ Token刪除失敗:', error);
+        res.status(500).json({ success: false, message: `Token刪除失敗: ${error.message}`, error: error.message });
+    }
 });
 
 // 404處理 - 僅處理API請求
@@ -473,7 +368,7 @@ app.use('/api/*', (req, res) => {
 
 // 對於非API請求，返回index.html（SPA路由）
 app.get('*', (req, res) => {
-    const indexPath = path.join(__dirname, 'frontend/index.html');
+    const indexPath = path.join(__dirname, 'app/frontend/index.html');
     console.log('🔍 嘗試發送 index.html:', indexPath);
     console.log('🔍 當前目錄:', __dirname);
     console.log('🔍 請求路徑:', req.path);
@@ -499,8 +394,8 @@ app.listen(PORT, () => {
     console.log('🚀 家庭收支備份服務已啟動');
     console.log(`📡 服務地址: http://localhost:${PORT}`);
     console.log(`📁 工作目錄: ${__dirname}`);
-    console.log(`📁 前端目錄: ${path.join(__dirname, 'frontend')}`);
-    console.log(`📁 資源目錄: ${path.join(__dirname, 'assets')}`);
+    console.log(`📁 前端目錄: ${path.join(__dirname, 'app/frontend')}`);
+    console.log(`📁 數據目錄: ${path.join(__dirname, 'data')}`);
     console.log('📋 可用API:');
     console.log('   GET  /api/health     - 健康檢查');
     console.log('   POST /api/backup     - 備份到GitHub');

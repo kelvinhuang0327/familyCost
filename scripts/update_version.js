@@ -42,7 +42,7 @@ function updateVersion() {
         description: "家庭收支管理平台版本信息"
     };
     
-    const versionFile = path.join(__dirname, '../../assets/data/version.json');
+    const versionFile = path.join(__dirname, '../data/version.json');
     
     try {
         fs.writeFileSync(versionFile, JSON.stringify(versionInfo, null, 2));
