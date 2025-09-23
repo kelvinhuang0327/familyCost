@@ -5,7 +5,7 @@ const util = require('util');
 const fs = require('fs').promises;
 const path = require('path');
 const TokenManager = require('./token_manager');
-const { getConfig, getEnvironment } = require('./config');
+const { getConfig, getEnvironment } = require('../config/config');
 
 const app = express();
 
@@ -27,7 +27,7 @@ console.log(`🔗 後端URL: ${config.backendUrl}`);
 // 中間件
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.'));
+app.use(express.static('src/frontend'));
 
 const execAsync = util.promisify(exec);
 
@@ -392,7 +392,7 @@ app.use('/api/*', (req, res) => {
 
 // 對於非API請求，返回index.html（SPA路由）
 app.get('*', (req, res) => {
-    const indexPath = path.join(__dirname, 'index.html');
+    const indexPath = path.join(__dirname, '../frontend/index.html');
     console.log('🔍 嘗試發送 index.html:', indexPath);
     console.log('🔍 當前目錄:', __dirname);
     console.log('🔍 請求路徑:', req.path);
