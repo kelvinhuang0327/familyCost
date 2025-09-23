@@ -3,6 +3,19 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
+// 動態導入 fetch (Node.js 18+ 或 node-fetch)
+let fetch;
+try {
+    fetch = globalThis.fetch;
+} catch (error) {
+    try {
+        fetch = require('node-fetch');
+    } catch (fetchError) {
+        console.error('❌ 無法載入 fetch API');
+        throw fetchError;
+    }
+}
+
 class TokenManager {
     constructor() {
         this.tokenFile = path.join(__dirname, '.github_token');
@@ -183,6 +196,10 @@ class TokenManager {
                 return { valid: false, error: 'Token長度不正確' };
             }
             
+            console.log('🔍 開始驗證 Token...');
+            console.log('🔍 Token 長度:', cleanToken.length);
+            console.log('🔍 Token 前綴:', cleanToken.substring(0, 4));
+            
             const response = await fetch('https://api.github.com/user', {
                 headers: {
                     'Authorization': `Bearer ${cleanToken}`,
@@ -191,12 +208,17 @@ class TokenManager {
                 }
             });
 
+            console.log('🔍 GitHub API 響應狀態:', response.status);
+            console.log('🔍 GitHub API 響應狀態文本:', response.statusText);
+
             if (response.ok) {
                 const userData = await response.json();
                 console.log(`✅ Token有效，用戶: ${userData.login}`);
                 return { valid: true, user: userData.login };
             } else {
+                const errorText = await response.text();
                 console.log(`❌ Token無效: ${response.status} ${response.statusText}`);
+                console.log(`❌ 錯誤詳情: ${errorText}`);
                 return { valid: false, error: `${response.status} ${response.statusText}` };
             }
         } catch (error) {
