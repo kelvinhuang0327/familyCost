@@ -4,10 +4,45 @@ const { exec } = require('child_process');
 const util = require('util');
 const fs = require('fs').promises;
 const path = require('path');
+
+// 添加錯誤處理
+try {
+    const TokenManager = require('./token_manager');
+    const { getConfig, getEnvironment } = require('../config/config');
+    
+    console.log('✅ 所有模組載入成功');
+} catch (error) {
+    console.error('❌ 模組載入失敗:', error);
+    process.exit(1);
+}
+
 const TokenManager = require('./token_manager');
 const { getConfig, getEnvironment } = require('../config/config');
 
 const app = express();
+
+// 啟動前的檢查
+console.log('🔍 啟動前檢查...');
+console.log('📁 當前工作目錄:', process.cwd());
+console.log('📁 __dirname:', __dirname);
+console.log('📁 前端目錄:', path.join(__dirname, '../frontend'));
+console.log('📁 資源目錄:', path.join(__dirname, '../../assets'));
+
+// 檢查關鍵文件是否存在
+const frontendPath = path.join(__dirname, '../frontend/index.html');
+const assetsPath = path.join(__dirname, '../../assets/data/data.json');
+
+fs.access(frontendPath).then(() => {
+    console.log('✅ 前端文件存在:', frontendPath);
+}).catch(() => {
+    console.error('❌ 前端文件不存在:', frontendPath);
+});
+
+fs.access(assetsPath).then(() => {
+    console.log('✅ 數據文件存在:', assetsPath);
+}).catch(() => {
+    console.error('❌ 數據文件不存在:', assetsPath);
+});
 
 // 獲取環境配置
 const config = getConfig();
