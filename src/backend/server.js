@@ -56,7 +56,7 @@ app.post('/api/backup', async (req, res) => {
         console.log(`📦 收到備份請求: ${count}筆記錄`);
         
         // 更新data.json
-        const dataJsonPath = path.join(__dirname, 'data.json');
+        const dataJsonPath = path.join(__dirname, '../../assets/data/data.json');
         const data = {
             records: records,
             metadata: {
@@ -84,7 +84,7 @@ app.post('/api/backup', async (req, res) => {
             }
             
             // 添加變更
-            await execAsync('git add data.json');
+            await execAsync('git add assets/data/data.json');
             console.log('📁 已添加 data.json 到暫存區');
             
             // 提交變更
@@ -97,9 +97,17 @@ app.post('/api/backup', async (req, res) => {
                 await execAsync('git push origin main');
                 console.log('🚀 已推送到GitHub');
             } catch (pushError) {
-                console.log('⚠️ Git推送失敗:', pushError.message);
-                // 如果推送失敗，仍然返回成功，因為本地備份已完成
-                console.log('📝 本地備份已完成，但GitHub推送失敗');
+                console.log('⚠️ Git推送失敗，嘗試重新配置遠端:', pushError.message);
+                // 重新配置遠端
+                await execAsync('git remote remove origin');
+                await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
+                try {
+                    await execAsync('git push origin main');
+                    console.log('🚀 重新配置後推送成功');
+                } catch (retryError) {
+                    console.log('❌ 重新配置後推送仍然失敗:', retryError.message);
+                    console.log('📝 本地備份已完成，但GitHub推送失敗');
+                }
             }
             
             res.json({
@@ -136,8 +144,17 @@ app.get('/api/restore', async (req, res) => {
         console.log('🔍 檢查GitHub上的最新數據...');
         
         // 獲取最新變更
-        await execAsync('git fetch origin');
-        console.log('📥 已獲取遠端更新');
+        try {
+            await execAsync('git fetch origin');
+            console.log('📥 已獲取遠端更新');
+        } catch (fetchError) {
+            console.log('⚠️ Git fetch 失敗，嘗試重新配置遠端:', fetchError.message);
+            // 重新配置遠端
+            await execAsync('git remote remove origin');
+            await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
+            await execAsync('git fetch origin');
+            console.log('✅ 已重新配置並獲取遠端更新');
+        }
         
         // 檢查是否有新的提交
         const { stdout } = await execAsync('git log HEAD..origin/main --oneline');
@@ -147,8 +164,17 @@ app.get('/api/restore', async (req, res) => {
             console.log('新提交:', stdout.trim());
             
             // 拉取最新變更
-            await execAsync('git pull origin main');
-            console.log('✅ 已同步最新數據');
+            try {
+                await execAsync('git pull origin main');
+                console.log('✅ 已同步最新數據');
+            } catch (pullError) {
+                console.log('⚠️ Git pull 失敗，嘗試重新配置遠端:', pullError.message);
+                // 重新配置遠端
+                await execAsync('git remote remove origin');
+                await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
+                await execAsync('git pull origin main');
+                console.log('✅ 重新配置後同步成功');
+            }
             
             res.json({
                 success: true,
@@ -346,8 +372,17 @@ app.post('/api/sync', async (req, res) => {
             await execAsync('git push origin main');
             console.log('🚀 手動同步已推送到GitHub');
         } catch (pushError) {
-            console.log('⚠️ Git推送失敗:', pushError.message);
-            console.log('📝 本地同步已完成，但GitHub推送失敗');
+            console.log('⚠️ Git推送失敗，嘗試重新配置遠端:', pushError.message);
+            // 重新配置遠端
+            await execAsync('git remote remove origin');
+            await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
+            try {
+                await execAsync('git push origin main');
+                console.log('🚀 重新配置後推送成功');
+            } catch (retryError) {
+                console.log('❌ 重新配置後推送仍然失敗:', retryError.message);
+                console.log('📝 本地同步已完成，但GitHub推送失敗');
+            }
         }
         
         res.json({
