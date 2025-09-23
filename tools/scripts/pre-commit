@@ -4,14 +4,14 @@
 echo "🔄 Pre-commit: 更新版本號..."
 
 # 運行版本更新腳本
-node update_version.js
+node tools/scripts/update_version.js
 
 # 檢查版本更新是否成功
 if [ $? -eq 0 ]; then
     echo "✅ 版本號更新成功"
     
     # 將版本文件添加到commit中
-    git add version.json
+    git add assets/data/version.json
     
     echo "📝 版本文件已添加到commit"
 else

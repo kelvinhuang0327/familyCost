@@ -2,29 +2,23 @@
   "name": "family-cost",
   "version": "1.0.0",
   "description": "家庭收支管理平台",
-  "main": "server.js",
+  "main": "src/backend/server.js",
   "scripts": {
-    "start": "NODE_ENV=production node server.js",
-    "dev": "NODE_ENV=local node server.js",
+    "start": "NODE_ENV=production node src/backend/server.js",
+    "dev": "NODE_ENV=development node src/backend/server.js",
+    "local": "NODE_ENV=local node src/backend/server.js",
+    "sit": "NODE_ENV=sit node src/backend/server.js",
+    "version:update": "node tools/scripts/update_version.js",
+    "version:show": "cat assets/data/version.json",
     "build": "echo 'No build step required'",
-    "vercel-build": "echo 'Vercel build completed'",
-    "version:update": "node update_version.js",
-    "version:show": "cat version.json"
+    "vercel-build": "echo 'Vercel build completed'"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "node-fetch": "^3.3.2"
   },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "keywords": [
-    "family",
-    "finance",
-    "management",
-    "nodejs",
-    "express"
-  ],
-  "author": "kelvinhuang0327",
+  "keywords": ["family", "cost", "management", "finance"],
+  "author": "Kelvin Huang",
   "license": "MIT"
 }
