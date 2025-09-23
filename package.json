@@ -2,7 +2,7 @@
   "name": "family-cost",
   "version": "1.0.0",
   "description": "家庭收支管理平台",
-  "main": "src/backend/server.js",
+  "main": "src/server.js",
   "scripts": {
     "start": "NODE_ENV=production node src/backend/server.js",
     "dev": "NODE_ENV=development node src/backend/server.js",
