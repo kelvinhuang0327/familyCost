@@ -1685,6 +1685,8 @@
                     return 'local';
                 } else if (hostname.includes('vercel.app')) {
                     return 'vercel'; // Vercel 環境
+                } else if (hostname.includes('onrender.com')) {
+                    return 'render'; // Render 環境
                 } else if (hostname.includes('github.io')) {
                     return 'sit'; // GitHub Pages 環境
                 }
@@ -1696,6 +1698,8 @@
                 const env = this.getEnvironment();
                 if (env === 'vercel') {
                     return window.location.origin + '/api'; // Vercel 支持後端
+                } else if (env === 'render') {
+                    return window.location.origin + '/api'; // Render 支持後端
                 } else if (env === 'sit') {
                     return window.location.origin + '/api'; // GitHub Pages 不支持後端
                 } else {
@@ -1708,6 +1712,8 @@
                 const env = this.getEnvironment();
                 if (env === 'vercel') {
                     return window.location.origin; // Vercel 支持後端
+                } else if (env === 'render') {
+                    return window.location.origin; // Render 支持後端
                 } else if (env === 'sit') {
                     return window.location.origin; // GitHub Pages 不支持後端
                 } else {
@@ -1728,6 +1734,8 @@
                 limitationNotice.style.display = 'none';
                 if (env === 'vercel') {
                     console.log('✅ Vercel 環境：後端功能完全可用');
+                } else if (env === 'render') {
+                    console.log('✅ Render 環境：後端功能完全可用');
                 } else if (env === 'local') {
                     console.log('✅ 本地環境：後端功能完全可用');
                 }
