@@ -12,7 +12,7 @@ const app = express();
 // 獲取環境配置
 const config = getConfig();
 const environment = getEnvironment();
-const PORT = config.port;
+const PORT = process.env.PORT || config.port;
 
 // 初始化Token管理器
 const tokenManager = new TokenManager();
