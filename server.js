@@ -64,23 +64,57 @@ const PORT = process.env.PORT || config.port;
 // 初始化Token管理器
 const tokenManager = new TokenManager();
 
-// Excel 資料處理函數
-function processExcelData(excelData) {
-    const processedData = [];
+// 檢測成員標題行
+function detectMemberTitle(row) {
+    const keys = Object.keys(row);
     
-    for (const row of excelData) {
-        // 處理每一行的資料
-        const processedRow = processExcelRow(row);
-        if (processedRow) {
-            processedData.push(processedRow);
+    // 檢查是否只有一個非空值，且該值為已知成員名稱
+    const nonEmptyValues = keys.filter(key => row[key] && row[key].toString().trim() !== '');
+    
+    if (nonEmptyValues.length === 1) {
+        const value = row[nonEmptyValues[0]].toString().trim();
+        const knownMembers = ['Kelvin', 'Phuong', 'Ryan', '家用'];
+        
+        if (knownMembers.includes(value)) {
+            console.log('🔍 [detectMemberTitle] 檢測到成員標題:', value);
+            return value;
         }
     }
     
+    return null;
+}
+
+// Excel 資料處理函數
+function processExcelData(excelData) {
+    const processedData = [];
+    let currentMember = null;
+    
+    excelData.forEach((row, index) => {
+        try {
+            // 檢查是否為成員標題行（如 "Kelvin", "Phuong"）
+            const memberTitle = detectMemberTitle(row);
+            if (memberTitle) {
+                currentMember = memberTitle;
+                console.log('🔍 [processExcelData] 檢測到成員:', currentMember);
+                return;
+            }
+            
+            // 處理數據行
+            const processedRow = processExcelRow(row, currentMember);
+            if (processedRow) {
+                processedData.push(processedRow);
+            }
+        } catch (error) {
+            console.error(`❌ [processExcelData] 處理第 ${index + 1} 行失敗:`, error, row);
+        }
+    });
+    
+    console.log('🔍 [processExcelData] 處理完成，有效記錄數:', processedData.length);
     return processedData;
 }
 
 // 處理單行 Excel 資料
-function processExcelRow(row) {
+function processExcelRow(row, currentMember = null) {
     try {
         // 根據圖片格式，假設 Excel 有以下欄位：
         // 日期, 描述, 金額, 成員 (或類似的欄位名)
@@ -117,11 +151,12 @@ function processExcelRow(row) {
         // 如果沒有找到標準欄位，嘗試從第一列開始推測
         const keys = Object.keys(row);
         if (keys.length >= 3) {
-            // 假設格式是：日期, 描述, 金額, 成員
+            // 假設格式是：日期, 描述, 金額
             date = row[keys[0]];
             description = row[keys[1]];
             amount = row[keys[2]];
-            member = row[keys[3]] || '未知';
+            // 使用當前成員（從標題行檢測）
+            member = currentMember || '未知';
         }
         
         // 處理日期格式 (M/D -> YYYY-MM-DD)
@@ -147,7 +182,13 @@ function processExcelRow(row) {
         
         // 驗證必要欄位
         if (!date || !description || amount === undefined || amount === null) {
-            console.log('⚠️ [processExcelRow] 跳過不完整的記錄:', row);
+            console.log('⚠️ [processExcelRow] 跳過不完整的記錄:', { date, description, amount, member, currentMember });
+            return null;
+        }
+        
+        // 如果沒有成員信息，跳過這行
+        if (!member || member === '未知') {
+            console.log('⚠️ [processExcelRow] 跳過無成員信息記錄:', { date, description, amount, member, currentMember });
             return null;
         }
         
