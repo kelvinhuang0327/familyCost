@@ -80,13 +80,14 @@
             }
             
             .stats-grid {
-                display: flex;
-                overflow-x: auto;
-                gap: -20px; /* 負間距創造重疊效果 */
-                padding: 20px 0 10px 0;
-                scroll-snap-type: x mandatory;
-                -webkit-overflow-scrolling: touch;
-                align-items: center;
+                display: flex !important;
+                overflow-x: auto !important;
+                gap: -20px !important; /* 負間距創造重疊效果 */
+                padding: 20px 0 10px 0 !important;
+                scroll-snap-type: x mandatory !important;
+                -webkit-overflow-scrolling: touch !important;
+                align-items: center !important;
+                scroll-behavior: smooth !important;
             }
             
             .stats-grid::-webkit-scrollbar {
@@ -108,64 +109,72 @@
             }
             
             .stat-card {
-                padding: 15px;
-                margin-bottom: 8px;
-                min-width: 160px;
-                flex-shrink: 0;
-                scroll-snap-align: center;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                border-radius: 12px;
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-                transform: scale(0.95);
-                transition: all 0.3s ease;
-                position: relative;
-                z-index: 1;
+                padding: 15px !important;
+                margin-bottom: 8px !important;
+                min-width: 160px !important;
+                width: 160px !important;
+                flex-shrink: 0 !important;
+                scroll-snap-align: center !important;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                border-radius: 12px !important;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+                transform: scale(0.95) !important;
+                transition: all 0.3s ease !important;
+                position: relative !important;
+                z-index: 1 !important;
             }
             
             .stat-card:first-child {
-                margin-left: 20px;
+                margin-left: 20px !important;
+                transform: scale(0.9) !important;
+                z-index: 0 !important;
             }
             
             .stat-card:last-child {
-                margin-right: 20px;
+                margin-right: 20px !important;
+                transform: scale(0.9) !important;
+                z-index: 0 !important;
             }
             
             .stat-card:nth-child(2) {
-                transform: scale(1);
-                z-index: 2;
-                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+                transform: scale(1) !important;
+                z-index: 2 !important;
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2) !important;
             }
             
             .stat-card:nth-child(3) {
-                transform: scale(0.95);
-                z-index: 1;
+                transform: scale(0.95) !important;
+                z-index: 1 !important;
             }
             
             .stat-card:nth-child(4) {
-                transform: scale(0.9);
-                z-index: 0;
+                transform: scale(0.9) !important;
+                z-index: 0 !important;
             }
             
             .stat-card h3 {
-                font-size: 1.1em;
-                margin-bottom: 8px;
-                color: white;
-                font-weight: bold;
-                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                font-size: 1.2em !important;
+                margin-bottom: 8px !important;
+                color: white !important;
+                font-weight: bold !important;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+                text-align: center !important;
             }
             
             .stat-card .stat-value {
-                font-size: 1.3em;
-                color: white;
-                font-weight: bold;
-                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                font-size: 1.4em !important;
+                color: white !important;
+                font-weight: bold !important;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+                text-align: center !important;
             }
             
             .stat-card p {
-                color: rgba(255, 255, 255, 0.9);
-                font-size: 0.85em;
-                margin: 0;
-                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+                color: rgba(255, 255, 255, 0.9) !important;
+                font-size: 0.9em !important;
+                margin: 0 !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+                text-align: center !important;
             }
             
             .form-group {
@@ -365,31 +374,111 @@
             }
             
             /* 緊湊的記錄列表 */
+            /* 記錄查看區塊滑動效果 */
+            .records-list {
+                background: #f8f9fa !important;
+                border-radius: 10px !important;
+                padding: 15px !important;
+                margin-bottom: 15px !important;
+            }
+            
+            .records-container {
+                display: flex !important;
+                overflow-x: auto !important;
+                gap: -15px !important;
+                padding: 10px 0 !important;
+                scroll-snap-type: x mandatory !important;
+                -webkit-overflow-scrolling: touch !important;
+                align-items: center !important;
+                scroll-behavior: smooth !important;
+            }
+            
+            .records-container::-webkit-scrollbar {
+                height: 4px;
+            }
+            
+            .records-container::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 2px;
+            }
+            
+            .records-container::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 2px;
+            }
+            
+            .records-container::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+            
             .record-item {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 8px;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 12px !important;
+                min-width: 200px !important;
+                width: 200px !important;
+                flex-shrink: 0 !important;
+                scroll-snap-align: center !important;
+                background: white !important;
+                border-radius: 8px !important;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+                transition: all 0.3s ease !important;
+                position: relative !important;
+                z-index: 1 !important;
+                margin: 0 5px !important;
+            }
+            
+            .record-item:first-child {
+                margin-left: 10px !important;
+                transform: scale(0.95) !important;
+                z-index: 0 !important;
+            }
+            
+            .record-item:last-child {
+                margin-right: 10px !important;
+                transform: scale(0.95) !important;
+                z-index: 0 !important;
+            }
+            
+            .record-item:nth-child(2) {
+                transform: scale(1) !important;
+                z-index: 2 !important;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+            }
+            
+            .record-item:nth-child(3) {
+                transform: scale(0.95) !important;
+                z-index: 1 !important;
+            }
+            
+            .record-item:nth-child(4) {
+                transform: scale(0.9) !important;
+                z-index: 0 !important;
             }
             
             .record-info {
-                flex: 1;
-                min-width: 0;
+                flex: 1 !important;
+                min-width: 0 !important;
             }
             
             .record-info h4 {
-                font-size: 0.85em;
-                margin-bottom: 2px;
+                font-size: 0.9em !important;
+                margin-bottom: 3px !important;
+                color: #333 !important;
+                font-weight: bold !important;
             }
             
             .record-info p {
-                font-size: 0.7em;
-                margin: 1px 0;
+                font-size: 0.75em !important;
+                margin: 2px 0 !important;
+                color: #666 !important;
             }
             
             .record-amount {
-                font-size: 0.9em;
-                font-weight: bold;
+                font-size: 1em !important;
+                font-weight: bold !important;
+                color: #333 !important;
             }
             
             .record-actions {
@@ -3352,7 +3441,7 @@
             let recordsHtml = `
                 <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                     <h4 style="color: #333; margin-bottom: 15px;">${title}</h4>
-                    <div style="max-height: 400px; overflow-y: auto;">
+                    <div class="records-container">
             `;
             
             recordsToShow.forEach(record => {
@@ -3361,18 +3450,14 @@
                 const prefix = record.type === 'income' ? '+' : '-';
                 
                 recordsHtml += `
-                    <div class="record-item ${amountClass}" style="margin-bottom: 10px; padding: 10px; border-radius: 5px; background: ${record.type === 'income' ? 'rgba(81, 207, 102, 0.1)' : 'rgba(255, 107, 107, 0.1)'};">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <strong>${record.member} - ${record.mainCategory}${record.subCategory ? ' - ' + record.subCategory : ''}</strong>
-                                <br>
-                                <small style="color: #666;">${record.description || '無描述'}</small>
-                                <br>
-                                <small style="color: #999;">${record.date}</small>
-                            </div>
-                            <div style="font-weight: bold; color: ${record.type === 'income' ? '#51cf66' : '#ff6b6b'};">
-                                ${prefix}$${record.amount.toLocaleString()}
-                            </div>
+                    <div class="record-item ${amountClass}">
+                        <div class="record-info">
+                            <h4>${record.member} - ${record.mainCategory}${record.subCategory ? ' - ' + record.subCategory : ''}</h4>
+                            <p>${record.description || '無描述'}</p>
+                            <p>${record.date}</p>
+                        </div>
+                        <div class="record-amount" style="color: ${record.type === 'income' ? '#51cf66' : '#ff6b6b'};">
+                            ${prefix}$${record.amount.toLocaleString()}
                         </div>
                     </div>
                 `;
@@ -3380,6 +3465,7 @@
             
             recordsHtml += `
                     </div>
+                    <div class="swipe-indicator" id="recordsSwipeIndicator"></div>
                 </div>
             `;
             
