@@ -79,6 +79,7 @@
                 padding: 10px;
             }
             
+            .stats,
             .stats-grid {
                 display: flex !important;
                 overflow-x: auto !important;
@@ -90,20 +91,24 @@
                 scroll-behavior: smooth !important;
             }
             
+            .stats::-webkit-scrollbar,
             .stats-grid::-webkit-scrollbar {
                 height: 4px;
             }
             
+            .stats::-webkit-scrollbar-track,
             .stats-grid::-webkit-scrollbar-track {
                 background: #f1f1f1;
                 border-radius: 2px;
             }
             
+            .stats::-webkit-scrollbar-thumb,
             .stats-grid::-webkit-scrollbar-thumb {
                 background: #888;
                 border-radius: 2px;
             }
             
+            .stats::-webkit-scrollbar-thumb:hover,
             .stats-grid::-webkit-scrollbar-thumb:hover {
                 background: #555;
             }
@@ -301,7 +306,7 @@
                 min-width: 280px !important;
                 flex-shrink: 0 !important;
                 scroll-snap-align: center !important;
-                background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%) !important;
+                background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%) !important;
                 border-radius: 12px !important;
                 box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
                 transition: all 0.3s ease !important;
@@ -598,17 +603,20 @@
             }
             
             /* 動態滑動效果 */
+            .stats:active .stat-card,
             .stats-grid:active .stat-card,
             .member-stats-grid:active .stat-card {
                 transition: transform 0.1s ease;
             }
             
+            .stats:active .stat-card:nth-child(2),
             .stats-grid:active .stat-card:nth-child(2),
             .member-stats-grid:active .stat-card:nth-child(2) {
                 transform: scale(0.98);
             }
             
             /* 滑動時的視覺反饋 */
+            .stats::-webkit-scrollbar-thumb:active,
             .stats-grid::-webkit-scrollbar-thumb:active,
             .member-stats-grid::-webkit-scrollbar-thumb:active {
                 background: #333;
@@ -2623,6 +2631,11 @@
             addSwipeEffects(statsGrid);
             addSwipeEffects(memberStatsGrid);
             
+            // 初始化總支出統計滑動
+            if (statsGrid) {
+                initializeStatsSwipe();
+            }
+            
             // 監聽窗口大小變化
             window.addEventListener('resize', function() {
                 checkScrollable(statsGrid, statsIndicator);
@@ -2637,6 +2650,73 @@
             
             if (statsGrid) observer.observe(statsGrid, { childList: true, subtree: true });
             if (memberStatsGrid) observer.observe(memberStatsGrid, { childList: true, subtree: true });
+        }
+        
+        // 初始化總支出統計滑動功能
+        function initializeStatsSwipe() {
+            const statsGrid = document.querySelector('.stats');
+            
+            if (!statsGrid) return;
+            
+            let currentIndex = 1; // 預設顯示中間的卡片（第二個位置）
+            
+            // 滑動到指定位置
+            function scrollToStats(index) {
+                const cardWidth = 160; // 固定卡片寬度
+                statsGrid.scrollTo({
+                    left: index * cardWidth,
+                    behavior: 'smooth'
+                });
+                currentIndex = index;
+            }
+            
+            // 初始化時滑動到中間位置
+            setTimeout(() => {
+                scrollToStats(1);
+            }, 200);
+            
+            // 監聽滑動事件
+            statsGrid.addEventListener('scroll', () => {
+                const cardWidth = 160; // 固定卡片寬度
+                const scrollLeft = statsGrid.scrollLeft;
+                const newIndex = Math.round(scrollLeft / cardWidth);
+                
+                if (newIndex !== currentIndex && newIndex >= 0 && newIndex < 4) {
+                    currentIndex = newIndex;
+                }
+            });
+            
+            // 添加觸控滑動支持
+            let startX = 0;
+            let isScrolling = false;
+            
+            statsGrid.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isScrolling = false;
+            });
+            
+            statsGrid.addEventListener('touchmove', (e) => {
+                if (!isScrolling) {
+                    const currentX = e.touches[0].clientX;
+                    const diffX = Math.abs(currentX - startX);
+                    
+                    if (diffX > 10) {
+                        isScrolling = true;
+                    }
+                }
+            });
+            
+            statsGrid.addEventListener('touchend', () => {
+                if (isScrolling) {
+                    const cardWidth = 160; // 固定卡片寬度
+                    const scrollLeft = statsGrid.scrollLeft;
+                    const newIndex = Math.round(scrollLeft / cardWidth);
+                    
+                    if (newIndex !== currentIndex && newIndex >= 0 && newIndex < 4) {
+                        currentIndex = newIndex;
+                    }
+                }
+            });
         }
 
         // 初始化
