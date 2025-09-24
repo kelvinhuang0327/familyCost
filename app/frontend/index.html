@@ -19,6 +19,341 @@
             padding: 20px;
         }
 
+        /* 響應式設計 - 手機版 (iPhone 14 Pro: 393x852) */
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 10px;
+                margin: 0;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .header-main {
+                margin-bottom: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+                margin-bottom: 8px;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+            
+            .version-info {
+                align-items: center;
+                margin-top: 0;
+                padding: 6px 10px;
+                font-size: 0.8em;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .nav-tab {
+                padding: 12px 15px;
+                font-size: 0.9em;
+                border-radius: 8px;
+            }
+            
+            .tab-content {
+                padding: 15px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .stat-card {
+                padding: 15px;
+                margin-bottom: 10px;
+            }
+            
+            .stat-card h3 {
+                font-size: 1.1em;
+            }
+            
+            .stat-card .stat-value {
+                font-size: 1.3em;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .form-group label {
+                font-size: 0.9em;
+                margin-bottom: 5px;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 12px;
+                font-size: 16px; /* 防止 iOS 縮放 */
+                border-radius: 8px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-row .form-group {
+                min-width: auto;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 0.9em;
+                border-radius: 8px;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .btn-small {
+                padding: 8px 12px;
+                font-size: 0.8em;
+            }
+            
+            .record-item {
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 8px;
+            }
+            
+            .record-info h4 {
+                font-size: 1em;
+            }
+            
+            .record-info p {
+                font-size: 0.85em;
+            }
+            
+            .record-amount {
+                font-size: 1.1em;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 2px;
+            }
+            
+            .calendar-day {
+                padding: 8px 4px;
+                font-size: 0.8em;
+            }
+            
+            .day-number {
+                font-size: 0.9em;
+            }
+            
+            .day-records {
+                font-size: 0.7em;
+            }
+            
+            .chart-section {
+                margin-bottom: 20px;
+            }
+            
+            .chart-section canvas {
+                max-height: 250px;
+            }
+        }
+
+        /* 響應式設計 - iPad 版 (768x1024) */
+        @media screen and (min-width: 481px) and (max-width: 1024px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                border-radius: 12px;
+            }
+            
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .header p {
+                font-size: 1.05em;
+            }
+            
+            .nav-tabs {
+                gap: 8px;
+            }
+            
+            .nav-tab {
+                padding: 14px 18px;
+                font-size: 0.95em;
+            }
+            
+            .tab-content {
+                padding: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .stat-card {
+                padding: 20px;
+            }
+            
+            .stat-card h3 {
+                font-size: 1.2em;
+            }
+            
+            .stat-card .stat-value {
+                font-size: 1.4em;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            .form-row {
+                gap: 15px;
+            }
+            
+            .form-row .form-group {
+                min-width: 180px;
+            }
+            
+            .btn {
+                padding: 14px 24px;
+                font-size: 0.95em;
+            }
+            
+            .record-item {
+                padding: 15px;
+                margin-bottom: 12px;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 3px;
+            }
+            
+            .calendar-day {
+                padding: 10px 6px;
+            }
+            
+            .chart-section canvas {
+                max-height: 300px;
+            }
+        }
+
+        /* 響應式設計 - 電腦版 (1025px+) */
+        @media screen and (min-width: 1025px) {
+            .container {
+                max-width: 1400px;
+            }
+            
+            .header {
+                padding: 30px;
+            }
+            
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .header p {
+                font-size: 1.1em;
+            }
+            
+            .nav-tabs {
+                gap: 10px;
+            }
+            
+            .nav-tab {
+                padding: 16px 20px;
+                font-size: 1em;
+            }
+            
+            .tab-content {
+                padding: 25px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+            
+            .stat-card {
+                padding: 25px;
+            }
+            
+            .stat-card h3 {
+                font-size: 1.3em;
+            }
+            
+            .stat-card .stat-value {
+                font-size: 1.5em;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 16px;
+            }
+            
+            .form-row {
+                gap: 20px;
+            }
+            
+            .form-row .form-group {
+                min-width: 200px;
+            }
+            
+            .btn {
+                padding: 16px 28px;
+                font-size: 1em;
+            }
+            
+            .record-item {
+                padding: 18px;
+                margin-bottom: 15px;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 4px;
+            }
+            
+            .calendar-day {
+                padding: 12px 8px;
+            }
+            
+            .chart-section canvas {
+                max-height: 400px;
+            }
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -112,6 +447,7 @@
             display: flex;
             background: #f8f9fa;
             border-bottom: 1px solid #dee2e6;
+            flex-wrap: wrap;
         }
 
         .nav-tab {
@@ -123,6 +459,10 @@
             border: none;
             font-size: 16px;
             transition: all 0.3s ease;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .nav-tab.active {
@@ -179,10 +519,12 @@
         .form-row {
             display: flex;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .form-row .form-group {
             flex: 1;
+            min-width: 200px;
         }
 
         .btn {
@@ -194,10 +536,18 @@
             cursor: pointer;
             font-size: 16px;
             transition: transform 0.2s ease;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            min-width: 120px;
         }
 
         .btn:hover {
             transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .btn-danger {
