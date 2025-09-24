@@ -259,8 +259,8 @@
             .member-stats-grid {
                 display: flex;
                 overflow-x: auto;
-                gap: 0; /* 無間距，完全重疊 */
-                padding: 15px 0 10px 0;
+                gap: -20px; /* 負間距創造重疊效果 */
+                padding: 20px 0 10px 0;
                 scroll-snap-type: x mandatory;
                 -webkit-overflow-scrolling: touch;
                 align-items: center;
@@ -287,30 +287,49 @@
             
             .member-stats .stat-card {
                 padding: 15px;
-                width: 100%;
-                min-width: 100%;
+                width: 280px;
+                min-width: 280px;
                 flex-shrink: 0;
-                scroll-snap-align: start;
+                scroll-snap-align: center;
                 background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
                 border-radius: 12px;
                 box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
                 transition: all 0.3s ease;
                 position: relative;
                 z-index: 1;
-                margin: 0 10px;
             }
             
             .member-stats .stat-card:first-child {
-                margin-left: 0;
+                margin-left: 20px;
+                transform: scale(0.9);
+                z-index: 0;
             }
             
             .member-stats .stat-card:last-child {
-                margin-right: 0;
+                margin-right: 20px;
+                transform: scale(0.9);
+                z-index: 0;
+            }
+            
+            .member-stats .stat-card:nth-child(2) {
+                transform: scale(1);
+                z-index: 2;
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+            }
+            
+            .member-stats .stat-card:nth-child(3) {
+                transform: scale(0.95);
+                z-index: 1;
+            }
+            
+            .member-stats .stat-card:nth-child(4) {
+                transform: scale(0.9);
+                z-index: 0;
             }
             
             .member-stats .stat-card h4 {
-                font-size: 1.1em;
-                margin-bottom: 8px;
+                font-size: 1.2em;
+                margin-bottom: 10px;
                 color: white;
                 font-weight: bold;
                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -318,11 +337,11 @@
             }
             
             .member-stats .stat-card small {
-                font-size: 0.85em;
+                font-size: 0.9em;
                 color: rgba(255, 255, 255, 0.9);
                 text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
                 display: block;
-                margin: 3px 0;
+                margin: 5px 0;
                 text-align: center;
             }
             
@@ -330,15 +349,15 @@
                 color: white;
                 font-weight: bold;
                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-                font-size: 1.2em;
+                font-size: 1.4em;
                 text-align: center;
-                margin-top: 8px;
+                margin-top: 10px;
             }
             
             .member-stats .stat-card .view-details {
                 text-align: center;
-                margin-top: 10px;
-                font-size: 0.8em;
+                margin-top: 12px;
+                font-size: 0.85em;
                 color: rgba(255, 255, 255, 0.8);
                 text-decoration: underline;
                 cursor: pointer;
@@ -3007,7 +3026,14 @@
             console.log('updateMemberStats: 總記錄數', records.length);
             console.log('updateMemberStats: 記錄內容', records);
 
-            familyMembers.forEach((member, index) => {
+            // 重新排列成員順序，讓第一個成員在中間
+            const reorderedMembers = [...familyMembers];
+            if (reorderedMembers.length > 1) {
+                const firstMember = reorderedMembers.shift();
+                reorderedMembers.splice(1, 0, firstMember); // 將第一個成員插入到第二個位置（中間）
+            }
+            
+            reorderedMembers.forEach((member, index) => {
                 const memberRecords = records.filter(record => record.member === member);
                 console.log(`${member} 的記錄:`, memberRecords);
                 
@@ -3046,7 +3072,7 @@
                 // 創建成員指示器
                 const indicator = document.createElement('div');
                 indicator.className = 'member-indicator';
-                if (index === 0) indicator.classList.add('active');
+                if (index === 1) indicator.classList.add('active'); // 第二個位置（中間）為預設活動
                 indicator.addEventListener('click', () => {
                     scrollToMember(index);
                 });
@@ -3064,11 +3090,11 @@
             
             if (!memberStatsGrid) return;
             
-            let currentIndex = 0;
+            let currentIndex = 1; // 預設顯示中間的卡片（第二個位置）
             
             // 滑動到指定成員
             function scrollToMember(index) {
-                const cardWidth = memberStatsGrid.clientWidth;
+                const cardWidth = 280; // 固定卡片寬度
                 memberStatsGrid.scrollTo({
                     left: index * cardWidth,
                     behavior: 'smooth'
@@ -3076,6 +3102,11 @@
                 updateActiveIndicator(index);
                 currentIndex = index;
             }
+            
+            // 初始化時滑動到中間位置
+            setTimeout(() => {
+                scrollToMember(1);
+            }, 100);
             
             // 更新活動指示器
             function updateActiveIndicator(index) {
@@ -3086,7 +3117,7 @@
             
             // 監聽滑動事件
             memberStatsGrid.addEventListener('scroll', () => {
-                const cardWidth = memberStatsGrid.clientWidth;
+                const cardWidth = 280; // 固定卡片寬度
                 const scrollLeft = memberStatsGrid.scrollLeft;
                 const newIndex = Math.round(scrollLeft / cardWidth);
                 
@@ -3118,7 +3149,7 @@
             
             memberStatsGrid.addEventListener('touchend', () => {
                 if (isScrolling) {
-                    const cardWidth = memberStatsGrid.clientWidth;
+                    const cardWidth = 280; // 固定卡片寬度
                     const scrollLeft = memberStatsGrid.scrollLeft;
                     const newIndex = Math.round(scrollLeft / cardWidth);
                     
