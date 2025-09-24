@@ -12,11 +12,18 @@
     "version:show": "cat data/version.json"
   },
   "dependencies": {
-    "express": "^4.19.2",
     "cors": "^2.8.5",
-    "node-fetch": "^3.3.2"
+    "express": "^4.19.2",
+    "multer": "^2.0.2",
+    "node-fetch": "^3.3.2",
+    "xlsx": "^0.18.5"
   },
-  "keywords": ["family", "cost", "management", "finance"],
+  "keywords": [
+    "family",
+    "cost",
+    "management",
+    "finance"
+  ],
   "author": "Kelvin Huang",
   "license": "MIT"
 }

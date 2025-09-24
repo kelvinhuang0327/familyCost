@@ -7,6 +7,8 @@ const { exec } = require('child_process');
 const util = require('util');
 const fs = require('fs').promises;
 const path = require('path');
+const multer = require('multer');
+const XLSX = require('xlsx');
 
 // 添加錯誤處理
 try {
@@ -23,6 +25,36 @@ const TokenManager = require('./app/backend/token_manager');
 const { getConfig, getEnvironment } = require('./app/config/config');
 
 const app = express();
+
+// 配置 multer 用於檔案上傳
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        // 確保 uploads 目錄存在
+        const uploadDir = 'uploads';
+        if (!require('fs').existsSync(uploadDir)) {
+            require('fs').mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload = multer({ 
+    storage: storage,
+    fileFilter: function (req, file, cb) {
+        if (file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+            file.mimetype === 'application/vnd.ms-excel') {
+            cb(null, true);
+        } else {
+            cb(new Error('只允許上傳 Excel 檔案 (.xlsx, .xls)'), false);
+        }
+    },
+    limits: {
+        fileSize: 10 * 1024 * 1024 // 10MB 限制
+    }
+});
 
 // 獲取環境配置
 const config = getConfig();
@@ -411,6 +443,158 @@ app.delete('/api/token', (req, res) => {
     }
 });
 
+// Excel 資料比對和匯入 API
+app.post('/api/excel/compare', upload.single('excelFile'), async (req, res) => {
+    try {
+        console.log('🔍 [API] POST /api/excel/compare 開始處理...');
+        
+        if (!req.file) {
+            console.log('❌ [API] 沒有上傳檔案');
+            return res.status(400).json({ success: false, message: '請選擇要上傳的 Excel 檔案' });
+        }
+
+        console.log('🔍 [API] 上傳的檔案:', req.file.filename);
+        
+        // 讀取 Excel 檔案
+        const workbook = XLSX.readFile(req.file.path);
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const excelData = XLSX.utils.sheet_to_json(worksheet);
+        
+        console.log('🔍 [API] Excel 資料筆數:', excelData.length);
+        
+        // 讀取系統現有資料
+        const dataPath = path.join(__dirname, 'data', 'data.json');
+        let systemData = [];
+        
+        try {
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            systemData = JSON.parse(dataContent);
+        } catch (error) {
+            console.log('⚠️ [API] 系統資料檔案不存在或為空');
+        }
+        
+        console.log('🔍 [API] 系統現有資料筆數:', systemData.length);
+        
+        // 比對資料，找出多餘的記錄
+        const newRecords = [];
+        const duplicateRecords = [];
+        
+        for (const excelRecord of excelData) {
+            // 檢查是否已存在（基於日期、金額、描述等關鍵欄位）
+            const isDuplicate = systemData.some(systemRecord => {
+                return systemRecord.date === excelRecord.date &&
+                       systemRecord.amount === excelRecord.amount &&
+                       systemRecord.description === excelRecord.description &&
+                       systemRecord.member === excelRecord.member;
+            });
+            
+            if (isDuplicate) {
+                duplicateRecords.push(excelRecord);
+            } else {
+                newRecords.push(excelRecord);
+            }
+        }
+        
+        console.log('🔍 [API] 新增記錄數:', newRecords.length);
+        console.log('🔍 [API] 重複記錄數:', duplicateRecords.length);
+        
+        // 清理上傳的檔案
+        require('fs').unlinkSync(req.file.path);
+        
+        res.json({
+            success: true,
+            message: 'Excel 資料比對完成',
+            data: {
+                totalExcelRecords: excelData.length,
+                systemRecords: systemData.length,
+                newRecords: newRecords.length,
+                duplicateRecords: duplicateRecords.length,
+                newRecordsData: newRecords,
+                duplicateRecordsData: duplicateRecords
+            }
+        });
+        
+    } catch (error) {
+        console.error('❌ [API] Excel 比對失敗:', error);
+        console.error('❌ [API] 錯誤堆疊:', error.stack);
+        
+        // 清理上傳的檔案
+        if (req.file && require('fs').existsSync(req.file.path)) {
+            require('fs').unlinkSync(req.file.path);
+        }
+        
+        res.status(500).json({ 
+            success: false, 
+            message: `Excel 比對失敗: ${error.message}`, 
+            error: error.message 
+        });
+    }
+});
+
+// 匯入新記錄到系統
+app.post('/api/excel/import', async (req, res) => {
+    try {
+        console.log('🔍 [API] POST /api/excel/import 開始處理...');
+        
+        const { records } = req.body;
+        
+        if (!records || !Array.isArray(records)) {
+            console.log('❌ [API] 沒有提供要匯入的記錄');
+            return res.status(400).json({ success: false, message: '請提供要匯入的記錄' });
+        }
+        
+        console.log('🔍 [API] 要匯入的記錄數:', records.length);
+        
+        // 讀取系統現有資料
+        const dataPath = path.join(__dirname, 'data', 'data.json');
+        let systemData = [];
+        
+        try {
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            systemData = JSON.parse(dataContent);
+        } catch (error) {
+            console.log('⚠️ [API] 系統資料檔案不存在，將創建新檔案');
+        }
+        
+        // 添加新記錄
+        const importedRecords = [];
+        for (const record of records) {
+            // 為新記錄添加 ID
+            const newRecord = {
+                ...record,
+                id: Date.now() + Math.random().toString(36).substr(2, 9)
+            };
+            systemData.push(newRecord);
+            importedRecords.push(newRecord);
+        }
+        
+        // 儲存更新後的資料
+        await fs.writeFile(dataPath, JSON.stringify(systemData, null, 2));
+        
+        console.log('✅ [API] 成功匯入', importedRecords.length, '筆記錄');
+        
+        res.json({
+            success: true,
+            message: `成功匯入 ${importedRecords.length} 筆記錄`,
+            data: {
+                importedCount: importedRecords.length,
+                totalRecords: systemData.length,
+                importedRecords: importedRecords
+            }
+        });
+        
+    } catch (error) {
+        console.error('❌ [API] 匯入失敗:', error);
+        console.error('❌ [API] 錯誤堆疊:', error.stack);
+        res.status(500).json({ 
+            success: false, 
+            message: `匯入失敗: ${error.message}`, 
+            error: error.message 
+        });
+    }
+});
+
 // 404處理 - 僅處理API請求
 app.use('/api/*', (req, res) => {
     res.status(404).json({
@@ -494,6 +678,8 @@ app.listen(PORT, () => {
     console.log('   POST /api/token/save - 儲存GitHub Token');
     console.log('   GET  /api/token/status - 檢查Token狀態');
     console.log('   DELETE /api/token    - 刪除Token');
+    console.log('   POST /api/excel/compare - Excel資料比對');
+    console.log('   POST /api/excel/import - 匯入Excel資料');
     console.log('按 Ctrl+C 停止服務');
 });
 
