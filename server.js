@@ -126,10 +126,14 @@ app.post('/api/backup', async (req, res) => {
                 console.log('⚠️ Git推送失敗，嘗試重新配置遠端:', pushError.message);
                 // 檢查遠端是否存在
                 try {
-                    await execAsync('git remote -v');
-                    console.log('📋 當前遠端配置存在');
+                    const { stdout: remoteList } = await execAsync('git remote -v');
+                    console.log('📋 當前遠端配置:', remoteList);
+                    if (!remoteList.includes('origin')) {
+                        console.log('⚠️ origin 遠端不存在，創建遠端');
+                        await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
+                    }
                 } catch (remoteError) {
-                    console.log('⚠️ 遠端配置不存在，創建遠端');
+                    console.log('⚠️ 無法檢查遠端配置，創建遠端');
                     await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
                 }
                 try {
@@ -180,10 +184,14 @@ app.get('/api/restore', async (req, res) => {
             console.log('⚠️ Git fetch 失敗，嘗試重新配置遠端:', fetchError.message);
             // 檢查遠端是否存在
             try {
-                await execAsync('git remote -v');
-                console.log('📋 當前遠端配置存在');
+                const { stdout: remoteList } = await execAsync('git remote -v');
+                console.log('📋 當前遠端配置:', remoteList);
+                if (!remoteList.includes('origin')) {
+                    console.log('⚠️ origin 遠端不存在，創建遠端');
+                    await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
+                }
             } catch (remoteError) {
-                console.log('⚠️ 遠端配置不存在，創建遠端');
+                console.log('⚠️ 無法檢查遠端配置，創建遠端');
                 await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
             }
             await execAsync('git fetch origin');
@@ -205,10 +213,14 @@ app.get('/api/restore', async (req, res) => {
                 console.log('⚠️ Git pull 失敗，嘗試重新配置遠端:', pullError.message);
                 // 檢查遠端是否存在
                 try {
-                    await execAsync('git remote -v');
-                    console.log('📋 當前遠端配置存在');
+                    const { stdout: remoteList } = await execAsync('git remote -v');
+                    console.log('📋 當前遠端配置:', remoteList);
+                    if (!remoteList.includes('origin')) {
+                        console.log('⚠️ origin 遠端不存在，創建遠端');
+                        await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
+                    }
                 } catch (remoteError) {
-                    console.log('⚠️ 遠端配置不存在，創建遠端');
+                    console.log('⚠️ 無法檢查遠端配置，創建遠端');
                     await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
                 }
                 await execAsync('git pull origin main');
@@ -287,10 +299,14 @@ app.post('/api/sync', async (req, res) => {
             console.log('⚠️ Git推送失敗，嘗試重新配置遠端:', pushError.message);
             // 檢查遠端是否存在
             try {
-                await execAsync('git remote -v');
-                console.log('📋 當前遠端配置存在');
+                const { stdout: remoteList } = await execAsync('git remote -v');
+                console.log('📋 當前遠端配置:', remoteList);
+                if (!remoteList.includes('origin')) {
+                    console.log('⚠️ origin 遠端不存在，創建遠端');
+                    await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
+                }
             } catch (remoteError) {
-                console.log('⚠️ 遠端配置不存在，創建遠端');
+                console.log('⚠️ 無法檢查遠端配置，創建遠端');
                 await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
             }
             try {
