@@ -36,8 +36,27 @@
                 padding-bottom: 80px !important;
                 background: white;
                 height: 100vh;
-                overflow-y: auto;
-                overflow-x: hidden;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            
+            .container::-webkit-scrollbar {
+                width: 8px;
+            }
+            
+            .container::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 4px;
+            }
+            
+            .container::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 4px;
+            }
+            
+            .container::-webkit-scrollbar-thumb:hover {
+                background: #555;
             }
             
             .header {
@@ -516,6 +535,7 @@
             /* 優化內容區域 */
             .content {
                 padding: 10px;
+                min-height: calc(100vh - 200px) !important;
             }
             
             /* 緊湊的篩選標籤 */
@@ -718,8 +738,27 @@
                 padding-bottom: 100px !important;
                 background: white;
                 height: 100vh;
-                overflow-y: auto;
-                overflow-x: hidden;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            
+            .container::-webkit-scrollbar {
+                width: 10px;
+            }
+            
+            .container::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 5px;
+            }
+            
+            .container::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 5px;
+            }
+            
+            .container::-webkit-scrollbar-thumb:hover {
+                background: #555;
             }
             
             .header {
@@ -758,6 +797,7 @@
             
             .tab-content {
                 padding: 20px;
+                min-height: calc(100vh - 250px) !important;
             }
             
             .stats-grid {
@@ -868,8 +908,27 @@
                 padding-bottom: 120px !important;
                 background: white;
                 height: 100vh;
-                overflow-y: auto;
-                overflow-x: hidden;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            
+            .container::-webkit-scrollbar {
+                width: 12px;
+            }
+            
+            .container::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 6px;
+            }
+            
+            .container::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 6px;
+            }
+            
+            .container::-webkit-scrollbar-thumb:hover {
+                background: #555;
             }
             
             .header {
@@ -908,6 +967,7 @@
             
             .tab-content {
                 padding: 25px;
+                min-height: calc(100vh - 300px) !important;
             }
             
             .stats-grid {
