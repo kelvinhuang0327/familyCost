@@ -22,7 +22,7 @@
         /* 響應式設計 - 手機版 (iPhone 14 Pro: 393x852) */
         @media screen and (max-width: 480px) {
             body {
-                padding: 5px;
+                padding: 2px;
             }
             
             .container {
@@ -74,11 +74,25 @@
             }
             
             .nav-tab {
-                padding: 8px 6px;
-                font-size: 0.8em;
-                border-radius: 6px;
-                flex: 1;
-                min-width: 0;
+                padding: 10px 8px !important;
+                font-size: 0.75em !important;
+                border-radius: 6px !important;
+                flex: 1 !important;
+                min-width: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 2px !important;
+            }
+            
+            .nav-tab i {
+                font-size: 1.2em !important;
+                margin-bottom: 2px !important;
+            }
+            
+            .nav-tab span {
+                font-size: 0.7em !important;
+                line-height: 1 !important;
             }
             
             .tab-content {
@@ -90,7 +104,7 @@
                 display: flex !important;
                 overflow-x: auto !important;
                 gap: -20px !important; /* 負間距創造重疊效果 */
-                padding: 20px 0 10px 0 !important;
+                padding: 15px 0 8px 0 !important;
                 scroll-snap-type: x mandatory !important;
                 -webkit-overflow-scrolling: touch !important;
                 align-items: center !important;
@@ -120,8 +134,8 @@
             }
             
             .stat-card {
-                padding: 18px !important;
-                margin-bottom: 8px !important;
+                padding: 15px !important;
+                margin-bottom: 5px !important;
                 min-width: 200px !important;
                 width: 200px !important;
                 flex-shrink: 0 !important;
@@ -659,6 +673,9 @@
                 border-radius: 12px !important;
                 margin-top: 20px !important;
                 text-align: center !important;
+                position: sticky !important;
+                bottom: 0 !important;
+                z-index: 1000 !important;
             }
             
             .footer-content {
@@ -781,6 +798,9 @@
                 border-radius: 12px !important;
                 margin-top: 25px !important;
                 text-align: center !important;
+                position: sticky !important;
+                bottom: 0 !important;
+                z-index: 1000 !important;
             }
             
             .footer-content {
@@ -898,6 +918,9 @@
                 border-radius: 12px !important;
                 margin-top: 30px !important;
                 text-align: center !important;
+                position: sticky !important;
+                bottom: 0 !important;
+                z-index: 1000 !important;
             }
             
             .footer-content {
@@ -1740,12 +1763,30 @@
         </div>
 
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('dashboard')">📊 總覽</button>
-            <button class="nav-tab" onclick="showTab('list')">📋 列表</button>
-            <button class="nav-tab" onclick="showTab('calendar')">📅 日曆</button>
-            <button class="nav-tab" onclick="showTab('charts')">📈 圖表</button>
-            <button class="nav-tab" onclick="showTab('add')">➕ 新增</button>
-            <button class="nav-tab" onclick="showTab('import')">⚙️ 設定</button>
+            <button class="nav-tab active" onclick="showTab('dashboard')">
+                <i>📊</i>
+                <span>總覽</span>
+            </button>
+            <button class="nav-tab" onclick="showTab('list')">
+                <i>📋</i>
+                <span>列表</span>
+            </button>
+            <button class="nav-tab" onclick="showTab('calendar')">
+                <i>📅</i>
+                <span>日曆</span>
+            </button>
+            <button class="nav-tab" onclick="showTab('charts')">
+                <i>📈</i>
+                <span>圖表</span>
+            </button>
+            <button class="nav-tab" onclick="showTab('add')">
+                <i>➕</i>
+                <span>新增</span>
+            </button>
+            <button class="nav-tab" onclick="showTab('import')">
+                <i>⚙️</i>
+                <span>設定</span>
+            </button>
         </div>
 
         <div class="content">
