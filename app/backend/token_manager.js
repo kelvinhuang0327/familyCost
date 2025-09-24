@@ -190,10 +190,10 @@ class TokenManager {
                 return { valid: false, error: 'Token包含非ASCII字符' };
             }
             
-            // 檢查token長度
+            // 檢查token長度（GitHub Token 長度範圍：20-100 字符）
             if (cleanToken.length < 20 || cleanToken.length > 100) {
-                console.log('❌ Token長度不正確');
-                return { valid: false, error: 'Token長度不正確' };
+                console.log('❌ Token長度不正確，GitHub Token通常為40個字符');
+                return { valid: false, error: 'Token長度不正確，GitHub Token通常為40個字符' };
             }
             
             console.log('🔍 開始驗證 Token...');

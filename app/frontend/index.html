@@ -3839,12 +3839,14 @@
                 
                 console.log('📡 收到回應:', response.status);
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP錯誤: ${response.status} ${response.statusText}`);
-                }
-                
                 const data = await response.json();
                 console.log('📊 回應數據:', data);
+                
+                if (!response.ok) {
+                    // 顯示後端返回的具體錯誤信息
+                    alert(`❌ ${data.message || `HTTP錯誤: ${response.status} ${response.statusText}`}`);
+                    return;
+                }
                 
                 if (data.success) {
                     alert(`✅ ${data.message}`);
