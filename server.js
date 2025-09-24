@@ -600,21 +600,45 @@ app.post('/api/excel/compare', upload.single('excelFile'), async (req, res) => {
         
         try {
             const dataContent = await fs.readFile(dataPath, 'utf8');
-            systemData = JSON.parse(dataContent);
+            const parsedData = JSON.parse(dataContent);
+            
+            // 確保 systemData 是數組
+            if (Array.isArray(parsedData)) {
+                systemData = parsedData;
+            } else if (parsedData && Array.isArray(parsedData.records)) {
+                systemData = parsedData.records;
+            } else if (parsedData && typeof parsedData === 'object') {
+                // 如果是對象，嘗試轉換為數組
+                systemData = Object.values(parsedData).filter(item => 
+                    item && typeof item === 'object' && item.date
+                );
+            } else {
+                console.log('⚠️ [API] 系統資料格式不正確，使用空數組');
+                systemData = [];
+            }
         } catch (error) {
-            console.log('⚠️ [API] 系統資料檔案不存在或為空');
+            console.log('⚠️ [API] 系統資料檔案不存在或為空:', error.message);
+            systemData = [];
         }
         
         console.log('🔍 [API] 系統現有資料筆數:', systemData.length);
+        console.log('🔍 [API] systemData 類型:', Array.isArray(systemData) ? 'Array' : typeof systemData);
         
         // 比對資料，找出多餘的記錄
         const newRecords = [];
         const duplicateRecords = [];
         
+        // 確保 systemData 是數組
+        if (!Array.isArray(systemData)) {
+            console.log('❌ [API] systemData 不是數組，強制轉換為空數組');
+            systemData = [];
+        }
+        
         for (const excelRecord of processedData) {
             // 檢查是否已存在（基於日期、金額、描述等關鍵欄位）
             const isDuplicate = systemData.some(systemRecord => {
-                return systemRecord.date === excelRecord.date &&
+                return systemRecord && 
+                       systemRecord.date === excelRecord.date &&
                        systemRecord.amount === excelRecord.amount &&
                        systemRecord.description === excelRecord.description &&
                        systemRecord.member === excelRecord.member;
@@ -683,9 +707,20 @@ app.post('/api/excel/import', async (req, res) => {
         
         try {
             const dataContent = await fs.readFile(dataPath, 'utf8');
-            systemData = JSON.parse(dataContent);
+            const parsedData = JSON.parse(dataContent);
+            
+            // 確保 systemData 是數組
+            if (Array.isArray(parsedData)) {
+                systemData = parsedData;
+            } else if (parsedData && Array.isArray(parsedData.records)) {
+                systemData = parsedData.records;
+            } else {
+                console.log('⚠️ [API] 系統資料格式不正確，使用空數組');
+                systemData = [];
+            }
         } catch (error) {
-            console.log('⚠️ [API] 系統資料檔案不存在，將創建新檔案');
+            console.log('⚠️ [API] 系統資料檔案不存在，將創建新檔案:', error.message);
+            systemData = [];
         }
         
         // 添加新記錄
@@ -700,8 +735,9 @@ app.post('/api/excel/import', async (req, res) => {
             importedRecords.push(newRecord);
         }
         
-        // 儲存更新後的資料
-        await fs.writeFile(dataPath, JSON.stringify(systemData, null, 2));
+        // 儲存更新後的資料，保持原有格式
+        const dataToSave = { records: systemData };
+        await fs.writeFile(dataPath, JSON.stringify(dataToSave, null, 2));
         
         console.log('✅ [API] 成功匯入', importedRecords.length, '筆記錄');
         
