@@ -1942,7 +1942,7 @@
                         }
                     }
                 } else {
-                    console.log('data.json 載入失敗，狀態碼:', response.status);
+                    console.log('data.json 載入失敗');
                     // 如果檔案不存在，嘗試從 localStorage 載入
                     const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
                     if (localRecords.length > 0) {

@@ -402,8 +402,37 @@ app.use('/api/*', (req, res) => {
     });
 });
 
-// 對於非API請求，返回index.html（SPA路由）
+// 靜態文件服務 - 數據文件
+app.get('/data/*', (req, res) => {
+    const filePath = path.join(__dirname, req.path);
+    console.log('📁 請求數據文件:', filePath);
+    
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error('❌ 發送數據文件失敗:', err);
+            res.status(404).json({
+                success: false,
+                message: '找不到數據文件',
+                error: err.message,
+                path: filePath
+            });
+        } else {
+            console.log('✅ 數據文件發送成功:', req.path);
+        }
+    });
+});
+
+// 對於非API和非數據文件請求，返回index.html（SPA路由）
 app.get('*', (req, res) => {
+    // 跳過 API 和數據文件請求
+    if (req.path.startsWith('/api/') || req.path.startsWith('/data/')) {
+        return res.status(404).json({
+            success: false,
+            message: 'API或數據文件不存在',
+            path: req.path
+        });
+    }
+    
     const indexPath = path.join(__dirname, 'app/frontend/index.html');
     console.log('🔍 嘗試發送 index.html:', indexPath);
     console.log('🔍 當前目錄:', __dirname);
