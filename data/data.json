@@ -1,5 +1,46 @@
 {
-  "records": [],
-  "lastUpdated": "2025-09-24T01:25:00.000Z",
+  "records": [
+    {
+      "id": "sample-1",
+      "member": "Kelvin",
+      "type": "expense",
+      "amount": 1200,
+      "mainCategory": "日常",
+      "subCategory": "手機費",
+      "description": "手機費",
+      "date": "2025-09-24"
+    },
+    {
+      "id": "sample-2",
+      "member": "Phuong",
+      "type": "expense",
+      "amount": 800,
+      "mainCategory": "日常",
+      "subCategory": "交通",
+      "description": "捷運費",
+      "date": "2025-09-24"
+    },
+    {
+      "id": "sample-3",
+      "member": "家用",
+      "type": "income",
+      "amount": 50000,
+      "mainCategory": "薪資",
+      "subCategory": "薪資",
+      "description": "Kelvin 薪資",
+      "date": "2025-09-24"
+    },
+    {
+      "id": "sample-4",
+      "member": "家用",
+      "type": "expense",
+      "amount": 15000,
+      "mainCategory": "居住",
+      "subCategory": "房租",
+      "description": "房租",
+      "date": "2025-09-24"
+    }
+  ],
+  "lastUpdated": "2025-09-24T01:30:00.000Z",
   "version": "1.0.0"
 }
