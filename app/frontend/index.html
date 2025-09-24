@@ -23,11 +23,15 @@
         @media screen and (max-width: 480px) {
             body {
                 padding: 2px;
+                margin: 0;
+                min-height: 100vh;
+                overflow-x: hidden;
             }
             
             .container {
                 border-radius: 8px;
                 margin: 0;
+                padding-bottom: 80px !important;
             }
             
             .header {
@@ -524,22 +528,25 @@
             /* 緊湊的篩選標籤 */
             .record-filter-tabs {
                 display: flex !important;
-                flex-wrap: wrap !important;
-                gap: 6px !important;
+                flex-wrap: nowrap !important;
+                gap: 4px !important;
                 margin-bottom: 15px !important;
-                justify-content: center !important;
+                justify-content: space-between !important;
+                overflow-x: auto !important;
             }
             
             .filter-tab {
-                padding: 8px 12px !important;
-                font-size: 0.8em !important;
+                padding: 8px 6px !important;
+                font-size: 0.75em !important;
                 border-radius: 6px !important;
-                min-width: 60px !important;
+                min-width: 0 !important;
+                flex: 1 !important;
                 text-align: center !important;
                 background: #f8f9fa !important;
                 border: 1px solid #dee2e6 !important;
                 color: #495057 !important;
                 transition: all 0.3s ease !important;
+                white-space: nowrap !important;
             }
             
             .filter-tab.active {
@@ -673,8 +680,10 @@
                 border-radius: 12px !important;
                 margin-top: 20px !important;
                 text-align: center !important;
-                position: sticky !important;
+                position: fixed !important;
                 bottom: 0 !important;
+                left: 2px !important;
+                right: 2px !important;
                 z-index: 1000 !important;
             }
             
@@ -708,6 +717,7 @@
             
             .container {
                 border-radius: 12px;
+                padding-bottom: 100px !important;
             }
             
             .header {
@@ -798,8 +808,10 @@
                 border-radius: 12px !important;
                 margin-top: 25px !important;
                 text-align: center !important;
-                position: sticky !important;
+                position: fixed !important;
                 bottom: 0 !important;
+                left: 15px !important;
+                right: 15px !important;
                 z-index: 1000 !important;
             }
             
@@ -829,6 +841,7 @@
         @media screen and (min-width: 1025px) {
             .container {
                 max-width: 1400px;
+                padding-bottom: 120px !important;
             }
             
             .header {
@@ -918,8 +931,10 @@
                 border-radius: 12px !important;
                 margin-top: 30px !important;
                 text-align: center !important;
-                position: sticky !important;
+                position: fixed !important;
                 bottom: 0 !important;
+                left: 20px !important;
+                right: 20px !important;
                 z-index: 1000 !important;
             }
             
