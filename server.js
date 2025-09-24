@@ -91,6 +91,7 @@ function processExcelRow(row) {
         // 日期欄位
         if (row['日期'] || row['date'] || row['Date'] || row['DATE']) {
             date = row['日期'] || row['date'] || row['Date'] || row['DATE'];
+            console.log('🔍 [processExcelRow] 找到日期欄位:', date, '類型:', typeof date);
         }
         
         // 描述欄位
@@ -165,6 +166,24 @@ function processExcelRow(row) {
 // 日期格式轉換函數
 function formatDate(dateStr) {
     try {
+        console.log('🔍 [formatDate] 處理日期:', dateStr, '類型:', typeof dateStr);
+        
+        // 處理 Excel 序列號格式 (如 45908)
+        if (typeof dateStr === 'number' || (typeof dateStr === 'string' && /^\d+$/.test(dateStr))) {
+            const serialNumber = typeof dateStr === 'string' ? parseInt(dateStr) : dateStr;
+            console.log('🔍 [formatDate] Excel 序列號:', serialNumber);
+            
+            // Excel 序列號轉換 (1900年1月1日為基準)
+            const excelEpoch = new Date(1900, 0, 1);
+            const date = new Date(excelEpoch.getTime() + (serialNumber - 2) * 24 * 60 * 60 * 1000);
+            
+            if (!isNaN(date.getTime())) {
+                const formatted = date.toISOString().split('T')[0];
+                console.log('🔍 [formatDate] Excel 序列號轉換結果:', formatted);
+                return formatted;
+            }
+        }
+        
         // 處理 M/D 格式 (如 9/1, 9/23)
         if (typeof dateStr === 'string' && dateStr.includes('/')) {
             const parts = dateStr.split('/');
@@ -172,16 +191,23 @@ function formatDate(dateStr) {
                 const month = parts[0].padStart(2, '0');
                 const day = parts[1].padStart(2, '0');
                 const currentYear = new Date().getFullYear();
-                return `${currentYear}-${month}-${day}`;
+                const formatted = `${currentYear}-${month}-${day}`;
+                console.log('🔍 [formatDate] M/D 格式轉換結果:', formatted);
+                return formatted;
             }
         }
         
-        // 處理其他日期格式
-        const date = new Date(dateStr);
-        if (!isNaN(date.getTime())) {
-            return date.toISOString().split('T')[0];
+        // 處理標準日期格式
+        if (typeof dateStr === 'string') {
+            const date = new Date(dateStr);
+            if (!isNaN(date.getTime())) {
+                const formatted = date.toISOString().split('T')[0];
+                console.log('🔍 [formatDate] 標準日期轉換結果:', formatted);
+                return formatted;
+            }
         }
         
+        console.log('⚠️ [formatDate] 無法轉換日期:', dateStr);
         return dateStr;
     } catch (error) {
         console.error('❌ [formatDate] 日期轉換失敗:', error, dateStr);
@@ -614,7 +640,12 @@ app.post('/api/excel/compare', upload.single('excelFile'), async (req, res) => {
         const workbook = XLSX.readFile(req.file.path);
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
-        const excelData = XLSX.utils.sheet_to_json(worksheet);
+        
+        // 使用選項來正確處理日期
+        const excelData = XLSX.utils.sheet_to_json(worksheet, {
+            raw: false,  // 不返回原始值，而是格式化後的值
+            dateNF: 'yyyy-mm-dd'  // 日期格式
+        });
         
         console.log('🔍 [API] Excel 原始資料筆數:', excelData.length);
         console.log('🔍 [API] Excel 原始資料範例:', excelData.slice(0, 3));
