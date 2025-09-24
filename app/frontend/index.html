@@ -259,11 +259,12 @@
             .member-stats-grid {
                 display: flex;
                 overflow-x: auto;
-                gap: -15px; /* 負間距創造重疊效果 */
+                gap: 0; /* 無間距，完全重疊 */
                 padding: 15px 0 10px 0;
                 scroll-snap-type: x mandatory;
                 -webkit-overflow-scrolling: touch;
                 align-items: center;
+                scroll-behavior: smooth;
             }
             
             .member-stats-grid::-webkit-scrollbar {
@@ -285,61 +286,62 @@
             }
             
             .member-stats .stat-card {
-                padding: 12px;
-                min-width: 180px;
+                padding: 15px;
+                width: 100%;
+                min-width: 100%;
                 flex-shrink: 0;
-                scroll-snap-align: center;
+                scroll-snap-align: start;
                 background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-                border-radius: 10px;
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-                transform: scale(0.95);
+                border-radius: 12px;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
                 transition: all 0.3s ease;
                 position: relative;
                 z-index: 1;
+                margin: 0 10px;
             }
             
             .member-stats .stat-card:first-child {
-                margin-left: 15px;
+                margin-left: 0;
             }
             
             .member-stats .stat-card:last-child {
-                margin-right: 15px;
-            }
-            
-            .member-stats .stat-card:nth-child(2) {
-                transform: scale(1);
-                z-index: 2;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
-            }
-            
-            .member-stats .stat-card:nth-child(3) {
-                transform: scale(0.95);
-                z-index: 1;
-            }
-            
-            .member-stats .stat-card:nth-child(4) {
-                transform: scale(0.9);
-                z-index: 0;
+                margin-right: 0;
             }
             
             .member-stats .stat-card h4 {
-                font-size: 0.9em;
-                margin-bottom: 5px;
+                font-size: 1.1em;
+                margin-bottom: 8px;
                 color: white;
                 font-weight: bold;
                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                text-align: center;
             }
             
             .member-stats .stat-card small {
-                font-size: 0.75em;
+                font-size: 0.85em;
                 color: rgba(255, 255, 255, 0.9);
                 text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+                display: block;
+                margin: 3px 0;
+                text-align: center;
             }
             
             .member-stats .stat-card .balance {
                 color: white;
                 font-weight: bold;
                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                font-size: 1.2em;
+                text-align: center;
+                margin-top: 8px;
+            }
+            
+            .member-stats .stat-card .view-details {
+                text-align: center;
+                margin-top: 10px;
+                font-size: 0.8em;
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: underline;
+                cursor: pointer;
             }
             
             /* 緊湊的記錄列表 */
@@ -462,6 +464,28 @@
             
             .swipe-indicator::before {
                 content: "← 左右滑動查看更多 →";
+            }
+            
+            /* 成員指示器 */
+            .member-indicators {
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+                margin: 10px 0;
+            }
+            
+            .member-indicator {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            
+            .member-indicator.active {
+                background: white;
+                transform: scale(1.2);
             }
             
             /* 動態滑動效果 */
@@ -1503,6 +1527,7 @@
                 <div class="member-stats">
                     <h3>各成員收支統計</h3>
                     <div class="member-stats-grid" id="memberStats"></div>
+                    <div class="member-indicators" id="memberIndicators"></div>
                     <div class="swipe-indicator" id="memberSwipeIndicator"></div>
                 </div>
                 <div class="records-list">
@@ -2975,12 +3000,14 @@
 
         function updateMemberStats() {
             const memberStatsContainer = document.getElementById('memberStats');
+            const memberIndicatorsContainer = document.getElementById('memberIndicators');
             memberStatsContainer.innerHTML = '';
+            memberIndicatorsContainer.innerHTML = '';
 
             console.log('updateMemberStats: 總記錄數', records.length);
             console.log('updateMemberStats: 記錄內容', records);
 
-            familyMembers.forEach(member => {
+            familyMembers.forEach((member, index) => {
                 const memberRecords = records.filter(record => record.member === member);
                 console.log(`${member} 的記錄:`, memberRecords);
                 
@@ -2996,20 +3023,15 @@
 
                 const memberCard = document.createElement('div');
                 memberCard.className = 'stat-card';
-                memberCard.style.background = 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)';
                 memberCard.style.cursor = 'pointer';
                 memberCard.innerHTML = `
                     <h4>${member}</h4>
-                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                        <div>
-                            <small>收入: $${memberIncome.toLocaleString()}</small><br>
-                            <small>支出: $${memberExpense.toLocaleString()}</small>
-                        </div>
-                        <div style="font-weight: bold; color: ${memberBalance >= 0 ? '#51cf66' : '#ff6b6b'};">
-                            $${memberBalance.toLocaleString()}
-                        </div>
+                    <small>收入: $${memberIncome.toLocaleString()}</small>
+                    <small>支出: $${memberExpense.toLocaleString()}</small>
+                    <div class="balance" style="color: ${memberBalance >= 0 ? '#51cf66' : '#ff6b6b'};">
+                        $${memberBalance.toLocaleString()}
                     </div>
-                    <div style="margin-top: 10px; font-size: 12px; opacity: 0.8;">
+                    <div class="view-details">
                         點擊查看詳細記錄
                     </div>
                 `;
@@ -3020,6 +3042,91 @@
                 });
                 
                 memberStatsContainer.appendChild(memberCard);
+                
+                // 創建成員指示器
+                const indicator = document.createElement('div');
+                indicator.className = 'member-indicator';
+                if (index === 0) indicator.classList.add('active');
+                indicator.addEventListener('click', () => {
+                    scrollToMember(index);
+                });
+                memberIndicatorsContainer.appendChild(indicator);
+            });
+            
+            // 初始化滑動功能
+            initializeMemberSwipe();
+        }
+        
+        // 初始化成員滑動功能
+        function initializeMemberSwipe() {
+            const memberStatsGrid = document.querySelector('.member-stats-grid');
+            const indicators = document.querySelectorAll('.member-indicator');
+            
+            if (!memberStatsGrid) return;
+            
+            let currentIndex = 0;
+            
+            // 滑動到指定成員
+            function scrollToMember(index) {
+                const cardWidth = memberStatsGrid.clientWidth;
+                memberStatsGrid.scrollTo({
+                    left: index * cardWidth,
+                    behavior: 'smooth'
+                });
+                updateActiveIndicator(index);
+                currentIndex = index;
+            }
+            
+            // 更新活動指示器
+            function updateActiveIndicator(index) {
+                indicators.forEach((indicator, i) => {
+                    indicator.classList.toggle('active', i === index);
+                });
+            }
+            
+            // 監聽滑動事件
+            memberStatsGrid.addEventListener('scroll', () => {
+                const cardWidth = memberStatsGrid.clientWidth;
+                const scrollLeft = memberStatsGrid.scrollLeft;
+                const newIndex = Math.round(scrollLeft / cardWidth);
+                
+                if (newIndex !== currentIndex && newIndex >= 0 && newIndex < indicators.length) {
+                    currentIndex = newIndex;
+                    updateActiveIndicator(currentIndex);
+                }
+            });
+            
+            // 添加觸控滑動支持
+            let startX = 0;
+            let isScrolling = false;
+            
+            memberStatsGrid.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isScrolling = false;
+            });
+            
+            memberStatsGrid.addEventListener('touchmove', (e) => {
+                if (!isScrolling) {
+                    const currentX = e.touches[0].clientX;
+                    const diffX = Math.abs(currentX - startX);
+                    
+                    if (diffX > 10) {
+                        isScrolling = true;
+                    }
+                }
+            });
+            
+            memberStatsGrid.addEventListener('touchend', () => {
+                if (isScrolling) {
+                    const cardWidth = memberStatsGrid.clientWidth;
+                    const scrollLeft = memberStatsGrid.scrollLeft;
+                    const newIndex = Math.round(scrollLeft / cardWidth);
+                    
+                    if (newIndex !== currentIndex && newIndex >= 0 && newIndex < indicators.length) {
+                        currentIndex = newIndex;
+                        updateActiveIndicator(currentIndex);
+                    }
+                }
             });
         }
 
