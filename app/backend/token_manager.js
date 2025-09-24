@@ -137,12 +137,14 @@ class TokenManager {
                 throw new Error('Token不能為空');
             }
 
-            // 驗證token格式 (GitHub token通常是40個字符的十六進制字符串)
-            if (!/^[a-f0-9]{40}$/i.test(token.trim())) {
-                console.log('⚠️ 警告: Token格式可能不正確');
+            const cleanToken = token.trim();
+            
+            // 驗證token格式 (GitHub Personal Access Token 以 ghp_ 開頭，長度約40+字符)
+            if (!cleanToken.startsWith('ghp_') || cleanToken.length < 40) {
+                console.log('⚠️ 警告: Token格式可能不正確，GitHub Personal Access Token 應以 ghp_ 開頭');
             }
 
-            const encryptedData = this.encryptToken(token.trim());
+            const encryptedData = this.encryptToken(cleanToken);
             fs.writeFileSync(this.tokenFile, JSON.stringify(encryptedData));
             
             // 設置文件權限為只有用戶可讀寫
@@ -195,6 +197,31 @@ class TokenManager {
     // 檢查token是否存在
     hasToken() {
         return fs.existsSync(this.tokenFile);
+    }
+
+    // 獲取token信息
+    async getTokenInfo() {
+        try {
+            const token = this.loadToken();
+            if (!token) {
+                return null;
+            }
+            
+            // 驗證token有效性
+            const validation = await this.validateToken(token);
+            return {
+                valid: validation.valid,
+                user: validation.user || null,
+                error: validation.error || null
+            };
+        } catch (error) {
+            console.error('❌ 獲取Token信息失敗:', error.message);
+            return {
+                valid: false,
+                user: null,
+                error: error.message
+            };
+        }
     }
 
     // 驗證token有效性 (通過GitHub API)
