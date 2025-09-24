@@ -18,9 +18,15 @@ try {
 
 class TokenManager {
     constructor() {
-        this.tokenFile = path.join(__dirname, '.github_token');
-        this.keyFile = path.join(__dirname, '.github_key');
+        // 使用相對於項目根目錄的路徑
+        this.tokenFile = path.join(process.cwd(), 'app', 'backend', '.github_token');
+        this.keyFile = path.join(process.cwd(), 'app', 'backend', '.github_key');
         this.algorithm = 'aes-256-gcm';
+        
+        console.log('🔍 TokenManager 初始化:');
+        console.log('🔍 工作目錄:', process.cwd());
+        console.log('🔍 Token檔案路徑:', this.tokenFile);
+        console.log('🔍 密鑰檔案路徑:', this.keyFile);
     }
 
     // 生成或讀取加密密鑰
