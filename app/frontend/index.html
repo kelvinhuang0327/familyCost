@@ -301,21 +301,111 @@
             }
             
             .calendar-grid {
-                grid-template-columns: repeat(7, 1fr);
-                gap: 1px;
+                display: grid !important;
+                grid-template-columns: repeat(7, 1fr) !important;
+                gap: 2px !important;
+                background: #f8f9fa !important;
+                border-radius: 8px !important;
+                padding: 8px !important;
+                margin: 10px 0 !important;
             }
             
             .calendar-day {
-                padding: 6px 2px;
-                font-size: 0.7em;
+                padding: 8px 4px !important;
+                font-size: 0.8em !important;
+                background: white !important;
+                border-radius: 4px !important;
+                text-align: center !important;
+                min-height: 40px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            }
+            
+            .calendar-header {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                margin-bottom: 15px !important;
+                padding: 10px 0 !important;
+            }
+            
+            .calendar-title {
+                font-size: 1.2em !important;
+                font-weight: bold !important;
+                color: #333 !important;
+                text-align: center !important;
+                flex: 1 !important;
+            }
+            
+            .calendar-nav {
+                padding: 8px 12px !important;
+                font-size: 0.8em !important;
+                background: #007bff !important;
+                color: white !important;
+                border: none !important;
+                border-radius: 6px !important;
+                cursor: pointer !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            .calendar-nav:hover {
+                background: #0056b3 !important;
             }
             
             .day-number {
-                font-size: 0.8em;
+                font-size: 0.9em !important;
+                font-weight: bold !important;
+                color: #333 !important;
+                margin-bottom: 2px !important;
             }
             
             .day-records {
-                font-size: 0.6em;
+                font-size: 0.7em !important;
+                color: #666 !important;
+                text-align: center !important;
+                line-height: 1.2 !important;
+            }
+            
+            .day-income {
+                color: #51cf66 !important;
+                font-weight: 500 !important;
+                font-size: 0.65em !important;
+                margin: 1px 0 !important;
+            }
+            
+            .day-expense {
+                color: #ff6b6b !important;
+                font-weight: 500 !important;
+                font-size: 0.65em !important;
+                margin: 1px 0 !important;
+            }
+            
+            .calendar-day.today {
+                background: #e3f2fd !important;
+                border: 2px solid #2196f3 !important;
+            }
+            
+            .calendar-day.has-records {
+                background: #fff3e0 !important;
+            }
+            
+            .calendar-weekdays {
+                display: grid !important;
+                grid-template-columns: repeat(7, 1fr) !important;
+                gap: 2px !important;
+                margin-bottom: 5px !important;
+                padding: 0 8px !important;
+            }
+            
+            .calendar-weekday {
+                text-align: center !important;
+                font-size: 0.75em !important;
+                font-weight: bold !important;
+                color: #666 !important;
+                padding: 5px 0 !important;
             }
             
             .chart-section {
@@ -1976,6 +2066,15 @@
                         <button class="calendar-nav" onclick="changeMonth(-1)">‹ 上月</button>
                         <div class="calendar-title" id="calendarTitle"></div>
                         <button class="calendar-nav" onclick="changeMonth(1)">下月 ›</button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <div class="calendar-weekday">日</div>
+                        <div class="calendar-weekday">一</div>
+                        <div class="calendar-weekday">二</div>
+                        <div class="calendar-weekday">三</div>
+                        <div class="calendar-weekday">四</div>
+                        <div class="calendar-weekday">五</div>
+                        <div class="calendar-weekday">六</div>
                     </div>
                     <div class="calendar-grid" id="calendarGrid"></div>
                 </div>
