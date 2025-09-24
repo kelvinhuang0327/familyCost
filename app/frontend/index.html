@@ -114,10 +114,10 @@
             }
             
             .stat-card {
-                padding: 15px !important;
+                padding: 18px !important;
                 margin-bottom: 8px !important;
-                min-width: 160px !important;
-                width: 160px !important;
+                min-width: 200px !important;
+                width: 200px !important;
                 flex-shrink: 0 !important;
                 scroll-snap-align: center !important;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
@@ -158,8 +158,8 @@
             }
             
             .stat-card h3 {
-                font-size: 1.2em !important;
-                margin-bottom: 8px !important;
+                font-size: 1.4em !important;
+                margin-bottom: 10px !important;
                 color: white !important;
                 font-weight: bold !important;
                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
@@ -167,7 +167,7 @@
             }
             
             .stat-card .stat-value {
-                font-size: 1.4em !important;
+                font-size: 1.6em !important;
                 color: white !important;
                 font-weight: bold !important;
                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
@@ -176,7 +176,7 @@
             
             .stat-card p {
                 color: rgba(255, 255, 255, 0.9) !important;
-                font-size: 0.9em !important;
+                font-size: 1em !important;
                 margin: 0 !important;
                 text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
                 text-align: center !important;
@@ -502,17 +502,40 @@
             }
             
             /* 緊湊的篩選標籤 */
-            .filter-tabs {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 4px;
-                margin-bottom: 10px;
+            .record-filter-tabs {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 6px !important;
+                margin-bottom: 15px !important;
+                justify-content: center !important;
             }
             
             .filter-tab {
-                padding: 6px 10px;
-                font-size: 0.75em;
-                border-radius: 4px;
+                padding: 8px 12px !important;
+                font-size: 0.8em !important;
+                border-radius: 6px !important;
+                min-width: 60px !important;
+                text-align: center !important;
+                background: #f8f9fa !important;
+                border: 1px solid #dee2e6 !important;
+                color: #495057 !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            .filter-tab.active {
+                background: #007bff !important;
+                color: white !important;
+                border-color: #007bff !important;
+            }
+            
+            .filter-tab:hover {
+                background: #e9ecef !important;
+                border-color: #adb5bd !important;
+            }
+            
+            .filter-tab.active:hover {
+                background: #0056b3 !important;
+                border-color: #0056b3 !important;
             }
             
             /* 緊湊的圖表區域 */
@@ -1053,6 +1076,10 @@
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 15px;
+            }
+            
+            .member-stats .stat-card {
+                background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%) !important;
             }
         }
 
@@ -1653,11 +1680,11 @@
                 <div class="records-list">
                     <h3>記錄查看</h3>
                     <div class="record-filter-tabs">
-                        <button class="filter-tab active" onclick="showExpenseRecords()">總支出</button>
-                        <button class="filter-tab" onclick="showCashExpenseRecords()">現金支出</button>
-                        <button class="filter-tab" onclick="showCreditExpenseRecords()">信用卡支出</button>
-                        <button class="filter-tab" onclick="showIncomeRecords()">總收入</button>
-                        <button class="filter-tab" onclick="showAllRecords()">全部記錄</button>
+                        <button class="filter-tab active" onclick="showExpenseRecords()">支出</button>
+                        <button class="filter-tab" onclick="showCashExpenseRecords()">現金</button>
+                        <button class="filter-tab" onclick="showCreditExpenseRecords()">信用卡</button>
+                        <button class="filter-tab" onclick="showIncomeRecords()">收入</button>
+                        <button class="filter-tab" onclick="showAllRecords()">全部</button>
                     </div>
                     <div id="recentRecords"></div>
                 </div>
@@ -2662,7 +2689,7 @@
             
             // 滑動到指定位置
             function scrollToStats(index) {
-                const cardWidth = 160; // 固定卡片寬度
+                const cardWidth = 200; // 固定卡片寬度
                 statsGrid.scrollTo({
                     left: index * cardWidth,
                     behavior: 'smooth'
@@ -2677,7 +2704,7 @@
             
             // 監聽滑動事件
             statsGrid.addEventListener('scroll', () => {
-                const cardWidth = 160; // 固定卡片寬度
+                const cardWidth = 200; // 固定卡片寬度
                 const scrollLeft = statsGrid.scrollLeft;
                 const newIndex = Math.round(scrollLeft / cardWidth);
                 
@@ -2708,7 +2735,7 @@
             
             statsGrid.addEventListener('touchend', () => {
                 if (isScrolling) {
-                    const cardWidth = 160; // 固定卡片寬度
+                    const cardWidth = 200; // 固定卡片寬度
                     const scrollLeft = statsGrid.scrollLeft;
                     const newIndex = Math.round(scrollLeft / cardWidth);
                     
