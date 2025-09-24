@@ -916,6 +916,30 @@ app.post('/api/excel/compare', (req, res, next) => {
                     });
                 }
                 
+                // 顯示比對不一致的詳細原因
+                if (!isMatch && (memberMatch || dateMatch || amountMatch || mainCategoryMatch)) {
+                    console.log('⚠️ [API] 比對不一致:', {
+                        excel: {
+                            member: excelRecord.member,
+                            date: excelRecord.date,
+                            mainCategory: excelRecord.mainCategory,
+                            amount: excelRecord.amount
+                        },
+                        system: {
+                            member: systemRecord.member,
+                            date: systemRecord.date,
+                            mainCategory: systemMainCategory,
+                            amount: systemRecord.amount
+                        },
+                        differences: {
+                            member: memberMatch ? '✅' : `❌ (Excel: ${excelRecord.member} vs System: ${systemRecord.member})`,
+                            date: dateMatch ? '✅' : `❌ (Excel: ${excelRecord.date} vs System: ${systemRecord.date})`,
+                            amount: amountMatch ? '✅' : `❌ (Excel: ${excelRecord.amount} vs System: ${systemRecord.amount})`,
+                            mainCategory: mainCategoryMatch ? '✅' : `❌ (Excel: ${excelRecord.mainCategory} vs System: ${systemMainCategory})`
+                        }
+                    });
+                }
+                
                 if (isMatch) {
                     console.log('🔍 [API] 找到重複記錄:', {
                         excel: {
