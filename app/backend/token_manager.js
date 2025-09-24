@@ -47,26 +47,20 @@ class TokenManager {
             const key = this.getOrCreateKey();
             const iv = crypto.randomBytes(16);
             
-            // 使用更兼容的加密方法
-            let cipher;
-            try {
-                // 嘗試使用 GCM 模式
-                cipher = crypto.createCipherGCM(this.algorithm, key, iv);
-                cipher.setAAD(Buffer.from('github-token', 'utf8'));
-            } catch (gcmError) {
-                console.log('⚠️ GCM模式不可用，使用CBC模式');
-                // 回退到 CBC 模式
-                cipher = crypto.createCipher('aes-256-cbc', key);
-            }
+            // 使用 GCM 模式加密
+            const cipher = crypto.createCipherGCM('aes-256-gcm', key, iv);
+            cipher.setAAD(Buffer.from('github-token', 'utf8'));
             
             let encrypted = cipher.update(token, 'utf8', 'hex');
             encrypted += cipher.final('hex');
             
+            const authTag = cipher.getAuthTag();
+            
             const encryptedData = {
                 encrypted: encrypted,
                 iv: iv.toString('hex'),
-                authTag: cipher.getAuthTag ? cipher.getAuthTag().toString('hex') : null,
-                algorithm: cipher.getAuthTag ? 'aes-256-gcm' : 'aes-256-cbc'
+                authTag: authTag.toString('hex'),
+                algorithm: 'aes-256-gcm'
             };
             
             return encryptedData;
@@ -81,25 +75,12 @@ class TokenManager {
         try {
             const key = this.getOrCreateKey();
             const iv = Buffer.from(encryptedData.iv, 'hex');
+            const authTag = Buffer.from(encryptedData.authTag, 'hex');
             
-            let decipher;
-            const algorithm = encryptedData.algorithm || 'aes-256-gcm';
-            
-            if (algorithm === 'aes-256-gcm' && encryptedData.authTag) {
-                try {
-                    // 使用 GCM 模式
-                    const authTag = Buffer.from(encryptedData.authTag, 'hex');
-                    decipher = crypto.createDecipherGCM(this.algorithm, key, iv);
-                    decipher.setAAD(Buffer.from('github-token', 'utf8'));
-                    decipher.setAuthTag(authTag);
-                } catch (gcmError) {
-                    console.log('⚠️ GCM解密失敗，嘗試CBC模式');
-                    decipher = crypto.createDecipher('aes-256-cbc', key);
-                }
-            } else {
-                // 使用 CBC 模式
-                decipher = crypto.createDecipher('aes-256-cbc', key);
-            }
+            // 使用 GCM 模式解密
+            const decipher = crypto.createDecipherGCM('aes-256-gcm', key, iv);
+            decipher.setAAD(Buffer.from('github-token', 'utf8'));
+            decipher.setAuthTag(authTag);
             
             let decrypted = decipher.update(encryptedData.encrypted, 'hex', 'utf8');
             decrypted += decipher.final('utf8');
