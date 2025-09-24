@@ -44,10 +44,29 @@ const storage = multer.diskStorage({
 const upload = multer({ 
     storage: storage,
     fileFilter: function (req, file, cb) {
-        if (file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-            file.mimetype === 'application/vnd.ms-excel') {
+        console.log('🔍 [multer] 檢查檔案:', {
+            originalname: file.originalname,
+            mimetype: file.mimetype,
+            fieldname: file.fieldname
+        });
+        
+        // 檢查檔案副檔名
+        const isExcelFile = file.originalname.match(/\.(xlsx|xls)$/i);
+        
+        // 檢查 MIME 類型 (放寬檢查)
+        const isValidMimeType = file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                               file.mimetype === 'application/vnd.ms-excel' ||
+                               file.mimetype === 'application/octet-stream' ||
+                               file.mimetype === '';
+        
+        if (isExcelFile && isValidMimeType) {
+            console.log('✅ [multer] 檔案通過驗證');
             cb(null, true);
         } else {
+            console.log('❌ [multer] 檔案驗證失敗:', {
+                isExcelFile: isExcelFile,
+                isValidMimeType: isValidMimeType
+            });
             cb(new Error('只允許上傳 Excel 檔案 (.xlsx, .xls)'), false);
         }
     },
@@ -192,9 +211,15 @@ function processExcelRow(row, currentMember = null) {
         if (amount !== undefined && amount !== null) {
             console.log('🔍 [processExcelRow] 處理金額前:', amount, '類型:', typeof amount);
             
-            // 移除千分位逗號
+            // 移除千分位逗號和貨幣符號
             if (typeof amount === 'string') {
-                amount = amount.replace(/,/g, '');
+                amount = amount.replace(/,/g, ''); // 移除千分位逗號
+                amount = amount.replace(/\$/g, ''); // 移除美元符號
+                amount = amount.replace(/NT\$/g, ''); // 移除台幣符號
+                amount = amount.replace(/¥/g, ''); // 移除日圓符號
+                amount = amount.replace(/€/g, ''); // 移除歐元符號
+                amount = amount.replace(/£/g, ''); // 移除英鎊符號
+                amount = amount.trim(); // 移除前後空白
             }
             amount = parseFloat(amount);
             
@@ -727,9 +752,23 @@ app.get('/api/debug/data-format', async (req, res) => {
 });
 
 // Excel 資料比對和匯入 API
-app.post('/api/excel/compare', upload.single('excelFile'), async (req, res) => {
+app.post('/api/excel/compare', (req, res, next) => {
+    upload.single('excelFile')(req, res, (err) => {
+        if (err) {
+            console.log('❌ [multer] 檔案上傳錯誤:', err.message);
+            return res.status(400).json({ 
+                success: false, 
+                message: `檔案上傳失敗: ${err.message}`,
+                error: err.message 
+            });
+        }
+        next();
+    });
+}, async (req, res) => {
     try {
         console.log('🔍 [API] POST /api/excel/compare 開始處理...');
+        console.log('🔍 [API] 請求標頭:', req.headers);
+        console.log('🔍 [API] 請求檔案:', req.file);
         
         if (!req.file) {
             console.log('❌ [API] 沒有上傳檔案');
@@ -824,13 +863,77 @@ app.post('/api/excel/compare', upload.single('excelFile'), async (req, res) => {
         }
         
         for (const excelRecord of processedData) {
-            // 檢查是否已存在（基於日期、金額、描述等關鍵欄位）
+            // 檢查是否已存在（只比較：成員 + 日期 + 主類別 + 金額）
             const isDuplicate = systemData.some(systemRecord => {
-                return systemRecord && 
-                       systemRecord.date === excelRecord.date &&
-                       systemRecord.amount === excelRecord.amount &&
-                       systemRecord.description === excelRecord.description &&
-                       systemRecord.member === excelRecord.member;
+                if (!systemRecord) return false;
+                
+                // 比較成員
+                const memberMatch = systemRecord.member === excelRecord.member;
+                
+                // 比較日期
+                const dateMatch = systemRecord.date === excelRecord.date;
+                
+                // 比較金額
+                const amountMatch = systemRecord.amount === excelRecord.amount;
+                
+                // 比較主類別
+                let systemMainCategory = '';
+                
+                // 優先使用 mainCategory 欄位
+                if (systemRecord.mainCategory) {
+                    systemMainCategory = systemRecord.mainCategory;
+                } else if (systemRecord.description && systemRecord.description.includes('-')) {
+                    // 如果沒有 mainCategory，從描述中提取
+                    systemMainCategory = systemRecord.description.split('-')[0].trim();
+                }
+                
+                const mainCategoryMatch = systemMainCategory === excelRecord.mainCategory;
+                
+                const isMatch = memberMatch && dateMatch && amountMatch && mainCategoryMatch;
+                
+                // 詳細的比對日誌（每10筆記錄顯示一次）
+                if (processedData.indexOf(excelRecord) % 10 === 0) {
+                    console.log('🔍 [API] 比對過程:', {
+                        excel: {
+                            member: excelRecord.member,
+                            date: excelRecord.date,
+                            mainCategory: excelRecord.mainCategory,
+                            amount: excelRecord.amount
+                        },
+                        system: {
+                            member: systemRecord.member,
+                            date: systemRecord.date,
+                            mainCategory: systemMainCategory,
+                            amount: systemRecord.amount
+                        },
+                        matches: {
+                            member: memberMatch,
+                            date: dateMatch,
+                            amount: amountMatch,
+                            mainCategory: mainCategoryMatch,
+                            overall: isMatch
+                        }
+                    });
+                }
+                
+                if (isMatch) {
+                    console.log('🔍 [API] 找到重複記錄:', {
+                        excel: {
+                            member: excelRecord.member,
+                            date: excelRecord.date,
+                            mainCategory: excelRecord.mainCategory,
+                            amount: excelRecord.amount
+                        },
+                        system: {
+                            member: systemRecord.member,
+                            date: systemRecord.date,
+                            mainCategory: systemMainCategory,
+                            amount: systemRecord.amount
+                        }
+                    });
+                }
+                
+                return isMatch;
             });
             
             if (isDuplicate) {
