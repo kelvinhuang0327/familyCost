@@ -337,42 +337,66 @@ app.post('/api/sync', async (req, res) => {
 // Token管理API
 app.post('/api/token/save', async (req, res) => {
     try {
+        console.log('🔍 [API] POST /api/token/save 開始處理...');
         const { token } = req.body;
+        console.log('🔍 [API] 收到Token長度:', token ? token.length : 'null');
+        console.log('🔍 [API] Token前綴:', token ? token.substring(0, 10) + '...' : 'null');
+        
         if (!token) {
+            console.log('❌ [API] Token為空');
             return res.status(400).json({ success: false, message: 'Token不能為空' });
         }
 
         const cleanToken = token.trim();
+        console.log('🔍 [API] 清理後Token長度:', cleanToken.length);
+        
         if (!/^[\x00-\x7F]+$/.test(cleanToken)) {
+            console.log('❌ [API] Token包含非ASCII字符');
             return res.status(400).json({ success: false, message: 'Token包含非ASCII字符，請檢查輸入' });
         }
         if (cleanToken.length < 20 || cleanToken.length > 100) {
+            console.log('❌ [API] Token長度不正確:', cleanToken.length);
             return res.status(400).json({ success: false, message: 'Token長度不正確，GitHub Token通常為40個字符' });
         }
 
-        console.log('🔍 開始驗證Token...');
+        console.log('🔍 [API] 開始驗證Token...');
         const validation = await tokenManager.validateToken(cleanToken);
+        console.log('🔍 [API] Token驗證結果:', validation);
+        
         if (!validation.valid) {
+            console.log('❌ [API] Token驗證失敗:', validation.error);
             return res.status(400).json({ success: false, message: `Token無效: ${validation.error}` });
         }
 
-        console.log('✅ Token驗證成功，開始儲存...');
+        console.log('✅ [API] Token驗證成功，開始儲存...');
         tokenManager.saveToken(cleanToken);
         tokenManager.setGitRemote(cleanToken);
-        res.json({ success: true, message: `Token已儲存，用戶: ${validation.user}`, user: validation.user });
+        
+        const response = { success: true, message: `Token已儲存，用戶: ${validation.user}`, user: validation.user };
+        console.log('✅ [API] Token儲存成功，返回響應:', response);
+        res.json(response);
     } catch (error) {
-        console.error('❌ Token儲存失敗:', error);
+        console.error('❌ [API] Token儲存失敗:', error);
+        console.error('❌ [API] 錯誤堆疊:', error.stack);
         res.status(500).json({ success: false, message: `Token儲存失敗: ${error.message}`, error: error.message });
     }
 });
 
 app.get('/api/token/status', async (req, res) => {
     try {
+        console.log('🔍 [API] GET /api/token/status 開始處理...');
         const hasToken = tokenManager.hasToken();
+        console.log('🔍 [API] hasToken結果:', hasToken);
+        
         const tokenInfo = hasToken ? await tokenManager.getTokenInfo() : null;
-        res.json({ success: true, hasToken, tokenInfo });
+        console.log('🔍 [API] tokenInfo結果:', tokenInfo);
+        
+        const response = { success: true, hasToken, tokenInfo };
+        console.log('✅ [API] Token狀態檢查完成，返回響應:', response);
+        res.json(response);
     } catch (error) {
-        console.error('❌ Token狀態檢查失敗:', error);
+        console.error('❌ [API] Token狀態檢查失敗:', error);
+        console.error('❌ [API] 錯誤堆疊:', error.stack);
         res.status(500).json({ success: false, message: `Token狀態檢查失敗: ${error.message}`, error: error.message });
     }
 });
