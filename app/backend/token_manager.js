@@ -204,7 +204,11 @@ class TokenManager {
         try {
             const token = this.loadToken();
             if (!token) {
-                return null;
+                return {
+                    valid: false,
+                    user: null,
+                    error: 'Token不存在'
+                };
             }
             
             // 驗證token有效性

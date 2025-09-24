@@ -366,10 +366,10 @@ app.post('/api/token/save', async (req, res) => {
     }
 });
 
-app.get('/api/token/status', (req, res) => {
+app.get('/api/token/status', async (req, res) => {
     try {
         const hasToken = tokenManager.hasToken();
-        const tokenInfo = hasToken ? tokenManager.getTokenInfo() : null;
+        const tokenInfo = hasToken ? await tokenManager.getTokenInfo() : null;
         res.json({ success: true, hasToken, tokenInfo });
     } catch (error) {
         console.error('❌ Token狀態檢查失敗:', error);
