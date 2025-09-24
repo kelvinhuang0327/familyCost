@@ -4056,20 +4056,8 @@
             
             calendarTitle.textContent = `${currentYear}年${currentMonth + 1}月`;
             
-            // 清空日曆
+            // 清空日曆（不包含星期標題，因為HTML中已經有了）
             calendarGrid.innerHTML = '';
-            
-            // 添加星期標題
-            const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
-            weekDays.forEach(day => {
-                const dayHeader = document.createElement('div');
-                dayHeader.style.background = '#f8f9fa';
-                dayHeader.style.fontWeight = 'bold';
-                dayHeader.style.textAlign = 'center';
-                dayHeader.style.padding = '10px';
-                dayHeader.textContent = day;
-                calendarGrid.appendChild(dayHeader);
-            });
             
             // 獲取當月第一天和最後一天
             const firstDay = new Date(currentYear, currentMonth, 1);
@@ -4110,14 +4098,9 @@
 
         function updateDayRecords() {
             // 先清空所有日期的記錄
-            for (let i = 0; i < 42; i++) {
-                const startDate = new Date(currentYear, currentMonth, 1);
-                startDate.setDate(startDate.getDate() - startDate.getDay() + i);
-                const dayRecordsElement = document.getElementById(`day-records-${formatDateToYYYYMMDD(startDate)}`);
-                if (dayRecordsElement) {
-                    dayRecordsElement.innerHTML = '';
-                }
-            }
+            document.querySelectorAll('.day-records').forEach(element => {
+                element.innerHTML = '';
+            });
             
             // 按日期和成員分組計算總額
             const dayMemberTotals = {};
@@ -4152,6 +4135,14 @@
                             dayRecordsElement.appendChild(recordDiv);
                         }
                     });
+                    
+                    // 如果有記錄，添加has-records類
+                    if (dayRecordsElement.children.length > 0) {
+                        const dayElement = dayRecordsElement.closest('.calendar-day');
+                        if (dayElement) {
+                            dayElement.classList.add('has-records');
+                        }
+                    }
                 }
             });
         }
