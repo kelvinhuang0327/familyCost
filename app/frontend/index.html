@@ -3159,7 +3159,9 @@
         // 載入版本信息
         async function loadVersionInfo() {
             try {
-                const response = await fetch('data/version.json');
+                // 添加時間戳避免快取
+                const timestamp = new Date().getTime();
+                const response = await fetch(`data/version.json?t=${timestamp}`);
                 const versionData = await response.json();
                 
                 const versionElement = document.getElementById('versionNumber');
