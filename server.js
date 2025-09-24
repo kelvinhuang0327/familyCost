@@ -568,6 +568,36 @@ app.delete('/api/token', (req, res) => {
     }
 });
 
+// 測試 API - 檢查資料格式
+app.get('/api/debug/data-format', async (req, res) => {
+    try {
+        const dataPath = path.join(__dirname, 'data', 'data.json');
+        const dataContent = await fs.readFile(dataPath, 'utf8');
+        const parsedData = JSON.parse(dataContent);
+        
+        let systemData = [];
+        if (Array.isArray(parsedData)) {
+            systemData = parsedData;
+        } else if (parsedData && Array.isArray(parsedData.records)) {
+            systemData = parsedData.records;
+        }
+        
+        res.json({
+            success: true,
+            data: {
+                originalFormat: typeof parsedData,
+                isArray: Array.isArray(parsedData),
+                hasRecords: parsedData && parsedData.records ? true : false,
+                recordsCount: systemData.length,
+                systemDataType: Array.isArray(systemData) ? 'Array' : typeof systemData,
+                sampleRecord: systemData[0] || null
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // Excel 資料比對和匯入 API
 app.post('/api/excel/compare', upload.single('excelFile'), async (req, res) => {
     try {
@@ -592,6 +622,7 @@ app.post('/api/excel/compare', upload.single('excelFile'), async (req, res) => {
         // 處理 Excel 資料格式
         const processedData = processExcelData(excelData);
         console.log('🔍 [API] 處理後資料筆數:', processedData.length);
+        console.log('🔍 [API] 處理後資料類型:', Array.isArray(processedData) ? 'Array' : typeof processedData);
         console.log('🔍 [API] 處理後資料範例:', processedData.slice(0, 3));
         
         // 讀取系統現有資料
@@ -632,6 +663,12 @@ app.post('/api/excel/compare', upload.single('excelFile'), async (req, res) => {
         if (!Array.isArray(systemData)) {
             console.log('❌ [API] systemData 不是數組，強制轉換為空數組');
             systemData = [];
+        }
+        
+        // 確保 processedData 也是數組
+        if (!Array.isArray(processedData)) {
+            console.log('❌ [API] processedData 不是數組，強制轉換為空數組');
+            processedData = [];
         }
         
         for (const excelRecord of processedData) {
