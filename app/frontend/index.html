@@ -1445,6 +1445,132 @@
             margin: 15px 0;
         }
 
+        /* Excel 匯入功能樣式 */
+        .excel-import-section {
+            margin-top: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #f9f9f9;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #007bff;
+            background: #f0f8ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+
+        .upload-content {
+            pointer-events: none;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .upload-hint {
+            color: #666;
+            font-size: 0.9em;
+            margin: 10px 0;
+        }
+
+        .compare-result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .result-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #6c757d;
+        }
+
+        .summary-item.new {
+            border-left-color: #28a745;
+        }
+
+        .summary-item.duplicate {
+            border-left-color: #ffc107;
+        }
+
+        .summary-item .label {
+            font-weight: 500;
+        }
+
+        .summary-item .value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .records-list {
+            margin-top: 15px;
+        }
+
+        .records-preview {
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 6px;
+            padding: 15px;
+        }
+
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .record-item:last-child {
+            border-bottom: none;
+        }
+
+        .record-info {
+            flex: 1;
+        }
+
+        .record-date {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .record-details {
+            font-size: 0.9em;
+            color: #666;
+        }
+
         .env-notice .notice-content h4 {
             margin: 0 0 10px 0;
             color: #856404;
@@ -1624,10 +1750,10 @@
 
         /* 桌面版成員統計 - 只在非手機版生效 */
         @media screen and (min-width: 481px) {
-            .member-stats-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 15px;
+        .member-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             }
             
             .member-stats .stat-card {
@@ -2594,6 +2720,65 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Excel 資料匯入 -->
+                <div class="settings-section">
+                    <h3>📊 Excel 資料匯入</h3>
+                    <p>上傳 Excel 檔案，比對並匯入新資料到系統中</p>
+                    
+                    <div class="excel-import-section">
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-content">
+                                <div class="upload-icon">📁</div>
+                                <p>點擊或拖拽 Excel 檔案到此處</p>
+                                <p class="upload-hint">支援 .xlsx 和 .xls 格式，最大 10MB</p>
+                                <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;">
+                                <button class="btn" onclick="document.getElementById('excelFileInput').click()">選擇檔案</button>
+                            </div>
+                        </div>
+                        
+                        <div id="compareResult" class="compare-result" style="display: none;">
+                            <h4>📋 比對結果</h4>
+                            <div class="result-summary">
+                                <div class="summary-item">
+                                    <span class="label">Excel 總記錄數:</span>
+                                    <span class="value" id="totalExcelRecords">0</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">系統現有記錄數:</span>
+                                    <span class="value" id="systemRecords">0</span>
+                                </div>
+                                <div class="summary-item new">
+                                    <span class="label">可新增記錄數:</span>
+                                    <span class="value" id="newRecords">0</span>
+                                </div>
+                                <div class="summary-item duplicate">
+                                    <span class="label">重複記錄數:</span>
+                                    <span class="value" id="duplicateRecords">0</span>
+                                </div>
+                            </div>
+                            
+                            <div class="result-actions">
+                                <button class="btn btn-primary" id="importBtn" onclick="importNewRecords()" disabled>
+                                    📥 匯入新記錄
+                                </button>
+                                <button class="btn btn-secondary" onclick="clearCompareResult()">
+                                    🔄 重新比對
+                                </button>
+                            </div>
+                            
+                            <div id="newRecordsList" class="records-list" style="display: none;">
+                                <h5>🆕 新記錄預覽</h5>
+                                <div class="records-preview" id="newRecordsPreview"></div>
+                            </div>
+                            
+                            <div id="duplicateRecordsList" class="records-list" style="display: none;">
+                                <h5>🔄 重複記錄</h5>
+                                <div class="records-preview" id="duplicateRecordsPreview"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -3379,12 +3564,202 @@
             }, { passive: false });
         }
 
+        // Excel 匯入功能
+        let currentCompareData = null;
+
+        // 初始化檔案上傳功能
+        function initExcelUpload() {
+            const fileInput = document.getElementById('excelFileInput');
+            const uploadArea = document.getElementById('uploadArea');
+
+            // 檔案選擇事件
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileUpload(e.target.files[0]);
+                }
+            });
+
+            // 拖拽功能
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileUpload(files[0]);
+                }
+            });
+
+            // 點擊上傳區域
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+        }
+
+        // 處理檔案上傳
+        async function handleFileUpload(file) {
+            console.log('📁 開始處理檔案上傳:', file.name);
+            
+            // 驗證檔案類型
+            if (!file.name.match(/\.(xlsx|xls)$/i)) {
+                alert('❌ 請選擇 Excel 檔案 (.xlsx 或 .xls)');
+                return;
+            }
+
+            // 驗證檔案大小
+            if (file.size > 10 * 1024 * 1024) {
+                alert('❌ 檔案大小不能超過 10MB');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('excelFile', file);
+
+            try {
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/excel/compare', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('✅ Excel 比對成功:', result.data);
+                    displayCompareResult(result.data);
+                } else {
+                    console.error('❌ Excel 比對失敗:', result.message);
+                    alert('❌ Excel 比對失敗: ' + result.message);
+                }
+            } catch (error) {
+                console.error('❌ 上傳失敗:', error);
+                alert('❌ 上傳失敗: ' + error.message);
+            }
+        }
+
+        // 顯示比對結果
+        function displayCompareResult(data) {
+            currentCompareData = data;
+            
+            // 更新統計數據
+            document.getElementById('totalExcelRecords').textContent = data.totalExcelRecords;
+            document.getElementById('systemRecords').textContent = data.systemRecords;
+            document.getElementById('newRecords').textContent = data.newRecords;
+            document.getElementById('duplicateRecords').textContent = data.duplicateRecords;
+            
+            // 顯示比對結果
+            document.getElementById('compareResult').style.display = 'block';
+            
+            // 啟用/禁用匯入按鈕
+            const importBtn = document.getElementById('importBtn');
+            if (data.newRecords > 0) {
+                importBtn.disabled = false;
+                importBtn.textContent = `📥 匯入 ${data.newRecords} 筆新記錄`;
+            } else {
+                importBtn.disabled = true;
+                importBtn.textContent = '📥 匯入新記錄';
+            }
+            
+            // 顯示記錄預覽
+            displayRecordsPreview(data.newRecordsData, 'newRecordsPreview', 'newRecordsList');
+            displayRecordsPreview(data.duplicateRecordsData, 'duplicateRecordsPreview', 'duplicateRecordsList');
+        }
+
+        // 顯示記錄預覽
+        function displayRecordsPreview(records, previewId, listId) {
+            const previewElement = document.getElementById(previewId);
+            const listElement = document.getElementById(listId);
+            
+            if (records.length > 0) {
+                listElement.style.display = 'block';
+                
+                previewElement.innerHTML = records.slice(0, 10).map(record => `
+                    <div class="record-item">
+                        <div class="record-info">
+                            <div class="record-date">${record.date || 'N/A'}</div>
+                            <div class="record-details">
+                                ${record.member || 'N/A'} - ${record.description || 'N/A'} - $${record.amount || 'N/A'}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                if (records.length > 10) {
+                    previewElement.innerHTML += `<div class="record-item"><div class="record-info">... 還有 ${records.length - 10} 筆記錄</div></div>`;
+                }
+            } else {
+                listElement.style.display = 'none';
+            }
+        }
+
+        // 匯入新記錄
+        async function importNewRecords() {
+            if (!currentCompareData || currentCompareData.newRecords === 0) {
+                alert('❌ 沒有可匯入的新記錄');
+                return;
+            }
+
+            if (!confirm(`確定要匯入 ${currentCompareData.newRecords} 筆新記錄嗎？`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/excel/import', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        records: currentCompareData.newRecordsData
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('✅ 匯入成功:', result.data);
+                    alert(`✅ 成功匯入 ${result.data.importedCount} 筆記錄！`);
+                    
+                    // 重新載入資料
+                    loadData();
+                    
+                    // 清除比對結果
+                    clearCompareResult();
+                } else {
+                    console.error('❌ 匯入失敗:', result.message);
+                    alert('❌ 匯入失敗: ' + result.message);
+                }
+            } catch (error) {
+                console.error('❌ 匯入失敗:', error);
+                alert('❌ 匯入失敗: ' + error.message);
+            }
+        }
+
+        // 清除比對結果
+        function clearCompareResult() {
+            document.getElementById('compareResult').style.display = 'none';
+            document.getElementById('excelFileInput').value = '';
+            currentCompareData = null;
+        }
+
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 DOM已載入，開始初始化...');
             
             // 載入版本信息
             loadVersionInfo();
+            
+            // 初始化 Excel 上傳功能
+            initExcelUpload();
             
             // 防止過度滾動
             preventOverScroll();
@@ -3889,10 +4264,10 @@
                 memberCard.innerHTML = `
                     <h4>${member}</h4>
                     <small>收入: $${memberIncome.toLocaleString()}</small>
-                    <small>支出: $${memberExpense.toLocaleString()}</small>
+                            <small>支出: $${memberExpense.toLocaleString()}</small>
                     <div class="balance" style="color: ${memberBalance >= 0 ? '#51cf66' : '#ff6b6b'};">
-                        $${memberBalance.toLocaleString()}
-                    </div>
+                            $${memberBalance.toLocaleString()}
+                        </div>
                     <div class="view-details">
                         點擊查看詳細記錄
                     </div>
@@ -4198,9 +4573,9 @@
                             <h4>${record.member} - ${record.mainCategory}${record.subCategory ? ' - ' + record.subCategory : ''}</h4>
                             <p>${record.description || '無描述'}</p>
                             <p>${record.date}</p>
-                        </div>
+                            </div>
                         <div class="record-amount" style="color: ${record.type === 'income' ? '#51cf66' : '#ff6b6b'};">
-                            ${prefix}$${record.amount.toLocaleString()}
+                                ${prefix}$${record.amount.toLocaleString()}
                         </div>
                     </div>
                 `;
