@@ -9,9 +9,7 @@
     "local": "NODE_ENV=local node server.js",
     "sit": "NODE_ENV=sit node server.js",
     "version:update": "node scripts/update_version.js",
-    "version:show": "cat data/version.json",
-    "build": "echo 'No build step required'",
-    "vercel-build": "echo 'Vercel build completed'"
+    "version:show": "cat data/version.json"
   },
   "dependencies": {
     "express": "^4.19.2",
