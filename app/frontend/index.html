@@ -427,17 +427,20 @@
                 border-radius: 10px !important;
                 padding: 15px !important;
                 margin-bottom: 15px !important;
+                max-height: 400px !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
             }
             
             .records-container {
                 display: flex !important;
-                overflow-x: auto !important;
-                gap: -15px !important;
+                flex-direction: column !important;
+                gap: 10px !important;
                 padding: 10px 0 !important;
-                scroll-snap-type: x mandatory !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                max-height: 350px !important;
                 -webkit-overflow-scrolling: touch !important;
-                align-items: center !important;
-                scroll-behavior: smooth !important;
             }
             
             .records-container::-webkit-scrollbar {
@@ -463,46 +466,18 @@
                 justify-content: space-between !important;
                 align-items: center !important;
                 padding: 12px !important;
-                min-width: 200px !important;
-                width: 200px !important;
+                width: 100% !important;
                 flex-shrink: 0 !important;
-                scroll-snap-align: center !important;
                 background: white !important;
                 border-radius: 8px !important;
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
                 transition: all 0.3s ease !important;
                 position: relative !important;
                 z-index: 1 !important;
-                margin: 0 5px !important;
+                margin: 0 !important;
             }
             
-            .record-item:first-child {
-                margin-left: 10px !important;
-                transform: scale(0.95) !important;
-                z-index: 0 !important;
-            }
-            
-            .record-item:last-child {
-                margin-right: 10px !important;
-                transform: scale(0.95) !important;
-                z-index: 0 !important;
-            }
-            
-            .record-item:nth-child(2) {
-                transform: scale(1) !important;
-                z-index: 2 !important;
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
-            }
-            
-            .record-item:nth-child(3) {
-                transform: scale(0.95) !important;
-                z-index: 1 !important;
-            }
-            
-            .record-item:nth-child(4) {
-                transform: scale(0.9) !important;
-                z-index: 0 !important;
-            }
+            /* 移除記錄項目的特殊樣式，改為垂直列表 */
             
             .record-info {
                 flex: 1 !important;
@@ -510,20 +485,20 @@
             }
             
             .record-info h4 {
-                font-size: 0.9em !important;
-                margin-bottom: 3px !important;
+                font-size: 1em !important;
+                margin-bottom: 5px !important;
                 color: #333 !important;
                 font-weight: bold !important;
             }
             
             .record-info p {
-                font-size: 0.75em !important;
-                margin: 2px 0 !important;
+                font-size: 0.85em !important;
+                margin: 3px 0 !important;
                 color: #666 !important;
             }
             
             .record-amount {
-                font-size: 1em !important;
+                font-size: 1.1em !important;
                 font-weight: bold !important;
                 color: #333 !important;
             }
@@ -3848,7 +3823,6 @@
             
             recordsHtml += `
                     </div>
-                    <div class="swipe-indicator" id="recordsSwipeIndicator"></div>
                 </div>
             `;
             
