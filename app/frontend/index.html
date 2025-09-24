@@ -1571,6 +1571,64 @@
             color: #666;
         }
 
+        /* Excel 格式說明樣式 */
+        .format-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .format-info h4 {
+            margin: 0 0 15px 0;
+            color: #495057;
+        }
+
+        .format-example ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .format-example li {
+            margin: 5px 0;
+        }
+
+        .format-table {
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+
+        .format-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .format-table th,
+        .format-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .format-table th {
+            background: #e9ecef;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .format-table td {
+            color: #6c757d;
+        }
+
+        .format-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
         .env-notice .notice-content h4 {
             margin: 0 0 10px 0;
             color: #856404;
@@ -2725,6 +2783,58 @@
                 <div class="settings-section">
                     <h3>📊 Excel 資料匯入</h3>
                     <p>上傳 Excel 檔案，比對並匯入新資料到系統中</p>
+                    
+                    <div class="format-info">
+                        <h4>📋 Excel 檔案格式要求</h4>
+                        <div class="format-example">
+                            <p><strong>支援的欄位名稱：</strong></p>
+                            <ul>
+                                <li><strong>日期</strong>: 支援 M/D 格式 (如 9/1, 9/23) 或標準日期格式</li>
+                                <li><strong>描述</strong>: 交易描述 (如 餐飲-午餐, 日常-手機網路)</li>
+                                <li><strong>金額</strong>: 數字，負數表示支出，正數表示收入</li>
+                                <li><strong>成員</strong>: Kelvin, Phuong, Ryan, 家用 等</li>
+                                <li><strong>類型</strong>: 收入/支出 (可選，系統會根據金額自動判斷)</li>
+                            </ul>
+                            
+                            <p><strong>範例格式：</strong></p>
+                            <div class="format-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>日期</th>
+                                            <th>描述</th>
+                                            <th>金額</th>
+                                            <th>成員</th>
+                                            <th>類型</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>9/1</td>
+                                            <td>餐飲-午餐</td>
+                                            <td>-68</td>
+                                            <td>Kelvin</td>
+                                            <td>支出</td>
+                                        </tr>
+                                        <tr>
+                                            <td>9/3</td>
+                                            <td>日常-手機網路</td>
+                                            <td>-1,200</td>
+                                            <td>Phuong</td>
+                                            <td>支出</td>
+                                        </tr>
+                                        <tr>
+                                            <td>9/7</td>
+                                            <td>禮物-汽車</td>
+                                            <td>-17,906</td>
+                                            <td>Ryan</td>
+                                            <td>支出</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="excel-import-section">
                         <div class="upload-area" id="uploadArea">

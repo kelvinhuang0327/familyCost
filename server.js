@@ -64,6 +64,131 @@ const PORT = process.env.PORT || config.port;
 // 初始化Token管理器
 const tokenManager = new TokenManager();
 
+// Excel 資料處理函數
+function processExcelData(excelData) {
+    const processedData = [];
+    
+    for (const row of excelData) {
+        // 處理每一行的資料
+        const processedRow = processExcelRow(row);
+        if (processedRow) {
+            processedData.push(processedRow);
+        }
+    }
+    
+    return processedData;
+}
+
+// 處理單行 Excel 資料
+function processExcelRow(row) {
+    try {
+        // 根據圖片格式，假設 Excel 有以下欄位：
+        // 日期, 描述, 金額, 成員 (或類似的欄位名)
+        
+        // 嘗試不同的欄位名稱組合
+        let date, description, amount, member, type;
+        
+        // 日期欄位
+        if (row['日期'] || row['date'] || row['Date'] || row['DATE']) {
+            date = row['日期'] || row['date'] || row['Date'] || row['DATE'];
+        }
+        
+        // 描述欄位
+        if (row['描述'] || row['description'] || row['Description'] || row['DESCRIPTION']) {
+            description = row['描述'] || row['description'] || row['Description'] || row['DESCRIPTION'];
+        }
+        
+        // 金額欄位
+        if (row['金額'] || row['amount'] || row['Amount'] || row['AMOUNT']) {
+            amount = row['金額'] || row['amount'] || row['Amount'] || row['AMOUNT'];
+        }
+        
+        // 成員欄位
+        if (row['成員'] || row['member'] || row['Member'] || row['MEMBER']) {
+            member = row['成員'] || row['member'] || row['Member'] || row['MEMBER'];
+        }
+        
+        // 類型欄位 (收入/支出)
+        if (row['類型'] || row['type'] || row['Type'] || row['TYPE']) {
+            type = row['類型'] || row['type'] || row['Type'] || row['TYPE'];
+        }
+        
+        // 如果沒有找到標準欄位，嘗試從第一列開始推測
+        const keys = Object.keys(row);
+        if (keys.length >= 3) {
+            // 假設格式是：日期, 描述, 金額, 成員
+            date = row[keys[0]];
+            description = row[keys[1]];
+            amount = row[keys[2]];
+            member = row[keys[3]] || '未知';
+        }
+        
+        // 處理日期格式 (M/D -> YYYY-MM-DD)
+        if (date) {
+            date = formatDate(date);
+        }
+        
+        // 處理金額格式
+        if (amount !== undefined && amount !== null) {
+            // 移除千分位逗號
+            if (typeof amount === 'string') {
+                amount = amount.replace(/,/g, '');
+            }
+            amount = parseFloat(amount);
+            
+            // 如果沒有類型欄位，根據金額正負判斷
+            if (!type) {
+                type = amount >= 0 ? '收入' : '支出';
+            }
+        }
+        
+        // 驗證必要欄位
+        if (!date || !description || amount === undefined || amount === null) {
+            console.log('⚠️ [processExcelRow] 跳過不完整的記錄:', row);
+            return null;
+        }
+        
+        return {
+            date: date,
+            description: description,
+            amount: amount,
+            member: member || '未知',
+            type: type || (amount >= 0 ? '收入' : '支出')
+        };
+        
+    } catch (error) {
+        console.error('❌ [processExcelRow] 處理行資料失敗:', error, row);
+        return null;
+    }
+}
+
+// 日期格式轉換函數
+function formatDate(dateStr) {
+    try {
+        // 處理 M/D 格式 (如 9/1, 9/23)
+        if (typeof dateStr === 'string' && dateStr.includes('/')) {
+            const parts = dateStr.split('/');
+            if (parts.length === 2) {
+                const month = parts[0].padStart(2, '0');
+                const day = parts[1].padStart(2, '0');
+                const currentYear = new Date().getFullYear();
+                return `${currentYear}-${month}-${day}`;
+            }
+        }
+        
+        // 處理其他日期格式
+        const date = new Date(dateStr);
+        if (!isNaN(date.getTime())) {
+            return date.toISOString().split('T')[0];
+        }
+        
+        return dateStr;
+    } catch (error) {
+        console.error('❌ [formatDate] 日期轉換失敗:', error, dateStr);
+        return dateStr;
+    }
+}
+
 // 環境信息
 console.log(`🌍 環境: ${environment.toUpperCase()}`);
 console.log(`🔧 配置: ${config.name}`);
@@ -461,7 +586,13 @@ app.post('/api/excel/compare', upload.single('excelFile'), async (req, res) => {
         const worksheet = workbook.Sheets[sheetName];
         const excelData = XLSX.utils.sheet_to_json(worksheet);
         
-        console.log('🔍 [API] Excel 資料筆數:', excelData.length);
+        console.log('🔍 [API] Excel 原始資料筆數:', excelData.length);
+        console.log('🔍 [API] Excel 原始資料範例:', excelData.slice(0, 3));
+        
+        // 處理 Excel 資料格式
+        const processedData = processExcelData(excelData);
+        console.log('🔍 [API] 處理後資料筆數:', processedData.length);
+        console.log('🔍 [API] 處理後資料範例:', processedData.slice(0, 3));
         
         // 讀取系統現有資料
         const dataPath = path.join(__dirname, 'data', 'data.json');
@@ -480,7 +611,7 @@ app.post('/api/excel/compare', upload.single('excelFile'), async (req, res) => {
         const newRecords = [];
         const duplicateRecords = [];
         
-        for (const excelRecord of excelData) {
+        for (const excelRecord of processedData) {
             // 檢查是否已存在（基於日期、金額、描述等關鍵欄位）
             const isDuplicate = systemData.some(systemRecord => {
                 return systemRecord.date === excelRecord.date &&
@@ -506,7 +637,7 @@ app.post('/api/excel/compare', upload.single('excelFile'), async (req, res) => {
             success: true,
             message: 'Excel 資料比對完成',
             data: {
-                totalExcelRecords: excelData.length,
+                totalExcelRecords: processedData.length,
                 systemRecords: systemData.length,
                 newRecords: newRecords.length,
                 duplicateRecords: duplicateRecords.length,
