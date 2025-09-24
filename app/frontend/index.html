@@ -24,8 +24,8 @@
             body {
                 padding: 0;
                 margin: 0;
-                min-height: 100vh;
-                overflow-x: hidden;
+                height: 100vh;
+                overflow: hidden;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             }
             
@@ -35,6 +35,9 @@
                 padding-top: 150px !important;
                 padding-bottom: 80px !important;
                 background: white;
+                height: 100vh;
+                overflow-y: auto;
+                overflow-x: hidden;
             }
             
             .header {
@@ -729,8 +732,8 @@
             body {
                 padding: 0;
                 margin: 0;
-                min-height: 100vh;
-                overflow-x: hidden;
+                height: 100vh;
+                overflow: hidden;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             }
             
@@ -739,6 +742,9 @@
                 padding-top: 150px !important;
                 padding-bottom: 100px !important;
                 background: white;
+                height: 100vh;
+                overflow-y: auto;
+                overflow-x: hidden;
             }
             
             .header {
@@ -876,8 +882,8 @@
             body {
                 padding: 0;
                 margin: 0;
-                min-height: 100vh;
-                overflow-x: hidden;
+                height: 100vh;
+                overflow: hidden;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             }
             
@@ -886,6 +892,9 @@
                 padding-top: 150px !important;
                 padding-bottom: 120px !important;
                 background: white;
+                height: 100vh;
+                overflow-y: auto;
+                overflow-x: hidden;
             }
             
             .header {
@@ -2971,12 +2980,54 @@
             });
         }
 
+        // 防止過度滾動的函數
+        function preventOverScroll() {
+            const container = document.querySelector('.container');
+            if (!container) return;
+            
+            container.addEventListener('scroll', function() {
+                const scrollTop = container.scrollTop;
+                const scrollHeight = container.scrollHeight;
+                const clientHeight = container.clientHeight;
+                
+                // 防止向上過度滾動
+                if (scrollTop <= 0) {
+                    container.scrollTop = 0;
+                }
+                
+                // 防止向下過度滾動
+                if (scrollTop + clientHeight >= scrollHeight) {
+                    container.scrollTop = scrollHeight - clientHeight;
+                }
+            });
+            
+            // 防止觸控過度滾動
+            container.addEventListener('touchstart', function(e) {
+                const scrollTop = container.scrollTop;
+                const scrollHeight = container.scrollHeight;
+                const clientHeight = container.clientHeight;
+                
+                // 如果已經在頂部，阻止向上滑動
+                if (scrollTop <= 0 && e.touches[0].clientY > e.touches[0].clientY) {
+                    e.preventDefault();
+                }
+                
+                // 如果已經在底部，阻止向下滑動
+                if (scrollTop + clientHeight >= scrollHeight && e.touches[0].clientY < e.touches[0].clientY) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 DOM已載入，開始初始化...');
             
             // 載入版本信息
             loadVersionInfo();
+            
+            // 防止過度滾動
+            preventOverScroll();
             
             // 檢測並修復Safari
             const isSafari = detectAndFixSafari();
