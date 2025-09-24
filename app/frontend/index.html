@@ -3719,6 +3719,9 @@
         // 處理檔案上傳
         async function handleFileUpload(file) {
             console.log('📁 開始處理檔案上傳:', file.name);
+            console.log('📁 檔案大小:', file.size, 'bytes');
+            console.log('📁 檔案類型:', file.type);
+            console.log('📁 API 地址:', ENV_CONFIG.getApiBase() + '/excel/compare');
             
             // 驗證檔案類型
             if (!file.name.match(/\.(xlsx|xls)$/i)) {
@@ -3736,12 +3739,19 @@
             formData.append('excelFile', file);
 
             try {
+                console.log('📡 開始發送請求到:', ENV_CONFIG.getApiBase() + '/excel/compare');
+                console.log('📡 FormData 內容:', formData);
+                
                 const response = await fetch(ENV_CONFIG.getApiBase() + '/excel/compare', {
                     method: 'POST',
                     body: formData
                 });
 
+                console.log('📡 收到回應狀態:', response.status);
+                console.log('📡 收到回應標頭:', response.headers);
+                
                 const result = await response.json();
+                console.log('📡 收到回應內容:', result);
                 
                 if (result.success) {
                     console.log('✅ Excel 比對成功:', result.data);
