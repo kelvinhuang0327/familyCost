@@ -257,14 +257,15 @@
             }
             
             .member-stats-grid {
-                display: flex;
-                overflow-x: auto;
-                gap: -20px; /* 負間距創造重疊效果 */
-                padding: 20px 0 10px 0;
-                scroll-snap-type: x mandatory;
-                -webkit-overflow-scrolling: touch;
-                align-items: center;
-                scroll-behavior: smooth;
+                display: flex !important;
+                overflow-x: auto !important;
+                gap: -20px !important; /* 負間距創造重疊效果 */
+                padding: 20px 0 10px 0 !important;
+                scroll-snap-type: x mandatory !important;
+                -webkit-overflow-scrolling: touch !important;
+                align-items: center !important;
+                scroll-behavior: smooth !important;
+                grid-template-columns: none !important;
             }
             
             .member-stats-grid::-webkit-scrollbar {
@@ -286,17 +287,17 @@
             }
             
             .member-stats .stat-card {
-                padding: 15px;
-                width: 280px;
-                min-width: 280px;
-                flex-shrink: 0;
-                scroll-snap-align: center;
-                background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-                border-radius: 12px;
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-                transition: all 0.3s ease;
-                position: relative;
-                z-index: 1;
+                padding: 15px !important;
+                width: 280px !important;
+                min-width: 280px !important;
+                flex-shrink: 0 !important;
+                scroll-snap-align: center !important;
+                background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%) !important;
+                border-radius: 12px !important;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+                transition: all 0.3s ease !important;
+                position: relative !important;
+                z-index: 1 !important;
             }
             
             .member-stats .stat-card:first-child {
@@ -949,10 +950,13 @@
             color: #333;
         }
 
-        .member-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+        /* 桌面版成員統計 - 只在非手機版生效 */
+        @media screen and (min-width: 481px) {
+            .member-stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+            }
         }
 
         .stat-card {
@@ -3081,6 +3085,12 @@
             
             // 初始化滑動功能
             initializeMemberSwipe();
+            
+            // 調試信息
+            console.log('📱 成員統計初始化完成');
+            console.log('📱 成員數量:', reorderedMembers.length);
+            console.log('📱 容器:', memberStatsContainer);
+            console.log('📱 容器樣式:', window.getComputedStyle(memberStatsContainer).display);
         }
         
         // 初始化成員滑動功能
@@ -3103,10 +3113,15 @@
                 currentIndex = index;
             }
             
+            // 強制重新渲染
+            memberStatsGrid.style.display = 'none';
+            memberStatsGrid.offsetHeight; // 觸發重排
+            memberStatsGrid.style.display = 'flex';
+            
             // 初始化時滑動到中間位置
             setTimeout(() => {
                 scrollToMember(1);
-            }, 100);
+            }, 200);
             
             // 更新活動指示器
             function updateActiveIndicator(index) {
