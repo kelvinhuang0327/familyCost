@@ -2628,7 +2628,7 @@
                 <!-- 數據匯入匯出 -->
                 <div class="import-section">
                     <h3>📥 數據匯入匯出</h3>
-                    <p>支援 CSV 和 Excel 檔案格式</p>
+                    <p>支援 CSV 和 Google 雲端 Excel 格式</p>
                     
                     <div class="import-options">
                         <div class="import-card">
@@ -2647,8 +2647,8 @@
                         </div>
                         
                         <div class="import-card">
-                            <h4>📊 Excel 檔案匯入</h4>
-                            <p>請確保 Excel 檔案包含以下欄位：</p>
+                            <h4>📊 Google 雲端 Excel 匯入</h4>
+                            <p>請確保 Google Sheets 包含以下欄位：</p>
                             <ul>
                                 <li>成員 (Kelvin, Phuong, Ryan, 家用)</li>
                                 <li>金額 (正數=收入, 負數=支出)</li>
@@ -2658,7 +2658,7 @@
                                 <li>日期 (YYYY-MM-DD)</li>
                             </ul>
                             <input type="file" id="excelFile" accept=".xlsx,.xls" onchange="handleExcelImport(event)">
-                            <button class="btn" onclick="document.getElementById('excelFile').click()">選擇 Excel 檔案</button>
+                            <button class="btn" onclick="document.getElementById('excelFile').click()">選擇 Google Sheets 檔案</button>
                         </div>
                     </div>
                     
@@ -2690,13 +2690,13 @@
                 
                 <div class="export-section">
                     <h3>📤 匯出功能</h3>
-                    <p>將現有記錄匯出為 CSV 或 Excel 檔案</p>
+                    <p>將現有記錄匯出為 CSV 或 Google 雲端 Excel 檔案</p>
                     <div class="export-actions">
                         <button class="btn" onclick="exportToCSV()">匯出為 CSV</button>
-                        <button class="btn" onclick="exportToExcel()">匯出為 Excel</button>
-                        <button class="btn" onclick="createSampleExcel()">創建示例 Excel</button>
+                        <button class="btn" onclick="exportToExcel()">匯出為 Google Sheets</button>
+                        <button class="btn" onclick="createSampleExcel()">創建示例 Google Sheets</button>
                         <button class="btn" onclick="downloadDataJson()">📁 下載 data.json 備份</button>
-                        <button class="btn" onclick="downloadExcelBackup()">📊 下載 Excel 備份</button>
+                        <button class="btn" onclick="downloadExcelBackup()">📊 下載 Google Sheets 備份</button>
                     </div>
                 </div>
                 
@@ -2779,13 +2779,13 @@
                     </div>
                 </div>
                 
-                <!-- Excel 資料匯入 -->
+                <!-- Google 雲端 Excel 資料匯入 -->
                 <div class="settings-section">
-                    <h3>📊 Excel 資料匯入</h3>
-                    <p>上傳 Excel 檔案，比對並匯入新資料到系統中</p>
+                    <h3>📊 Google 雲端 Excel 資料匯入</h3>
+                    <p>上傳 Google Sheets 檔案，比對並匯入新資料到系統中</p>
                     
                     <div class="format-info">
-                        <h4>📋 Excel 檔案格式要求</h4>
+                        <h4>📋 Google Sheets 檔案格式要求</h4>
                         <div class="format-example">
                             <p><strong>支援的欄位名稱：</strong></p>
                             <ul>
@@ -2840,7 +2840,7 @@
                         <div class="upload-area" id="uploadArea">
                             <div class="upload-content">
                                 <div class="upload-icon">📁</div>
-                                <p>點擊或拖拽 Excel 檔案到此處</p>
+                                <p>點擊或拖拽 Google Sheets 檔案到此處</p>
                                 <p class="upload-hint">支援 .xlsx 和 .xls 格式，最大 10MB</p>
                                 <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;">
                                 <button class="btn" onclick="document.getElementById('excelFileInput').click()">選擇檔案</button>
@@ -3725,7 +3725,7 @@
             
             // 驗證檔案類型
             if (!file.name.match(/\.(xlsx|xls)$/i)) {
-                alert('❌ 請選擇 Excel 檔案 (.xlsx 或 .xls)');
+                alert('❌ 請選擇 Google Sheets 檔案 (.xlsx 或 .xls)');
                 return;
             }
 
@@ -5398,7 +5398,7 @@
                     processImportData(jsonData);
                 } catch (error) {
                     console.error('Excel 讀取錯誤:', error);
-                    alert('讀取 Excel 檔案時發生錯誤：' + error.message);
+                    alert('讀取 Google Sheets 檔案時發生錯誤：' + error.message);
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -5788,7 +5788,7 @@
             XLSX.utils.book_append_sheet(workbook, worksheet, '示例數據');
             
             XLSX.writeFile(workbook, 'sample_family_records.xlsx');
-            alert('示例 Excel 檔案已創建！您可以下載並修改後重新上傳測試。');
+            alert('示例 Google Sheets 檔案已創建！您可以下載並修改後重新上傳測試。');
         }
 
         // 手動下載 data.json 備份
@@ -5843,7 +5843,7 @@
             const fileName = `family_records_backup_${formatDateToYYYYMMDD(new Date())}.xlsx`;
             XLSX.writeFile(workbook, fileName);
             
-            alert(`成功下載 Excel 備份檔案！\n備份了 ${records.length} 筆記錄。\n檔案名: ${fileName}\n\n此檔案可以直接重新匯入系統。`);
+            alert(`成功下載 Google Sheets 備份檔案！\n備份了 ${records.length} 筆記錄。\n檔案名: ${fileName}\n\n此檔案可以直接重新匯入系統。`);
         }
 
 
