@@ -31,33 +31,39 @@
             }
             
             .header {
-                padding: 15px 10px;
+                padding: 20px 15px !important;
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+                color: white !important;
+                border-radius: 12px !important;
+                margin-bottom: 15px !important;
             }
             
             .header-content {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center !important;
             }
             
             .header-main {
-                margin-bottom: 10px;
+                margin-bottom: 0 !important;
             }
             
             .header h1 {
-                font-size: 1.5em;
-                margin-bottom: 5px;
+                font-size: 1.8em !important;
+                margin-bottom: 8px !important;
+                font-weight: bold !important;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
             }
             
             .header p {
-                font-size: 0.9em;
+                font-size: 1em !important;
+                opacity: 0.9 !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
             }
             
+            /* 手機版隱藏header中的版本信息 */
             .version-info {
-                align-items: center;
-                margin-top: 0;
-                padding: 4px 8px;
-                font-size: 0.7em;
+                display: none !important;
             }
             
             .nav-tabs {
@@ -644,6 +650,37 @@
             .member-stats-grid::-webkit-scrollbar-thumb:active {
                 background: #333;
             }
+            
+            /* Footer 樣式 */
+            .footer {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                color: white !important;
+                padding: 15px !important;
+                border-radius: 12px !important;
+                margin-top: 20px !important;
+                text-align: center !important;
+            }
+            
+            .footer-content {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                gap: 10px !important;
+            }
+            
+            .footer-version {
+                font-size: 0.8em !important;
+                opacity: 0.9 !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+            }
+            
+            .footer-version-label {
+                font-weight: bold !important;
+            }
+            
+            .footer-version-number {
+                font-family: monospace !important;
+            }
         }
 
         /* 響應式設計 - iPad 版 (768x1024) */
@@ -735,6 +772,37 @@
             .chart-section canvas {
                 max-height: 300px;
             }
+            
+            /* iPad版 Footer 樣式 */
+            .footer {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                color: white !important;
+                padding: 20px !important;
+                border-radius: 12px !important;
+                margin-top: 25px !important;
+                text-align: center !important;
+            }
+            
+            .footer-content {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                gap: 15px !important;
+            }
+            
+            .footer-version {
+                font-size: 0.9em !important;
+                opacity: 0.9 !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+            }
+            
+            .footer-version-label {
+                font-weight: bold !important;
+            }
+            
+            .footer-version-number {
+                font-family: monospace !important;
+            }
         }
 
         /* 響應式設計 - 電腦版 (1025px+) */
@@ -820,6 +888,37 @@
             
             .chart-section canvas {
                 max-height: 400px;
+            }
+            
+            /* 桌面版 Footer 樣式 */
+            .footer {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                color: white !important;
+                padding: 25px !important;
+                border-radius: 12px !important;
+                margin-top: 30px !important;
+                text-align: center !important;
+            }
+            
+            .footer-content {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                gap: 20px !important;
+            }
+            
+            .footer-version {
+                font-size: 1em !important;
+                opacity: 0.9 !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+            }
+            
+            .footer-version-label {
+                font-weight: bold !important;
+            }
+            
+            .footer-version-number {
+                font-family: monospace !important;
             }
         }
 
@@ -2584,9 +2683,16 @@
                 const versionData = await response.json();
                 
                 const versionElement = document.getElementById('versionNumber');
+                const footerVersionElement = document.getElementById('footerVersionNumber');
+                
                 if (versionElement) {
                     versionElement.textContent = versionData.version;
                     versionElement.title = `建構時間: ${versionData.buildTime}\nCommit: ${versionData.commitHash || 'N/A'}`;
+                }
+                
+                if (footerVersionElement) {
+                    footerVersionElement.textContent = versionData.version;
+                    footerVersionElement.title = `建構時間: ${versionData.buildTime}\nCommit: ${versionData.commitHash || 'N/A'}`;
                 }
                 
                 console.log('✅ 版本信息已載入:', versionData.version);
@@ -2598,8 +2704,14 @@
             } catch (error) {
                 console.error('❌ 載入版本信息失敗:', error);
                 const versionElement = document.getElementById('versionNumber');
+                const footerVersionElement = document.getElementById('footerVersionNumber');
+                
                 if (versionElement) {
                     versionElement.textContent = '載入失敗';
+                }
+                
+                if (footerVersionElement) {
+                    footerVersionElement.textContent = '載入失敗';
                 }
             }
         }
@@ -5630,5 +5742,15 @@
         }
 
     </script>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-version">
+                <span class="footer-version-label">版本</span>
+                <span class="footer-version-number" id="footerVersionNumber">載入中...</span>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
