@@ -20,3 +20,8 @@ else
 fi
 
 echo "🎉 Pre-commit 完成"
+
+# 顯示更新後的版本號碼
+echo ""
+echo "📋 更新後的版本信息:"
+node scripts/show_version.js

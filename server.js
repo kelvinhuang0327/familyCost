@@ -126,7 +126,9 @@ function processExcelRow(row) {
         
         // 處理日期格式 (M/D -> YYYY-MM-DD)
         if (date) {
+            console.log('🔍 [processExcelRow] 處理日期前:', date, '類型:', typeof date);
             date = formatDate(date);
+            console.log('🔍 [processExcelRow] 處理日期後:', date);
         }
         
         // 處理金額格式
@@ -173,9 +175,10 @@ function formatDate(dateStr) {
             const serialNumber = typeof dateStr === 'string' ? parseInt(dateStr) : dateStr;
             console.log('🔍 [formatDate] Excel 序列號:', serialNumber);
             
-            // Excel 序列號轉換 (1900年1月1日為基準)
-            const excelEpoch = new Date(1900, 0, 1);
-            const date = new Date(excelEpoch.getTime() + (serialNumber - 2) * 24 * 60 * 60 * 1000);
+            // Excel 序列號轉換 (1900年1月1日為基準，但Excel有1900閏年錯誤)
+            // Excel 序列號 1 = 1900-01-01，但Excel錯誤地認為1900是閏年
+            const excelEpoch = new Date(1899, 11, 30); // 1899-12-30
+            const date = new Date(excelEpoch.getTime() + serialNumber * 24 * 60 * 60 * 1000);
             
             if (!isNaN(date.getTime())) {
                 const formatted = date.toISOString().split('T')[0];
@@ -643,8 +646,8 @@ app.post('/api/excel/compare', upload.single('excelFile'), async (req, res) => {
         
         // 使用選項來正確處理日期
         const excelData = XLSX.utils.sheet_to_json(worksheet, {
-            raw: false,  // 不返回原始值，而是格式化後的值
-            dateNF: 'yyyy-mm-dd'  // 日期格式
+            raw: true,  // 返回原始值，我們自己處理日期
+            defval: ''  // 空值默認
         });
         
         console.log('🔍 [API] Excel 原始資料筆數:', excelData.length);
