@@ -133,27 +133,38 @@ class TokenManager {
     // 儲存token
     saveToken(token) {
         try {
+            console.log('🔍 [saveToken] 開始儲存Token...');
+            console.log('🔍 [saveToken] 輸入Token長度:', token ? token.length : 'null');
+            console.log('🔍 [saveToken] Token前綴:', token ? token.substring(0, 10) + '...' : 'null');
+            
             if (!token || token.trim() === '') {
+                console.log('❌ [saveToken] Token為空');
                 throw new Error('Token不能為空');
             }
 
             const cleanToken = token.trim();
+            console.log('🔍 [saveToken] 清理後Token長度:', cleanToken.length);
             
             // 驗證token格式 (GitHub Personal Access Token 以 ghp_ 開頭，長度約40+字符)
             if (!cleanToken.startsWith('ghp_') || cleanToken.length < 40) {
-                console.log('⚠️ 警告: Token格式可能不正確，GitHub Personal Access Token 應以 ghp_ 開頭');
+                console.log('⚠️ [saveToken] 警告: Token格式可能不正確，GitHub Personal Access Token 應以 ghp_ 開頭');
             }
 
+            console.log('🔍 [saveToken] 開始加密Token...');
             const encryptedData = this.encryptToken(cleanToken);
+            console.log('🔍 [saveToken] Token加密完成');
+            
+            console.log('🔍 [saveToken] 寫入檔案:', this.tokenFile);
             fs.writeFileSync(this.tokenFile, JSON.stringify(encryptedData));
             
             // 設置文件權限為只有用戶可讀寫
             fs.chmodSync(this.tokenFile, 0o600);
             
-            console.log('✅ Token已安全儲存');
+            console.log('✅ [saveToken] Token已安全儲存');
             return true;
         } catch (error) {
-            console.error('❌ Token儲存失敗:', error.message);
+            console.error('❌ [saveToken] Token儲存失敗:', error.message);
+            console.error('❌ [saveToken] 錯誤堆疊:', error.stack);
             throw error;
         }
     }
@@ -161,17 +172,28 @@ class TokenManager {
     // 讀取token
     loadToken() {
         try {
+            console.log('🔍 [loadToken] 開始讀取Token...');
+            console.log('🔍 [loadToken] Token檔案路徑:', this.tokenFile);
+            console.log('🔍 [loadToken] 檔案是否存在:', fs.existsSync(this.tokenFile));
+            
             if (!fs.existsSync(this.tokenFile)) {
+                console.log('❌ [loadToken] Token檔案不存在');
                 return null;
             }
 
+            console.log('🔍 [loadToken] 讀取加密數據...');
             const encryptedData = JSON.parse(fs.readFileSync(this.tokenFile, 'utf8'));
-            const token = this.decryptToken(encryptedData);
+            console.log('🔍 [loadToken] 加密數據讀取完成');
             
-            console.log('✅ Token已載入');
+            console.log('🔍 [loadToken] 開始解密Token...');
+            const token = this.decryptToken(encryptedData);
+            console.log('🔍 [loadToken] Token解密完成，長度:', token ? token.length : 'null');
+            
+            console.log('✅ [loadToken] Token已載入');
             return token;
         } catch (error) {
-            console.error('❌ Token載入失敗:', error.message);
+            console.error('❌ [loadToken] Token載入失敗:', error.message);
+            console.error('❌ [loadToken] 錯誤堆疊:', error.stack);
             return null;
         }
     }
@@ -196,14 +218,20 @@ class TokenManager {
 
     // 檢查token是否存在
     hasToken() {
-        return fs.existsSync(this.tokenFile);
+        console.log('🔍 [hasToken] 檢查Token是否存在...');
+        console.log('🔍 [hasToken] Token檔案路徑:', this.tokenFile);
+        const exists = fs.existsSync(this.tokenFile);
+        console.log('🔍 [hasToken] Token檔案存在:', exists);
+        return exists;
     }
 
     // 獲取token信息
     async getTokenInfo() {
         try {
+            console.log('🔍 [getTokenInfo] 開始獲取Token信息...');
             const token = this.loadToken();
             if (!token) {
+                console.log('❌ [getTokenInfo] Token不存在');
                 return {
                     valid: false,
                     user: null,
@@ -211,15 +239,21 @@ class TokenManager {
                 };
             }
             
+            console.log('🔍 [getTokenInfo] Token存在，開始驗證...');
             // 驗證token有效性
             const validation = await this.validateToken(token);
-            return {
+            console.log('🔍 [getTokenInfo] Token驗證結果:', validation);
+            
+            const result = {
                 valid: validation.valid,
                 user: validation.user || null,
                 error: validation.error || null
             };
+            console.log('🔍 [getTokenInfo] 返回結果:', result);
+            return result;
         } catch (error) {
-            console.error('❌ 獲取Token信息失敗:', error.message);
+            console.error('❌ [getTokenInfo] 獲取Token信息失敗:', error.message);
+            console.error('❌ [getTokenInfo] 錯誤堆疊:', error.stack);
             return {
                 valid: false,
                 user: null,
