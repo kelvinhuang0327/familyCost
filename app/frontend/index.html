@@ -5092,15 +5092,29 @@
                 editMainCategorySelect.appendChild(otherOption);
             }
             
-            // 更新子類別
+            // 更新子類別（付款方式）
             const mainCategory = editMainCategorySelect.value;
-            editSubCategorySelect.innerHTML = '<option value="">請選擇</option>';
+            editSubCategorySelect.innerHTML = '<option value="">請選擇付款方式</option>';
+            
+            // 添加付款方式選項
+            const paymentMethods = ['信用卡', '現金'];
+            paymentMethods.forEach(method => {
+                const option = document.createElement('option');
+                option.value = method;
+                option.textContent = method;
+                editSubCategorySelect.appendChild(option);
+            });
+            
+            // 如果有預定義的子類別，也添加它們
             if (type === 'expense' && mainCategory && categories.expense[mainCategory]) {
                 categories.expense[mainCategory].forEach(subCategory => {
-                    const option = document.createElement('option');
-                    option.value = subCategory;
-                    option.textContent = subCategory;
-                    editSubCategorySelect.appendChild(option);
+                    // 避免重複添加付款方式
+                    if (!paymentMethods.includes(subCategory)) {
+                        const option = document.createElement('option');
+                        option.value = subCategory;
+                        option.textContent = subCategory;
+                        editSubCategorySelect.appendChild(option);
+                    }
                 });
             }
             
