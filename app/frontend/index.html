@@ -80,13 +80,38 @@
             }
             
             .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
+                display: flex;
+                overflow-x: auto;
                 gap: 8px;
+                padding: 0 0 10px 0;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .stats-grid::-webkit-scrollbar {
+                height: 4px;
+            }
+            
+            .stats-grid::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 2px;
+            }
+            
+            .stats-grid::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 2px;
+            }
+            
+            .stats-grid::-webkit-scrollbar-thumb:hover {
+                background: #555;
             }
             
             .stat-card {
                 padding: 10px;
                 margin-bottom: 8px;
+                min-width: 140px;
+                flex-shrink: 0;
+                scroll-snap-align: start;
             }
             
             .stat-card h3 {
@@ -183,13 +208,41 @@
             
             /* 緊湊的成員統計 */
             .member-stats {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
+                margin-bottom: 15px;
+            }
+            
+            .member-stats-grid {
+                display: flex;
+                overflow-x: auto;
                 gap: 8px;
+                padding: 0 0 10px 0;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .member-stats-grid::-webkit-scrollbar {
+                height: 4px;
+            }
+            
+            .member-stats-grid::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 2px;
+            }
+            
+            .member-stats-grid::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 2px;
+            }
+            
+            .member-stats-grid::-webkit-scrollbar-thumb:hover {
+                background: #555;
             }
             
             .member-stats .stat-card {
                 padding: 8px;
+                min-width: 160px;
+                flex-shrink: 0;
+                scroll-snap-align: start;
             }
             
             .member-stats .stat-card h4 {
@@ -308,6 +361,19 @@
             .env-notice .notice-content p {
                 font-size: 0.75em;
                 margin: 3px 0;
+            }
+            
+            /* 滑動指示器 */
+            .swipe-indicator {
+                text-align: center;
+                color: #666;
+                font-size: 0.7em;
+                margin: 5px 0;
+                opacity: 0.7;
+            }
+            
+            .swipe-indicator::before {
+                content: "← 左右滑動查看更多 →";
             }
         }
 
@@ -1328,9 +1394,11 @@
                         <p>現金流</p>
                     </div>
                 </div>
+                <div class="swipe-indicator" id="statsSwipeIndicator"></div>
                 <div class="member-stats">
                     <h3>各成員收支統計</h3>
                     <div class="member-stats-grid" id="memberStats"></div>
+                    <div class="swipe-indicator" id="memberSwipeIndicator"></div>
                 </div>
                 <div class="records-list">
                     <h3>記錄查看</h3>
@@ -2259,6 +2327,41 @@
             }
         }
 
+        // 初始化滑動指示器
+        function initializeSwipeIndicators() {
+            const statsGrid = document.querySelector('.stats');
+            const memberStatsGrid = document.querySelector('.member-stats-grid');
+            const statsIndicator = document.getElementById('statsSwipeIndicator');
+            const memberIndicator = document.getElementById('memberSwipeIndicator');
+            
+            // 檢查是否需要顯示滑動指示器
+            function checkScrollable(element, indicator) {
+                if (element && indicator) {
+                    const isScrollable = element.scrollWidth > element.clientWidth;
+                    indicator.style.display = isScrollable ? 'block' : 'none';
+                }
+            }
+            
+            // 初始檢查
+            checkScrollable(statsGrid, statsIndicator);
+            checkScrollable(memberStatsGrid, memberIndicator);
+            
+            // 監聽窗口大小變化
+            window.addEventListener('resize', function() {
+                checkScrollable(statsGrid, statsIndicator);
+                checkScrollable(memberStatsGrid, memberIndicator);
+            });
+            
+            // 監聽內容變化
+            const observer = new MutationObserver(function() {
+                checkScrollable(statsGrid, statsIndicator);
+                checkScrollable(memberStatsGrid, memberIndicator);
+            });
+            
+            if (statsGrid) observer.observe(statsGrid, { childList: true, subtree: true });
+            if (memberStatsGrid) observer.observe(memberStatsGrid, { childList: true, subtree: true });
+        }
+
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 DOM已載入，開始初始化...');
@@ -2271,6 +2374,7 @@
             console.log('🌐 瀏覽器檢測:', isSafari ? 'Safari' : '其他');
             
             initializeApp();
+            initializeSwipeIndicators();
         });
 
         // 頁面可見性變化時同步數據
