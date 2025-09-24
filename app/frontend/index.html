@@ -82,10 +82,11 @@
             .stats-grid {
                 display: flex;
                 overflow-x: auto;
-                gap: 8px;
-                padding: 0 0 10px 0;
+                gap: -20px; /* 負間距創造重疊效果 */
+                padding: 20px 0 10px 0;
                 scroll-snap-type: x mandatory;
                 -webkit-overflow-scrolling: touch;
+                align-items: center;
             }
             
             .stats-grid::-webkit-scrollbar {
@@ -107,20 +108,64 @@
             }
             
             .stat-card {
-                padding: 10px;
+                padding: 15px;
                 margin-bottom: 8px;
-                min-width: 140px;
+                min-width: 160px;
                 flex-shrink: 0;
-                scroll-snap-align: start;
+                scroll-snap-align: center;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 12px;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                transform: scale(0.95);
+                transition: all 0.3s ease;
+                position: relative;
+                z-index: 1;
+            }
+            
+            .stat-card:first-child {
+                margin-left: 20px;
+            }
+            
+            .stat-card:last-child {
+                margin-right: 20px;
+            }
+            
+            .stat-card:nth-child(2) {
+                transform: scale(1);
+                z-index: 2;
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+            }
+            
+            .stat-card:nth-child(3) {
+                transform: scale(0.95);
+                z-index: 1;
+            }
+            
+            .stat-card:nth-child(4) {
+                transform: scale(0.9);
+                z-index: 0;
             }
             
             .stat-card h3 {
-                font-size: 0.9em;
-                margin-bottom: 5px;
+                font-size: 1.1em;
+                margin-bottom: 8px;
+                color: white;
+                font-weight: bold;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             }
             
             .stat-card .stat-value {
-                font-size: 1.1em;
+                font-size: 1.3em;
+                color: white;
+                font-weight: bold;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            }
+            
+            .stat-card p {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 0.85em;
+                margin: 0;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
             }
             
             .form-group {
@@ -214,10 +259,11 @@
             .member-stats-grid {
                 display: flex;
                 overflow-x: auto;
-                gap: 8px;
-                padding: 0 0 10px 0;
+                gap: -15px; /* 負間距創造重疊效果 */
+                padding: 15px 0 10px 0;
                 scroll-snap-type: x mandatory;
                 -webkit-overflow-scrolling: touch;
+                align-items: center;
             }
             
             .member-stats-grid::-webkit-scrollbar {
@@ -239,19 +285,61 @@
             }
             
             .member-stats .stat-card {
-                padding: 8px;
-                min-width: 160px;
+                padding: 12px;
+                min-width: 180px;
                 flex-shrink: 0;
-                scroll-snap-align: start;
+                scroll-snap-align: center;
+                background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+                border-radius: 10px;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+                transform: scale(0.95);
+                transition: all 0.3s ease;
+                position: relative;
+                z-index: 1;
+            }
+            
+            .member-stats .stat-card:first-child {
+                margin-left: 15px;
+            }
+            
+            .member-stats .stat-card:last-child {
+                margin-right: 15px;
+            }
+            
+            .member-stats .stat-card:nth-child(2) {
+                transform: scale(1);
+                z-index: 2;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+            }
+            
+            .member-stats .stat-card:nth-child(3) {
+                transform: scale(0.95);
+                z-index: 1;
+            }
+            
+            .member-stats .stat-card:nth-child(4) {
+                transform: scale(0.9);
+                z-index: 0;
             }
             
             .member-stats .stat-card h4 {
-                font-size: 0.8em;
-                margin-bottom: 3px;
+                font-size: 0.9em;
+                margin-bottom: 5px;
+                color: white;
+                font-weight: bold;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             }
             
             .member-stats .stat-card small {
-                font-size: 0.7em;
+                font-size: 0.75em;
+                color: rgba(255, 255, 255, 0.9);
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            }
+            
+            .member-stats .stat-card .balance {
+                color: white;
+                font-weight: bold;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             }
             
             /* 緊湊的記錄列表 */
@@ -374,6 +462,23 @@
             
             .swipe-indicator::before {
                 content: "← 左右滑動查看更多 →";
+            }
+            
+            /* 動態滑動效果 */
+            .stats-grid:active .stat-card,
+            .member-stats-grid:active .stat-card {
+                transition: transform 0.1s ease;
+            }
+            
+            .stats-grid:active .stat-card:nth-child(2),
+            .member-stats-grid:active .stat-card:nth-child(2) {
+                transform: scale(0.98);
+            }
+            
+            /* 滑動時的視覺反饋 */
+            .stats-grid::-webkit-scrollbar-thumb:active,
+            .member-stats-grid::-webkit-scrollbar-thumb:active {
+                background: #333;
             }
         }
 
@@ -2342,9 +2447,44 @@
                 }
             }
             
+            // 添加滑動時的動態效果
+            function addSwipeEffects(element) {
+                if (!element) return;
+                
+                let isScrolling = false;
+                
+                element.addEventListener('scroll', function() {
+                    if (!isScrolling) {
+                        isScrolling = true;
+                        element.style.transition = 'none';
+                        
+                        // 滑動時的效果
+                        const cards = element.querySelectorAll('.stat-card');
+                        cards.forEach((card, index) => {
+                            const rect = card.getBoundingClientRect();
+                            const center = window.innerWidth / 2;
+                            const distance = Math.abs(rect.left + rect.width / 2 - center);
+                            const scale = Math.max(0.9, 1 - distance / 200);
+                            
+                            card.style.transform = `scale(${scale})`;
+                            card.style.zIndex = Math.round(scale * 10);
+                        });
+                        
+                        setTimeout(() => {
+                            isScrolling = false;
+                            element.style.transition = '';
+                        }, 100);
+                    }
+                });
+            }
+            
             // 初始檢查
             checkScrollable(statsGrid, statsIndicator);
             checkScrollable(memberStatsGrid, memberIndicator);
+            
+            // 添加滑動效果
+            addSwipeEffects(statsGrid);
+            addSwipeEffects(memberStatsGrid);
             
             // 監聽窗口大小變化
             window.addEventListener('resize', function() {
