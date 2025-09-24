@@ -2160,6 +2160,49 @@
             }
         }
 
+        // 更新數據統計顯示
+        function updateDataStats() {
+            try {
+                const totalRecords = records.length;
+                const totalIncome = records
+                    .filter(r => r.type === 'income')
+                    .reduce((sum, r) => sum + parseFloat(r.amount || 0), 0);
+                const totalExpense = records
+                    .filter(r => r.type === 'expense')
+                    .reduce((sum, r) => sum + parseFloat(r.amount || 0), 0);
+                
+                console.log('📊 數據統計更新:', {
+                    totalRecords,
+                    totalIncome,
+                    totalExpense,
+                    balance: totalIncome - totalExpense
+                });
+                
+                // 更新統計顯示（如果存在相關元素）
+                const statsElements = document.querySelectorAll('[data-stat]');
+                statsElements.forEach(element => {
+                    const statType = element.getAttribute('data-stat');
+                    switch(statType) {
+                        case 'total-records':
+                            element.textContent = totalRecords;
+                            break;
+                        case 'total-income':
+                            element.textContent = `$${totalIncome.toLocaleString()}`;
+                            break;
+                        case 'total-expense':
+                            element.textContent = `$${totalExpense.toLocaleString()}`;
+                            break;
+                        case 'balance':
+                            element.textContent = `$${(totalIncome - totalExpense).toLocaleString()}`;
+                            break;
+                    }
+                });
+                
+            } catch (error) {
+                console.error('❌ 更新數據統計失敗:', error);
+            }
+        }
+
         function updateStats() {
             const totalIncome = records
                 .filter(record => record.type === 'income')
