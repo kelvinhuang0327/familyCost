@@ -133,8 +133,8 @@ class BackupManager {
             }
 
             // 添加變更
-            await execAsync('git add data/data.json');
-            console.log('📁 已添加 data.json 到暫存區');
+            await execAsync('git add data/data.json data/version.json');
+            console.log('📁 已添加 data.json 和 version.json 到暫存區');
 
             // 提交變更
             const commitMessage = metadata.commitMessage || `自動備份 - ${new Date().toLocaleString('zh-TW')} (${records ? records.length : 0}筆記錄)`;

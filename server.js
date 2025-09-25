@@ -763,6 +763,7 @@ app.post('/api/version/update', async (req, res) => {
         await fs.writeFile(versionPath, JSON.stringify(versionData, null, 2), 'utf8');
         
         console.log('✅ 版本號已更新:', versionString);
+        console.log('📁 版本檔案路徑:', versionPath);
         
         res.json({
             success: true,
