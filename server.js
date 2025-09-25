@@ -22,6 +22,7 @@ try {
 }
 
 const TokenManager = require('./app/backend/token_manager');
+const BackupManager = require('./app/backend/backup_manager');
 const { getConfig, getEnvironment } = require('./app/config/config');
 
 const app = express();
@@ -80,8 +81,9 @@ const config = getConfig();
 const environment = getEnvironment();
 const PORT = process.env.PORT || config.port;
 
-// 初始化Token管理器
+// 初始化Token管理器和備份管理器
 const tokenManager = new TokenManager();
+const backupManager = new BackupManager();
 
 // 檢測成員標題行
 function detectMemberTitle(row) {
@@ -391,85 +393,29 @@ app.post('/api/backup', async (req, res) => {
         
         console.log(`📦 收到備份請求: ${count}筆記錄`);
         
-        // 更新data.json
-        const dataJsonPath = path.join(__dirname, 'data/data.json');
-        const data = {
-            records: records,
-            metadata: {
-                lastUpdated: timestamp,
-                version: "1.0",
-                description: "家庭收支記錄資料",
-                recordCount: count
-            }
-        };
-        
-        await fs.writeFile(dataJsonPath, JSON.stringify(data, null, 2), 'utf8');
-        console.log('✅ data.json 已更新');
-        
-        // Git操作
-        try {
-            // 檢查Git狀態
-            const { stdout: status } = await execAsync('git status --porcelain');
-            if (!status.trim()) {
-                console.log('📝 沒有變更需要提交');
-                return res.json({
-                    success: true,
-                    message: '數據已是最新，無需備份',
-                    timestamp: timestamp
-                });
-            }
-            
-            // 添加變更
-            await execAsync('git add data/data.json');
-            console.log('📁 已添加 data.json 到暫存區');
-            
-            // 提交變更
-            const commitMessage = `自動備份 - ${new Date().toLocaleString('zh-TW')} (${count}筆記錄)`;
-            await execAsync(`git commit -m "${commitMessage}"`);
-            console.log('💾 已提交變更');
-            
-            // 推送到GitHub
-            try {
-                await execAsync('git push origin main');
-                console.log('🚀 已推送到GitHub');
-            } catch (pushError) {
-                console.log('⚠️ Git推送失敗，嘗試重新配置遠端:', pushError.message);
-                // 檢查遠端是否存在
-                try {
-                    const { stdout: remoteList } = await execAsync('git remote -v');
-                    console.log('📋 當前遠端配置:', remoteList);
-                    if (!remoteList.includes('origin')) {
-                        console.log('⚠️ origin 遠端不存在，創建遠端');
-                        await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
-                    }
-                } catch (remoteError) {
-                    console.log('⚠️ 無法檢查遠端配置，創建遠端');
-                    await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
-                }
-                try {
-                    await execAsync('git push origin main');
-                    console.log('🚀 重新配置後推送成功');
-                } catch (retryError) {
-                    console.log('❌ 重新配置後推送仍然失敗:', retryError.message);
-                    console.log('📝 本地備份已完成，但GitHub推送失敗');
-                }
-            }
-            
-            res.json({
-                success: true,
-                message: `成功備份${count}筆記錄到GitHub`,
-                timestamp: timestamp,
-                commitMessage: commitMessage
-            });
-            
-        } catch (gitError) {
-            console.error('❌ Git操作失敗:', gitError);
-            res.status(500).json({
+        // 檢查數據完整性
+        const integrityCheck = await backupManager.checkDataIntegrity(records);
+        if (!integrityCheck.valid) {
+            console.log('⚠️ 數據完整性檢查失敗:', integrityCheck.issues);
+            return res.status(400).json({
                 success: false,
-                message: `Git操作失敗: ${gitError.message}`,
-                error: gitError.message
+                message: `數據完整性檢查失敗: ${integrityCheck.issues.join(', ')}`,
+                issues: integrityCheck.issues
             });
         }
+        
+        // 使用新的備份管理器創建完整備份
+        const backupResult = await backupManager.createFullBackup(records, {
+            lastUpdated: timestamp,
+            description: "家庭收支記錄資料"
+        });
+        
+        res.json({
+            success: true,
+            message: `成功備份${count}筆記錄`,
+            timestamp: timestamp,
+            backupResult: backupResult
+        });
         
     } catch (error) {
         console.error('❌ 備份失敗:', error);
@@ -718,6 +664,71 @@ app.delete('/api/token', (req, res) => {
     } catch (error) {
         console.error('❌ Token刪除失敗:', error);
         res.status(500).json({ success: false, message: `Token刪除失敗: ${error.message}`, error: error.message });
+    }
+});
+
+// 備份管理API
+app.get('/api/backup/list', async (req, res) => {
+    try {
+        const backups = await backupManager.getBackupList();
+        res.json({ success: true, backups: backups });
+    } catch (error) {
+        console.error('❌ 獲取備份列表失敗:', error);
+        res.status(500).json({ success: false, message: `獲取備份列表失敗: ${error.message}` });
+    }
+});
+
+app.get('/api/backup/stats', async (req, res) => {
+    try {
+        const stats = await backupManager.getBackupStats();
+        res.json({ success: true, stats: stats });
+    } catch (error) {
+        console.error('❌ 獲取備份統計失敗:', error);
+        res.status(500).json({ success: false, message: `獲取備份統計失敗: ${error.message}` });
+    }
+});
+
+app.post('/api/backup/create', async (req, res) => {
+    try {
+        const { records, metadata } = req.body;
+        
+        // 檢查數據完整性
+        const integrityCheck = await backupManager.checkDataIntegrity(records);
+        if (!integrityCheck.valid) {
+            return res.status(400).json({
+                success: false,
+                message: `數據完整性檢查失敗: ${integrityCheck.issues.join(', ')}`,
+                issues: integrityCheck.issues
+            });
+        }
+        
+        const result = await backupManager.createFullBackup(records, metadata);
+        res.json({ success: true, result: result });
+    } catch (error) {
+        console.error('❌ 創建備份失敗:', error);
+        res.status(500).json({ success: false, message: `創建備份失敗: ${error.message}` });
+    }
+});
+
+app.post('/api/backup/restore/:backupFileName', async (req, res) => {
+    try {
+        const { backupFileName } = req.params;
+        const result = await backupManager.restoreFromBackup(backupFileName);
+        res.json({ success: true, result: result });
+    } catch (error) {
+        console.error('❌ 從備份恢復失敗:', error);
+        res.status(500).json({ success: false, message: `從備份恢復失敗: ${error.message}` });
+    }
+});
+
+app.post('/api/backup/check-integrity', async (req, res) => {
+    try {
+        const { records } = req.body;
+        const result = await backupManager.checkDataIntegrity(records);
+        res.json({ success: true, result: result });
+    } catch (error) {
+        console.error('❌ 數據完整性檢查失敗:', error);
+        res.status(500).json({ success: false, message: `數據完整性檢查失敗: ${error.message}` });
     }
 });
 
@@ -1176,6 +1187,7 @@ app.listen(PORT, () => {
     console.log(`📁 工作目錄: ${__dirname}`);
     console.log(`📁 前端目錄: ${path.join(__dirname, 'app/frontend')}`);
     console.log(`📁 數據目錄: ${path.join(__dirname, 'data')}`);
+    console.log(`📁 備份目錄: ${path.join(__dirname, 'data/backups')}`);
     console.log('📋 可用API:');
     console.log('   GET  /api/health     - 健康檢查');
     console.log('   POST /api/backup     - 備份到GitHub');
@@ -1187,6 +1199,16 @@ app.listen(PORT, () => {
     console.log('   DELETE /api/token    - 刪除Token');
     console.log('   POST /api/excel/compare - Excel資料比對');
     console.log('   POST /api/excel/import - 匯入Excel資料');
+    console.log('   GET  /api/backup/list - 獲取備份列表');
+    console.log('   GET  /api/backup/stats - 獲取備份統計');
+    console.log('   POST /api/backup/create - 創建備份');
+    console.log('   POST /api/backup/restore/:fileName - 從備份恢復');
+    console.log('   POST /api/backup/check-integrity - 檢查數據完整性');
+    
+    // 啟動自動備份機制
+    backupManager.startAutoBackup();
+    console.log('🔄 自動備份機制已啟動 (間隔: 5分鐘)');
+    
     console.log('按 Ctrl+C 停止服務');
 });
 
