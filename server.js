@@ -381,16 +381,16 @@ function processExcelRow(row, currentMember = null) {
     }
 }
 
-// 處理單行 Excel 資料 (新格式)
+// 處理單行 Excel 資料 (新格式 - 7欄格式)
 function processExcelRowNewFormat(row, rowNumber = 0) {
     try {
         console.log(`🔍 [processExcelRowNewFormat] 處理第 ${rowNumber} 行:`, row);
         
         // 根據圖片格式，Excel有以下欄位：
-        // 成員, 金額, 主類別, 子類別, 描述, 日期
+        // 成員, 金額, 類別, 主類別, 付款方式, 描述, 日期
         
         // 嘗試不同的欄位名稱組合
-        let date, description, amount, member, mainCategory, subCategory, type;
+        let date, description, amount, member, mainCategory, subCategory, type, paymentMethod;
         
         // 成員欄位
         if (row['成員'] || row['member'] || row['Member'] || row['MEMBER']) {
@@ -428,10 +428,30 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
             type = row['類型'] || row['type'] || row['Type'] || row['TYPE'];
         }
         
-        // 根據圖片格式：成員 | 金額 | 主類別 | 子類別 | 描述 | 日期
+        // 根據圖片格式：成員 | 金額 | 類別 | 主類別 | 付款方式 | 描述 | 日期
         const keys = Object.keys(row);
-        if (keys.length >= 6) {
-            // 按順序提取：第1欄=成員，第2欄=金額，第3欄=主類別，第4欄=子類別，第5欄=描述，第6欄=日期
+        if (keys.length >= 7) {
+            // 按順序提取：第1欄=成員，第2欄=金額，第3欄=類別，第4欄=主類別，第5欄=付款方式，第6欄=描述，第7欄=日期
+            member = row[keys[0]] || '未知';
+            amount = row[keys[1]];
+            type = row[keys[2]] || '支出'; // 類別欄位
+            mainCategory = row[keys[3]];
+            paymentMethod = row[keys[4]];
+            description = row[keys[5]];
+            date = row[keys[6]];
+            
+            console.log('🔍 [processExcelRowNewFormat] 按順序提取 (7欄格式):', {
+                member: member,
+                amount: amount,
+                type: type,
+                mainCategory: mainCategory,
+                paymentMethod: paymentMethod,
+                description: description,
+                date: date,
+                keys: keys
+            });
+        } else if (keys.length >= 6) {
+            // 兼容6欄格式：成員 | 金額 | 主類別 | 子類別 | 描述 | 日期
             member = row[keys[0]] || '未知';
             amount = row[keys[1]];
             mainCategory = row[keys[2]];
@@ -497,15 +517,16 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
                 amount = parsedAmount;
             }
             
-            // 如果沒有類型欄位，根據金額正負判斷
+            // 金額都是正數，支出/收入由類別欄位決定
+            // 如果沒有類型欄位，預設為支出
             if (!type) {
-                type = amount >= 0 ? '收入' : '支出';
+                type = '支出';
             }
             
             console.log(`🔍 [processExcelRowNewFormat] 第 ${rowNumber} 行處理金額後:`, {
                 amount: amount,
                 type: type,
-                isNegative: amount < 0
+                note: '金額保持正數，支出/收入由類別欄位決定'
             });
         }
         
@@ -552,14 +573,17 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
         // 生成唯一ID
         const id = generateUniqueId();
         
-        // 確定收入或支出類型
-        const recordType = amount >= 0 ? 'income' : 'expense';
+        // 根據類別欄位確定收入或支出類型
+        const recordType = (type === '收入') ? 'income' : 'expense';
+        
+        // 如果是支出，金額設為負數（用於統計計算）
+        const finalAmount = (recordType === 'expense') ? -(amount || 0) : (amount || 0);
         
         const processedRecord = {
             id: id,
             date: date || '',
             member: member || '未知',
-            amount: amount || 0,
+            amount: finalAmount,
             mainCategory: mainCategory || '其他',
             subCategory: subCategory || '信用卡',
             description: description || mainCategory || '其他',
