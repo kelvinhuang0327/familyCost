@@ -4040,6 +4040,8 @@
                 // 逐筆添加到SQLite數據庫
                 for (const record of newRecordsData) {
                     try {
+                        console.log('📤 準備添加記錄:', record);
+                        
                         const addResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
                             method: 'POST',
                             headers: {
@@ -4048,7 +4050,11 @@
                             body: JSON.stringify(record)
                         });
                         
+                        console.log('📡 API回應狀態:', addResponse.status);
+                        console.log('📡 API回應標頭:', addResponse.headers);
+                        
                         const addResult = await addResponse.json();
+                        console.log('📡 API回應內容:', addResult);
                         
                         if (addResult.success) {
                             successCount++;
@@ -4062,6 +4068,7 @@
                         errorCount++;
                         errors.push(`記錄 ${record.id}: ${recordError.message}`);
                         console.error('❌ 記錄添加錯誤:', record.id, recordError.message);
+                        console.error('❌ 錯誤堆疊:', recordError.stack);
                     }
                 }
                 
