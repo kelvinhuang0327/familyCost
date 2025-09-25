@@ -4874,6 +4874,17 @@
         }
 
         function updateStats() {
+            // 調試：檢查記錄數量和重複ID
+            console.log('🔍 updateStats調試信息:');
+            console.log('- 總記錄數:', records.length);
+            console.log('- 記錄ID列表:', records.map(r => r.id));
+            
+            // 檢查重複ID
+            const duplicateIds = records.map(r => r.id).filter((id, index, arr) => arr.indexOf(id) !== index);
+            if (duplicateIds.length > 0) {
+                console.warn('⚠️ 發現重複ID:', duplicateIds);
+            }
+            
             const totalIncome = records
                 .filter(record => record.type === 'income')
                 .reduce((sum, record) => sum + record.amount, 0);
@@ -4881,6 +4892,9 @@
             const totalExpense = records
                 .filter(record => record.type === 'expense')
                 .reduce((sum, record) => sum + record.amount, 0);
+            
+            console.log('- 總收入:', totalIncome);
+            console.log('- 總支出:', totalExpense);
             
             // 計算現金支出
             const cashExpense = records
