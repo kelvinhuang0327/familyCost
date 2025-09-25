@@ -12,6 +12,7 @@
     "version:show": "cat data/version.json"
   },
   "dependencies": {
+    "better-sqlite3": "^9.2.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "multer": "^2.0.2",

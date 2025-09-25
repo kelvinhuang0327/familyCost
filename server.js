@@ -23,6 +23,7 @@ try {
 
 const TokenManager = require('./app/backend/token_manager');
 const BackupManager = require('./app/backend/backup_manager');
+const DatabaseManager = require('./app/backend/database');
 const { getConfig, getEnvironment } = require('./app/config/config');
 
 const app = express();
@@ -81,9 +82,10 @@ const config = getConfig();
 const environment = getEnvironment();
 const PORT = process.env.PORT || config.port;
 
-// 初始化Token管理器和備份管理器
+// 初始化Token管理器、備份管理器和數據庫管理器
 const tokenManager = new TokenManager();
 const backupManager = new BackupManager();
+const dbManager = new DatabaseManager();
 
 // 檢測成員標題行
 function detectMemberTitle(row) {
@@ -1193,6 +1195,237 @@ app.delete('/api/data/clear', async (req, res) => {
         res.status(500).json({
             success: false,
             message: `清除數據失敗: ${error.message}`,
+            error: error.message
+        });
+    }
+});
+
+// ==================== SQLite 數據庫 API 端點 ====================
+
+// 獲取所有記錄
+app.get('/api/records', (req, res) => {
+    try {
+        const records = dbManager.getAllRecords();
+        res.json({
+            success: true,
+            records: records,
+            count: records.length
+        });
+    } catch (error) {
+        console.error('❌ 獲取記錄失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: '獲取記錄失敗',
+            error: error.message
+        });
+    }
+});
+
+// 獲取統計數據
+app.get('/api/records/stats', (req, res) => {
+    try {
+        const stats = dbManager.getStatistics();
+        res.json({
+            success: true,
+            stats: stats
+        });
+    } catch (error) {
+        console.error('❌ 獲取統計數據失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: '獲取統計數據失敗',
+            error: error.message
+        });
+    }
+});
+
+// 添加記錄
+app.post('/api/records', (req, res) => {
+    try {
+        const record = req.body;
+        
+        // 生成唯一ID
+        if (!record.id) {
+            record.id = Date.now() + Math.random().toString(36).substr(2, 9);
+        }
+        
+        const result = dbManager.insertRecord(record);
+        if (result.success) {
+            res.json({
+                success: true,
+                message: '記錄添加成功',
+                record: record
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: '記錄添加失敗',
+                error: result.error
+            });
+        }
+    } catch (error) {
+        console.error('❌ 添加記錄失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: '添加記錄失敗',
+            error: error.message
+        });
+    }
+});
+
+// 更新記錄
+app.put('/api/records/:id', (req, res) => {
+    try {
+        const id = req.params.id;
+        const updates = req.body;
+        
+        const result = dbManager.updateRecord(id, updates);
+        if (result.success) {
+            res.json({
+                success: true,
+                message: '記錄更新成功',
+                changes: result.changes
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: '記錄更新失敗',
+                error: result.error
+            });
+        }
+    } catch (error) {
+        console.error('❌ 更新記錄失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: '更新記錄失敗',
+            error: error.message
+        });
+    }
+});
+
+// 刪除記錄
+app.delete('/api/records/:id', (req, res) => {
+    try {
+        const id = req.params.id;
+        
+        const result = dbManager.deleteRecord(id);
+        if (result.success) {
+            res.json({
+                success: true,
+                message: '記錄刪除成功',
+                changes: result.changes
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: '記錄刪除失敗',
+                error: result.error
+            });
+        }
+    } catch (error) {
+        console.error('❌ 刪除記錄失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: '刪除記錄失敗',
+            error: error.message
+        });
+    }
+});
+
+// 批量刪除記錄
+app.delete('/api/records', (req, res) => {
+    try {
+        const { ids } = req.body;
+        
+        if (!Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: '請提供要刪除的記錄ID列表'
+            });
+        }
+        
+        const result = dbManager.deleteRecords(ids);
+        if (result.success) {
+            res.json({
+                success: true,
+                message: `成功刪除 ${result.count} 筆記錄`,
+                count: result.count
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: '批量刪除失敗',
+                error: result.error
+            });
+        }
+    } catch (error) {
+        console.error('❌ 批量刪除失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: '批量刪除失敗',
+            error: error.message
+        });
+    }
+});
+
+// 清空所有記錄
+app.delete('/api/records/clear', (req, res) => {
+    try {
+        const result = dbManager.clearAllRecords();
+        if (result.success) {
+            res.json({
+                success: true,
+                message: `成功清空所有記錄，刪除了 ${result.changes} 筆記錄`,
+                changes: result.changes
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: '清空記錄失敗',
+                error: result.error
+            });
+        }
+    } catch (error) {
+        console.error('❌ 清空記錄失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: '清空記錄失敗',
+            error: error.message
+        });
+    }
+});
+
+// 檢查數據完整性
+app.get('/api/records/integrity', (req, res) => {
+    try {
+        const integrityCheck = dbManager.checkDataIntegrity();
+        res.json({
+            success: true,
+            integrity: integrityCheck
+        });
+    } catch (error) {
+        console.error('❌ 數據完整性檢查失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: '數據完整性檢查失敗',
+            error: error.message
+        });
+    }
+});
+
+// 數據遷移端點
+app.post('/api/migrate', async (req, res) => {
+    try {
+        const DataMigrator = require('./app/backend/migrate');
+        const migrator = new DataMigrator();
+        
+        const result = await migrator.migrateFromJson();
+        res.json(result);
+    } catch (error) {
+        console.error('❌ 數據遷移失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: '數據遷移失敗',
             error: error.message
         });
     }
