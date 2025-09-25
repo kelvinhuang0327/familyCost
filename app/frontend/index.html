@@ -6836,7 +6836,7 @@
         }
 
         // 清空所有數據
-        function clearAllData() {
+        async function clearAllData() {
             if (records.length === 0) {
                 alert('沒有數據可以清空！');
                 return;
@@ -6851,15 +6851,46 @@
                     const userInput = prompt('請輸入 "YES" 來確認清空所有數據：');
                     
                     if (userInput === 'YES') {
-                        records = [];
-                        saveRecords();
-                        updateStats();
-                        updateRecentRecords();
-                        updateAllRecords();
-                        updateCalendar(); // 確保日曆更新
-                        updateDataStats();
-                        
-                        alert('所有數據已清空！');
+                        try {
+                            console.log('🗑️ 開始清除所有數據...');
+                            
+                            // 調用後端API清除數據
+                            const response = await fetch(ENV_CONFIG.getApiBase() + '/data/clear', {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+                            
+                            const result = await response.json();
+                            
+                            if (result.success) {
+                                console.log('✅ 後端數據已清除');
+                                
+                                // 清除前端數據
+                                records = [];
+                                localStorage.removeItem('familyRecords');
+                                localStorage.removeItem('lastSyncTime');
+                                localStorage.removeItem('lastGitHubBackup');
+                                localStorage.removeItem('lastLocalBackup');
+                                
+                                // 更新所有顯示
+                                updateStats();
+                                updateRecentRecords();
+                                updateAllRecords();
+                                updateCalendar();
+                                updateDataStats();
+                                
+                                alert('✅ 所有數據已成功清空！');
+                                console.log('✅ 清除數據完成');
+                            } else {
+                                console.error('❌ 後端清除失敗:', result.message);
+                                alert('❌ 清除數據失敗：' + result.message);
+                            }
+                        } catch (error) {
+                            console.error('❌ 清除數據時發生錯誤:', error);
+                            alert('❌ 清除數據時發生錯誤：' + error.message);
+                        }
                     } else {
                         alert('操作已取消。');
                     }

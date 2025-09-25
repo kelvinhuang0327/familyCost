@@ -1158,6 +1158,34 @@ app.use('/api/*', (req, res) => {
     });
 });
 
+// 清除所有數據 API
+app.delete('/api/data/clear', async (req, res) => {
+    try {
+        console.log('🗑️ [API] 開始清除所有數據...');
+        
+        const dataPath = path.join(__dirname, 'data', 'data.json');
+        const emptyData = { records: [] };
+        
+        // 寫入空的數據檔案
+        await fs.writeFile(dataPath, JSON.stringify(emptyData, null, 2), 'utf8');
+        
+        console.log('✅ [API] 所有數據已清除');
+        
+        res.json({
+            success: true,
+            message: '所有數據已成功清除',
+            data: { records: [] }
+        });
+    } catch (error) {
+        console.error('❌ [API] 清除數據失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: `清除數據失敗: ${error.message}`,
+            error: error.message
+        });
+    }
+});
+
 // 靜態文件服務 - 數據文件
 app.get('/data/*', (req, res) => {
     const filePath = path.join(__dirname, req.path);
