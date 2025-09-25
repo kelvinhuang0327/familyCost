@@ -1,6 +1,6 @@
 {
-  "version": "2025-09-25 15:05:42",
-  "buildTime": "2025-09-25T07:05:42.000Z",
-  "commitHash": "6204f81",
-  "description": "家庭收支管理平台版本信息 - 修復GitHub Token檢查問題，在備份前檢查Token狀態"
+  "version": "2025-09-25 15:21:25",
+  "buildTime": "2025-09-25T07:21:25.000Z",
+  "commitHash": "6ee79ec",
+  "description": "家庭收支管理平台版本信息 - 添加調試代碼檢查總支出重複計算問題"
 }
