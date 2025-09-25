@@ -4846,6 +4846,9 @@
         async function loadDataFromFile() {
             try {
                 console.log('🔄 開始從SQLite數據庫載入資料...');
+                console.log('🌍 當前環境:', ENV_CONFIG.getEnvironment());
+                console.log('🔗 API基礎URL:', ENV_CONFIG.getApiBase());
+                console.log('🔗 完整API URL:', ENV_CONFIG.getApiBase() + '/api/records');
                 
                 // 使用新的SQLite API端點
                 const response = await fetch(ENV_CONFIG.getApiBase() + '/api/records');
