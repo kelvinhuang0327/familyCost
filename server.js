@@ -90,7 +90,18 @@ const PORT = process.env.PORT || config.port;
 // 初始化Token管理器和數據庫管理器
 const tokenManager = new TokenManager();
 // const backupManager = new BackupManager(); // 已移除
-const dbManager = new DatabaseManager();
+
+console.log('🔄 開始初始化數據庫管理器...');
+let dbManager;
+try {
+    dbManager = new DatabaseManager();
+    console.log('✅ 數據庫管理器初始化成功');
+} catch (error) {
+    console.error('❌ 數據庫管理器初始化失敗:', error);
+    console.error('❌ 錯誤堆疊:', error.stack);
+    // 不拋出錯誤，讓服務器繼續啟動
+    dbManager = null;
+}
 
 // 檢測成員標題行
 function detectMemberTitle(row) {
@@ -1130,18 +1141,28 @@ app.get('/api/test', (req, res) => {
 // 獲取所有記錄
 app.get('/api/records', (req, res) => {
     try {
+        console.log('🔍 [API] 開始獲取記錄...');
+        console.log('🔍 [API] dbManager狀態:', dbManager ? '已初始化' : '未初始化');
+        
+        if (!dbManager) {
+            throw new Error('數據庫管理器未初始化');
+        }
+        
         const records = dbManager.getAllRecords();
+        console.log('✅ [API] 成功獲取記錄:', records.length, '筆');
+        
         res.json({
             success: true,
             records: records,
             count: records.length
         });
     } catch (error) {
-        console.error('❌ 獲取記錄失敗:', error);
+        console.error('❌ [API] 獲取記錄失敗:', error);
         res.status(500).json({
             success: false,
-            message: '獲取記錄失敗',
-            error: error.message
+            message: '獲取記錄失敗: ' + error.message,
+            error: error.message,
+            stack: error.stack
         });
     }
 });
