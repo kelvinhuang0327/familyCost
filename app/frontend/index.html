@@ -4216,8 +4216,8 @@
                     // 更新所有顯示
                     updateAllDisplays();
                     
-                    // 自動提交到Git
-                    await autoCommitToGit(`Excel匯入 ${result.data.importedCount} 筆記錄`);
+                    // 自動提交到Git（不更新版本號）
+                    await commitToGitWithoutVersion(`Excel匯入 ${result.data.importedCount} 筆記錄`);
                     
                     // 清除所有結果
                     clearCompareResult();
@@ -4238,7 +4238,7 @@
             document.getElementById('compareResult').style.display = 'block';
         }
 
-        // 自動提交到Git
+        // 自動提交到Git（包含版本號更新）
         async function autoCommitToGit(commitMessage) {
             try {
                 console.log('🔄 開始自動提交到Git...');
@@ -4276,6 +4276,42 @@
                 }
             } catch (error) {
                 console.error('❌ 自動Git提交失敗:', error);
+                showNotification('⚠️ 資料匯入成功，但Git提交失敗: ' + error.message, 'warning');
+            }
+        }
+
+        // 提交到Git（不更新版本號）
+        async function commitToGitWithoutVersion(commitMessage) {
+            try {
+                console.log('🔄 開始提交到Git（不更新版本號）...');
+                
+                // 直接備份資料到GitHub，不更新版本號
+                const backupResponse = await fetch(ENV_CONFIG.getApiBase() + '/backup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        records: records,
+                        timestamp: new Date().toISOString(),
+                        count: records.length,
+                        commitMessage: commitMessage
+                    })
+                });
+
+                const backupResult = await backupResponse.json();
+                
+                if (backupResult.success) {
+                    console.log('✅ Git提交成功:', backupResult.message);
+                    
+                    // 顯示成功訊息，不包含版本號
+                    showNotification(`✅ 資料已自動提交到GitHub`, 'success');
+                } else {
+                    console.warn('⚠️ Git提交失敗:', backupResult.message);
+                    showNotification('⚠️ 資料匯入成功，但Git提交失敗: ' + backupResult.message, 'warning');
+                }
+            } catch (error) {
+                console.error('❌ Git提交失敗:', error);
                 showNotification('⚠️ 資料匯入成功，但Git提交失敗: ' + error.message, 'warning');
             }
         }
@@ -5757,6 +5793,16 @@
                 updateAllRecords();
                 updateCalendar(); // 確保日曆更新
                 updateSyncStatus(); // 更新同步狀態
+                
+                // 自動備份到GitHub
+                backupToGitHub().then(success => {
+                    if (success) {
+                        console.log('✅ 刪除記錄後自動備份成功');
+                    } else {
+                        console.log('⚠️ 刪除記錄後自動備份失敗，但本地已保存');
+                    }
+                });
+                
                 alert('記錄已刪除！');
             }
         }
@@ -5865,6 +5911,15 @@
                         updateRecentRecords();
                         updateAllRecords();
                         updateCalendar();
+                        
+                        // 自動備份到GitHub
+                        backupToGitHub().then(success => {
+                            if (success) {
+                                console.log('✅ 固定支出記錄後自動備份成功');
+                            } else {
+                                console.log('⚠️ 固定支出記錄後自動備份失敗，但本地已保存');
+                            }
+                        });
                         
                         alert(`${expense.name} 記錄已新增！`);
                     }
@@ -6589,8 +6644,8 @@
                 updateSyncStatus();
                 fixes.push('✅ 更新所有顯示');
                 
-                // 6. 嘗試備份
-                console.log('📦 步驟6: 嘗試備份...');
+                // 6. 自動備份到GitHub
+                console.log('📦 步驟6: 自動備份到GitHub...');
                 try {
                     await backupToGitHub();
                     fixes.push('✅ 成功備份到GitHub');
@@ -6676,6 +6731,15 @@
                 updateCalendar(); // 確保日曆更新
                 updateDataStats();
                 cancelDelete();
+                
+                // 自動備份到GitHub
+                backupToGitHub().then(success => {
+                    if (success) {
+                        console.log('✅ 批量刪除記錄後自動備份成功');
+                    } else {
+                        console.log('⚠️ 批量刪除記錄後自動備份失敗，但本地已保存');
+                    }
+                });
                 
                 alert(`成功刪除 ${deleteData.length} 筆記錄！`);
             }
