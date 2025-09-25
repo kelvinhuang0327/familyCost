@@ -2740,249 +2740,10 @@
 
             <!-- 設定頁面 -->
             <div id="import" class="tab-content">
-                <!-- GitHub Token 設定 -->
-                <div class="settings-section">
-                    <h3>🔐 GitHub Token 設定</h3>
-                    <p>安全地儲存和管理您的GitHub Personal Access Token</p>
-                    
-                    <!-- 環境限制提示 -->
-        <div id="envLimitationNotice" class="env-notice" style="display: none;">
-            <div class="notice-content">
-                <h4>⚠️ GitHub Pages 環境限制</h4>
-                <p>GitHub Pages 只支持靜態網站，不支持 Node.js 後端服務。</p>
-                <p>Token 儲存和數據同步功能無法使用。</p>
-                <p>建議：</p>
-                <ul>
-                    <li><a href="http://localhost:8000" target="_blank">使用本地環境</a> (完全功能)</li>
-                    <li><a href="https://family-cost.vercel.app" target="_blank">使用 Vercel 環境</a> (雲端完整功能)</li>
-                    <li><a href="github_pages_info.html" target="_blank">查看詳細說明</a></li>
-                </ul>
-            </div>
-        </div>
-                    
-                    <div class="token-settings">
-                        <div class="token-card">
-                            <h4>🔑 Token 狀態</h4>
-                            <div class="token-status" id="tokenStatus">
-                                <p>檢查中...</p>
-                            </div>
-                            <div class="token-actions" style="margin-top: 15px;">
-                                <input type="password" id="githubToken" placeholder="輸入GitHub Personal Access Token" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px;">
-                                <button class="btn" onclick="saveGitHubToken()" style="margin-right: 10px;">💾 儲存Token</button>
-                                <button class="btn" onclick="checkTokenStatus()" style="margin-right: 10px;">🔍 檢查狀態</button>
-                                <button class="btn" onclick="recoverTokenFromBackup()" style="margin-right: 10px;">🔄 從備份恢復</button>
-                                <button class="btn btn-danger" onclick="deleteGitHubToken()" id="deleteTokenBtn" style="display: none;">🗑️ 刪除Token</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 數據匯入匯出 -->
+                <!-- 數據匯入功能 -->
                 <div class="import-section">
-                    <h3>📥 數據匯入匯出</h3>
-                    <p>支援 CSV 和 Google 雲端 Excel 格式</p>
-                    
-                    <div class="import-options">
-                        <div class="import-card">
-                            <h4>📄 CSV 檔案匯入</h4>
-                            <p>請確保 CSV 檔案包含以下欄位：</p>
-                            <ul>
-                                <li>成員 (Kelvin, Phuong, Ryan, 家用)</li>
-                                <li>金額 (正數=收入, 負數=支出)</li>
-                                <li>主類別</li>
-                                <li>付款方式 (信用卡/現金)</li>
-                                <li>描述</li>
-                                <li>日期 (YYYY-MM-DD)</li>
-                            </ul>
-                            <input type="file" id="csvFile" accept=".csv" onchange="handleCSVImport(event)">
-                            <button class="btn" onclick="document.getElementById('csvFile').click()">選擇 CSV 檔案</button>
-                        </div>
-                        
-                        <div class="import-card">
-                            <h4>📊 Google 雲端 Excel 匯入</h4>
-                            <p>請確保 Google Sheets 包含以下欄位：</p>
-                            <ul>
-                                <li>成員 (Kelvin, Phuong, Ryan, 家用)</li>
-                                <li>金額 (正數=收入, 負數=支出)</li>
-                                <li>主類別</li>
-                                <li>付款方式 (信用卡/現金)</li>
-                                <li>描述</li>
-                                <li>日期 (YYYY-MM-DD)</li>
-                            </ul>
-                            <input type="file" id="excelFile" accept=".xlsx,.xls" onchange="handleExcelImport(event)">
-                            <button class="btn" onclick="document.getElementById('excelFile').click()">選擇 Google Sheets 檔案</button>
-                        </div>
-                    </div>
-                    
-                    <div class="import-preview" id="importPreview" style="display: none;">
-                        <h4>預覽匯入數據</h4>
-                        <div class="preview-table">
-                            <table id="previewTable">
-                                <thead>
-                                    <tr>
-                                        <th>成員</th>
-                                        <th>金額</th>
-                                        <th>主類別</th>
-                                        <th>付款方式</th>
-                                        <th>描述</th>
-                                        <th>日期</th>
-                                        <th>狀態</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="previewTableBody">
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="import-actions">
-                            <button class="btn btn-success" onclick="confirmImport()">確認匯入</button>
-                            <button class="btn btn-danger" onclick="cancelImport()">取消</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="export-section">
-                    <h3>📤 匯出功能</h3>
-                    <p>將現有記錄匯出為 Excel 檔案</p>
-                    <div class="export-actions">
-                        <button class="btn" onclick="downloadExcelBackup()">📊 下載 Excel 備份</button>
-                    </div>
-                </div>
-                
-                <div class="delete-section">
-                    <h3>🗑️ 移除資料功能</h3>
-                    <p>管理您的收支記錄數據</p>
-                    
-                    <div class="delete-options">
-                        <div class="delete-card">
-                            <h4>🔄 數據同步</h4>
-                            <div class="sync-info">
-                                <p>同步狀態：<span id="syncStatus">檢查中...</span></p>
-                                <p>最後備份：<span id="lastBackup">未備份</span></p>
-                                <p>數據健康：<span id="dataHealth">檢查中...</span></p>
-                            </div>
-                            <div class="sync-actions" style="margin-top: 15px;">
-                                <button class="btn" onclick="manualSync()" style="margin-right: 10px;">🔄 立即同步</button>
-                                <button class="btn" onclick="clearCacheAndSync()" style="margin-right: 10px;">🗑️ 清除緩存並同步</button>
-                                <button class="btn" onclick="checkDataHealth()" style="margin-right: 10px;">🔍 數據健康檢查</button>
-                                <button class="btn" onclick="quickFix()" style="margin-right: 10px;">🔧 快速修復</button>
-                                <button class="btn" onclick="toggleAutoSync()" id="autoSyncBtn">⏸️ 暫停自動同步</button>
-                            </div>
-                        </div>
-                        
-                        <div class="delete-card">
-                            <h4>🔍 篩選刪除</h4>
-                            <p>根據條件刪除記錄</p>
-                            <div class="filter-delete">
-                            <select id="deleteMemberFilter">
-                                <option value="">所有成員</option>
-                                <option value="Kelvin">Kelvin</option>
-                                <option value="Phuong">Phuong</option>
-                                <option value="Ryan">Ryan</option>
-                                <option value="家用">家用</option>
-                            </select>
-                                <select id="deleteTypeFilter">
-                                    <option value="">所有類型</option>
-                                    <option value="income">收入</option>
-                                    <option value="expense">支出</option>
-                                </select>
-                                <input type="date" id="deleteDateFrom" placeholder="開始日期">
-                                <input type="date" id="deleteDateTo" placeholder="結束日期">
-                                <button class="btn btn-danger" onclick="previewDelete()">預覽刪除</button>
-                            </div>
-                        </div>
-                        
-                        <div class="delete-card">
-                            <h4>⚠️ 危險操作</h4>
-                            <p>請謹慎使用以下功能</p>
-                            <div class="danger-actions">
-                                <button class="btn btn-danger" onclick="clearAllData()">清空所有數據</button>
-                                <button class="btn" onclick="backupData()">備份數據</button>
-                                <button class="btn" onclick="restoreData()">還原數據</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="delete-preview" id="deletePreview" style="display: none;">
-                        <h4>預覽將要刪除的記錄</h4>
-                        <div class="preview-table">
-                            <table id="deletePreviewTable">
-                                <thead>
-                                    <tr>
-                                        <th>成員</th>
-                                        <th>金額</th>
-                                        <th>主類別</th>
-                                        <th>付款方式</th>
-                                        <th>描述</th>
-                                        <th>日期</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="deletePreviewTableBody">
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="delete-actions">
-                            <button class="btn btn-danger" onclick="confirmDelete()">確認刪除</button>
-                            <button class="btn" onclick="cancelDelete()">取消</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Google 雲端 Excel 資料匯入 -->
-                <div class="settings-section">
-                    <h3>📊 Google 雲端 Excel 資料匯入</h3>
-                    <p>上傳 Google Sheets 檔案，比對並匯入新資料到系統中</p>
-                    
-                    <div class="format-info">
-                        <h4>📋 Google Sheets 檔案格式要求</h4>
-                        <div class="format-example">
-                            <p><strong>支援的欄位名稱：</strong></p>
-                            <ul>
-                                <li><strong>日期</strong>: 支援 M/D 格式 (如 9/1, 9/23) 或標準日期格式</li>
-                                <li><strong>描述</strong>: 交易描述 (如 餐飲-午餐, 日常-手機網路)</li>
-                                <li><strong>金額</strong>: 數字，負數表示支出，正數表示收入</li>
-                                <li><strong>成員</strong>: Kelvin, Phuong, Ryan, 家用 等</li>
-                                <li><strong>類型</strong>: 收入/支出 (可選，系統會根據金額自動判斷)</li>
-                            </ul>
-                            
-                            <p><strong>範例格式：</strong></p>
-                            <div class="format-table">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>日期</th>
-                                            <th>描述</th>
-                                            <th>金額</th>
-                                            <th>成員</th>
-                                            <th>類型</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>9/1</td>
-                                            <td>餐飲-午餐</td>
-                                            <td>-68</td>
-                                            <td>Kelvin</td>
-                                            <td>支出</td>
-                                        </tr>
-                                        <tr>
-                                            <td>9/3</td>
-                                            <td>日常-手機網路</td>
-                                            <td>-1,200</td>
-                                            <td>Phuong</td>
-                                            <td>支出</td>
-                                        </tr>
-                                        <tr>
-                                            <td>9/7</td>
-                                            <td>禮物-汽車</td>
-                                            <td>-17,906</td>
-                                            <td>Ryan</td>
-                                            <td>支出</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    <h3>📥 數據匯入</h3>
+                    <p>支援 Google 雲端 Excel 格式匯入</p>
                     
                     <div class="excel-import-section">
                         <div class="upload-area" id="uploadArea">
@@ -3039,23 +2800,49 @@
                         <!-- 匯入選擇界面 -->
                         <div id="importSelection" class="import-selection" style="display: none;">
                             <h4>📋 選擇要匯入的記錄</h4>
-                            <p class="selection-description">包含所有記錄（新記錄和重複記錄），按日期從新到舊排序</p>
                             <div class="selection-controls">
-                                <button class="btn btn-sm" onclick="selectAllRecords()">全選</button>
-                                <button class="btn btn-sm" onclick="deselectAllRecords()">全不選</button>
-                                <button class="btn btn-sm" onclick="selectNewRecordsOnly()">只選新記錄</button>
-                                <span id="selectedCount">已選擇 0 筆記錄</span>
+                                <button class="btn btn-secondary" onclick="selectAllRecords()">全選</button>
+                                <button class="btn btn-secondary" onclick="selectNewRecordsOnly()">只選新記錄</button>
+                                <button class="btn btn-secondary" onclick="clearSelection()">清除選擇</button>
                             </div>
-                            <div class="records-selection" id="recordsSelectionList"></div>
+                            <div class="records-selection" id="recordsSelection"></div>
                             <div class="selection-actions">
-                                <button class="btn btn-success" id="confirmImportBtn" onclick="confirmSelectedImport()" disabled>
-                                    📥 確認匯入選中的記錄
-                                </button>
-                                <button class="btn btn-secondary" onclick="hideImportSelection()">
-                                    ❌ 取消
-                                </button>
+                                <button class="btn btn-success" onclick="confirmSelectedImport()">確認匯入選中記錄</button>
+                                <button class="btn btn-secondary" onclick="cancelImportSelection()">取消</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+                
+                <!-- 數據匯出功能 -->
+                <div class="export-section">
+                    <h3>📤 數據匯出</h3>
+                    <p>將現有記錄匯出為 Excel 檔案</p>
+                    <div class="export-actions">
+                        <button class="btn" onclick="downloadExcelBackup()">📊 下載 Excel 備份</button>
+                    </div>
+                </div>
+                
+                <!-- 資料清除功能 -->
+                <div class="clear-section">
+                    <h3>🗑️ 資料清除</h3>
+                    <p>清除所有收支記錄數據</p>
+                    
+                    <div class="clear-warning">
+                        <div class="warning-icon">⚠️</div>
+                        <div class="warning-content">
+                            <h4>警告：此操作不可逆</h4>
+                            <p>清除資料將會：</p>
+                            <ul>
+                                <li>刪除所有收支記錄</li>
+                                <li>清空統計數據</li>
+                                <li>無法復原</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="clear-actions">
+                        <button class="btn btn-danger" onclick="clearAllData()">🗑️ 清空所有數據</button>
                     </div>
                 </div>
             </div>
@@ -4531,102 +4318,59 @@
             console.log('應用程式初始化完成');
         }
 
-        // 從檔案載入資料
+        // 從SQLite數據庫載入資料
         async function loadDataFromFile() {
             try {
-                console.log('開始載入 data.json...');
-                // 嘗試多種方法讀取data.json
-                let data = null;
+                console.log('🔄 開始從SQLite數據庫載入資料...');
                 
-                // 方法1: 使用fetch (帶時間戳強制刷新)
-                try {
-                    const timestamp = new Date().getTime();
-                    const url = `data/data.json?t=${timestamp}`;
-                    console.log(`使用URL: ${url}`);
-                    
-                    const response = await fetch(url);
-                    if (response.ok) {
-                        data = await response.json();
-                        console.log('✅ 使用fetch成功載入 data.json');
-                    } else {
-                        console.log('❌ fetch載入失敗，狀態碼:', response.status);
-                    }
-                } catch (fetchError) {
-                    console.log('❌ fetch載入失敗:', fetchError.message);
-                    
-                    // 方法2: 使用XMLHttpRequest (帶時間戳強制刷新)
-                    try {
-                        const timestamp = new Date().getTime();
-                        const url = `data/data.json?t=${timestamp}`;
-                        console.log(`使用XHR URL: ${url}`);
-                        
-                        data = await new Promise((resolve, reject) => {
-                            const xhr = new XMLHttpRequest();
-                            xhr.open('GET', url, true);
-                            xhr.onreadystatechange = function() {
-                                if (xhr.readyState === 4) {
-                                    if (xhr.status === 200) {
-                                        try {
-                                            resolve(JSON.parse(xhr.responseText));
-                                        } catch (e) {
-                                            reject(e);
-                                        }
-                                    } else {
-                                        reject(new Error(`HTTP ${xhr.status}`));
-                                    }
-                                }
-                            };
-                            xhr.send();
-                        });
-                        console.log('✅ 使用XMLHttpRequest成功載入 data.json');
-                    } catch (xhrError) {
-                        console.log('❌ XMLHttpRequest載入失敗:', xhrError.message);
-                    }
-                }
+                // 使用新的SQLite API端點
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/records');
                 
-                if (data) {
-                    console.log('成功載入 data.json:', data);
-                    if (data.records && Array.isArray(data.records)) {
-                        // 如果檔案中有資料，使用檔案的資料並更新localStorage
-                        records = data.records;
+                if (response.ok) {
+                    const result = await response.json();
+                    
+                    if (result.success && Array.isArray(result.records)) {
+                        records = result.records;
                         localStorage.setItem('familyRecords', JSON.stringify(records));
-                        console.log('從 data.json 載入了', records.length, '筆記錄');
-                        console.log('記錄內容:', records);
-                        console.log('✅ 已同步到localStorage');
+                        console.log('✅ 從SQLite數據庫載入了', records.length, '筆記錄');
                         console.log('🔄 全局records變量已更新為:', records.length, '筆記錄');
+                        return;
                     } else {
-                        // 如果檔案中沒有資料，嘗試從 localStorage 載入
-                        const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
-                        if (localRecords.length > 0) {
-                            records = localRecords;
-                            console.log('從 localStorage 載入了', records.length, '筆記錄');
-                        } else {
-                            records = []; // 確保records是空數組
-                            console.log('data.json 和 localStorage 都沒有資料，records設為空數組');
-                        }
+                        console.warn('⚠️ SQLite API返回無效數據:', result);
                     }
                 } else {
-                    console.log('data.json 載入失敗');
-                    // 如果檔案不存在，嘗試從 localStorage 載入
-                    const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
-                    if (localRecords.length > 0) {
-                        records = localRecords;
-                        console.log('從 localStorage 載入了', records.length, '筆記錄');
-                    } else {
-                        records = []; // 確保records是空數組
-                        console.log('localStorage 也沒有資料，records設為空數組');
-                    }
+                    console.warn('⚠️ SQLite API請求失敗，狀態碼:', response.status);
                 }
-            } catch (error) {
-                console.log('無法載入 data.json，嘗試從 localStorage 載入:', error);
-                // 如果載入檔案失敗，嘗試從 localStorage 載入
+                
+                // 如果SQLite API失敗，嘗試從localStorage載入
+                console.log('🔄 嘗試從localStorage載入備份數據...');
                 const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
                 if (localRecords.length > 0) {
                     records = localRecords;
-                    console.log('從 localStorage 載入了', records.length, '筆記錄');
+                    console.log('✅ 從localStorage載入了', records.length, '筆記錄');
                 } else {
-                    records = []; // 確保records是空數組
-                    console.log('localStorage 也沒有資料，records設為空數組');
+                    records = [];
+                    console.log('📝 沒有找到任何數據，records設為空數組');
+                }
+                
+            } catch (error) {
+                console.error('❌ 從SQLite數據庫載入失敗:', error);
+                
+                // 如果SQLite API完全失敗，嘗試從localStorage載入
+                try {
+                    console.log('🔄 嘗試從localStorage載入備份數據...');
+                    const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
+                    if (localRecords.length > 0) {
+                        records = localRecords;
+                        console.log('✅ 從localStorage載入了', records.length, '筆記錄');
+                    } else {
+                        records = [];
+                        console.log('📝 沒有找到任何數據，records設為空數組');
+                    }
+                } catch (localError) {
+                    console.error('❌ localStorage載入也失敗:', localError);
+                    records = [];
+                    console.log('📝 所有載入方法都失敗，records設為空數組');
                 }
             }
         }
@@ -5516,7 +5260,7 @@
         }
 
         // 表單提交
-        document.getElementById('recordForm').addEventListener('submit', function(e) {
+        document.getElementById('recordForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // 數據驗證
@@ -5585,30 +5329,47 @@
                 date: date
             };
             
-            records.push(record);
-            saveRecords();
-            
-            // 自動備份到GitHub
-            backupToGitHub().then(success => {
-                if (success) {
-                    console.log('✅ 新增記錄後自動備份成功');
+            try {
+                console.log('➕ 開始向SQLite數據庫添加記錄...');
+                
+                // 使用新的SQLite添加API
+                const addResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(record)
+                });
+                
+                const addResult = await addResponse.json();
+                
+                if (addResult.success) {
+                    console.log('✅ SQLite數據庫記錄已添加:', addResult.message);
+                    
+                    // 添加到前端數組
+                    records.push(record);
+                    localStorage.setItem('familyRecords', JSON.stringify(records));
+                    
+                    // 重置表單
+                    this.reset();
+                    setTodayDate();
+                    
+                    // 更新顯示
+                    updateStats();
+                    updateRecentRecords();
+                    updateAllRecords();
+                    updateCalendar();
+                    updateSyncStatus();
+                    
+                    alert('✅ 記錄已成功新增！');
                 } else {
-                    console.log('⚠️ 新增記錄後自動備份失敗，但本地已保存');
+                    console.error('❌ SQLite數據庫添加失敗:', addResult.message);
+                    alert('❌ 記錄添加失敗：' + addResult.message);
                 }
-            });
-            
-            // 重置表單
-            this.reset();
-            setTodayDate();
-            
-            // 更新顯示
-            updateStats();
-            updateRecentRecords();
-            updateAllRecords();
-            updateCalendar(); // 確保日曆更新
-            updateSyncStatus(); // 更新同步狀態
-            
-            alert('記錄已新增！');
+            } catch (error) {
+                console.error('❌ 添加記錄時發生錯誤:', error);
+                alert('❌ 添加記錄時發生錯誤：' + error.message);
+            }
         });
 
         function editRecord(id) {
@@ -5798,26 +5559,44 @@
             }
         });
 
-        function deleteRecord(id) {
+        async function deleteRecord(id) {
             if (confirm('確定要刪除這筆記錄嗎？')) {
-                records = records.filter(record => record.id !== id);
-                saveRecords();
-                updateStats();
-                updateRecentRecords();
-                updateAllRecords();
-                updateCalendar(); // 確保日曆更新
-                updateSyncStatus(); // 更新同步狀態
-                
-                // 自動備份到GitHub
-                backupToGitHub().then(success => {
-                    if (success) {
-                        console.log('✅ 刪除記錄後自動備份成功');
+                try {
+                    console.log('🗑️ 開始從SQLite數據庫刪除記錄:', id);
+                    
+                    // 使用新的SQLite刪除API
+                    const deleteResponse = await fetch(ENV_CONFIG.getApiBase() + `/api/records/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+                    
+                    const deleteResult = await deleteResponse.json();
+                    
+                    if (deleteResult.success) {
+                        console.log('✅ SQLite數據庫記錄已刪除:', deleteResult.message);
+                        
+                        // 從前端數組中移除記錄
+                        records = records.filter(record => record.id !== id);
+                        localStorage.setItem('familyRecords', JSON.stringify(records));
+                        
+                        // 更新所有顯示
+                        updateStats();
+                        updateRecentRecords();
+                        updateAllRecords();
+                        updateCalendar();
+                        updateSyncStatus();
+                        
+                        alert('✅ 記錄已成功刪除！');
                     } else {
-                        console.log('⚠️ 刪除記錄後自動備份失敗，但本地已保存');
+                        console.error('❌ SQLite數據庫刪除失敗:', deleteResult.message);
+                        alert('❌ 記錄刪除失敗：' + deleteResult.message);
                     }
-                });
-                
-                alert('記錄已刪除！');
+                } catch (error) {
+                    console.error('❌ 刪除記錄時發生錯誤:', error);
+                    alert('❌ 刪除記錄時發生錯誤：' + error.message);
+                }
             }
         }
 
@@ -6776,7 +6555,7 @@
                 return;
             }
 
-            const confirmMessage = `⚠️ 警告：您即將清空所有 ${records.length} 筆記錄！\n\n此操作將：\n- 刪除所有收支記錄\n- 清空統計數據\n- 無法復原\n\n確定要繼續嗎？`;
+            const confirmMessage = `⚠️ 警告：您即將清空所有 ${records.length} 筆記錄！\n\n此操作將：\n- 刪除SQLite數據庫中的所有記錄\n- 清空統計數據\n- 無法復原\n\n確定要繼續嗎？`;
             
             if (confirm(confirmMessage)) {
                 const doubleConfirm = confirm('最後確認：您真的要清空所有數據嗎？\n\n請輸入 "YES" 來確認（請手動輸入 YES）');
@@ -6786,45 +6565,39 @@
                     
                     if (userInput === 'YES') {
                         try {
-                            console.log('🗑️ 開始清除所有數據...');
+                            console.log('🗑️ 開始清除SQLite數據庫中的所有數據...');
                             
-                            // 直接清除前端數據
-                            records = [];
-                            localStorage.removeItem('familyRecords');
-                            localStorage.removeItem('lastSyncTime');
-                            localStorage.removeItem('lastGitHubBackup');
-                            localStorage.removeItem('lastLocalBackup');
-                            
-                            // 更新所有顯示
-                            updateStats();
-                            updateRecentRecords();
-                            updateAllRecords();
-                            updateCalendar();
-                            updateDataStats();
-                            
-                            // 使用備份API提交空的數據到後端
-                            console.log('📦 提交空數據到後端...');
-                            const backupResponse = await fetch(ENV_CONFIG.getApiBase() + '/backup', {
-                                method: 'POST',
+                            // 使用新的SQLite清除API
+                            const clearResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/records/clear', {
+                                method: 'DELETE',
                                 headers: {
                                     'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    records: [],
-                                    timestamp: new Date().toISOString(),
-                                    count: 0,
-                                    commitMessage: '清除所有數據'
-                                })
+                                }
                             });
                             
-                            const backupResult = await backupResponse.json();
+                            const clearResult = await clearResponse.json();
                             
-                            if (backupResult.success) {
-                                console.log('✅ 後端數據已清除');
-                                alert('✅ 所有數據已成功清空！');
+                            if (clearResult.success) {
+                                console.log('✅ SQLite數據庫已清空:', clearResult.message);
+                                
+                                // 清除前端數據
+                                records = [];
+                                localStorage.removeItem('familyRecords');
+                                localStorage.removeItem('lastSyncTime');
+                                localStorage.removeItem('lastGitHubBackup');
+                                localStorage.removeItem('lastLocalBackup');
+                                
+                                // 更新所有顯示
+                                updateStats();
+                                updateRecentRecords();
+                                updateAllRecords();
+                                updateCalendar();
+                                updateDataStats();
+                                
+                                alert(`✅ 所有數據已成功清空！\n\n清除了 ${clearResult.changes} 筆記錄`);
                             } else {
-                                console.warn('⚠️ 後端清除失敗，但前端已清空:', backupResult.message);
-                                alert('✅ 前端數據已清空，但後端同步失敗：' + backupResult.message);
+                                console.error('❌ SQLite數據庫清除失敗:', clearResult.message);
+                                alert('❌ 數據庫清除失敗：' + clearResult.message);
                             }
                             
                             console.log('✅ 清除數據完成');
