@@ -1449,7 +1449,7 @@
         .excel-import-section {
             margin-top: 20px;
         }
-        
+
         /* 匯入選擇界面樣式 */
         .import-selection {
             margin-top: 20px;
@@ -2753,30 +2753,30 @@
                                 <p class="upload-hint">支援 .xlsx 和 .xls 格式，最大 10MB</p>
                                 <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;">
                                 <button class="btn" onclick="document.getElementById('excelFileInput').click()">選擇檔案</button>
-                            </div>
-                        </div>
-                        
+            </div>
+        </div>
+                    
                         <div id="compareResult" class="compare-result" style="display: none;">
                             <h4>📋 比對結果</h4>
                             <div class="result-summary">
                                 <div class="summary-item">
                                     <span class="label">Excel 總記錄數:</span>
                                     <span class="value" id="totalExcelRecords">0</span>
-                                </div>
+                            </div>
                                 <div class="summary-item">
                                     <span class="label">系統現有記錄數:</span>
                                     <span class="value" id="systemRecords">0</span>
-                                </div>
+                            </div>
                                 <div class="summary-item new">
                                     <span class="label">可新增記錄數:</span>
                                     <span class="value" id="newRecords">0</span>
-                                </div>
+                        </div>
                                 <div class="summary-item duplicate">
                                     <span class="label">重複記錄數:</span>
                                     <span class="value" id="duplicateRecords">0</span>
-                                </div>
-                            </div>
-                            
+                    </div>
+                </div>
+
                             <div class="result-actions">
                                 <button class="btn btn-primary" id="importBtn" onclick="showImportSelection()" disabled>
                                     📥 選擇匯入記錄
@@ -2789,14 +2789,14 @@
                             <div id="newRecordsList" class="records-list" style="display: none;">
                                 <h5>🆕 新記錄預覽</h5>
                                 <div class="records-preview" id="newRecordsPreview"></div>
-                            </div>
-                            
+                        </div>
+                        
                             <div id="duplicateRecordsList" class="records-list" style="display: none;">
                                 <h5>🔄 重複記錄</h5>
                                 <div class="records-preview" id="duplicateRecordsPreview"></div>
-                            </div>
                         </div>
-                        
+                    </div>
+                    
                         <!-- 匯入選擇界面 -->
                         <div id="importSelection" class="import-selection" style="display: none;">
                             <h4>📋 選擇要匯入的記錄</h4>
@@ -2804,7 +2804,7 @@
                                 <button class="btn btn-secondary" onclick="selectAllRecords()">全選</button>
                                 <button class="btn btn-secondary" onclick="selectNewRecordsOnly()">只選新記錄</button>
                                 <button class="btn btn-secondary" onclick="clearSelection()">清除選擇</button>
-                            </div>
+                        </div>
                             <div class="records-selection" id="recordsSelection"></div>
                             <div class="selection-actions">
                                 <button class="btn btn-success" onclick="confirmSelectedImport()">確認匯入選中記錄</button>
@@ -2820,6 +2820,80 @@
                     <p>將現有記錄匯出為 Excel 檔案</p>
                     <div class="export-actions">
                         <button class="btn" onclick="downloadExcelBackup()">📊 下載 Excel 備份</button>
+                    </div>
+                </div>
+                
+                <!-- Excel 匯入功能 -->
+                <div class="import-section">
+                    <h3>📥 Excel 匯入</h3>
+                    <p>從 Excel 檔案匯入收支記錄</p>
+                    
+                    <div class="excel-import-section">
+                        <div class="upload-area" id="excelImportUploadArea">
+                            <div class="upload-content">
+                                <div class="upload-icon">📁</div>
+                                <p>點擊或拖拽 Excel 檔案到此處</p>
+                                <p class="upload-hint">支援 .xlsx 和 .xls 格式，最大 10MB</p>
+                                <input type="file" id="excelImportFileInput" accept=".xlsx,.xls" style="display: none;">
+                                <button class="btn" onclick="document.getElementById('excelImportFileInput').click()">選擇檔案</button>
+                            </div>
+                        </div>
+                        
+                        <div id="excelImportCompareResult" class="compare-result" style="display: none;">
+                            <h4>📋 比對結果</h4>
+                            <div class="result-summary">
+                                <div class="summary-item">
+                                    <span class="label">Excel 總記錄數:</span>
+                                    <span class="value" id="excelImportTotalRecords">0</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">系統現有記錄數:</span>
+                                    <span class="value" id="excelImportSystemRecords">0</span>
+                                </div>
+                                <div class="summary-item new">
+                                    <span class="label">可新增記錄數:</span>
+                                    <span class="value" id="excelImportNewRecords">0</span>
+                                </div>
+                                <div class="summary-item duplicate">
+                                    <span class="label">重複記錄數:</span>
+                                    <span class="value" id="excelImportDuplicateRecords">0</span>
+                                </div>
+                            </div>
+                            
+                            <div class="result-actions">
+                                <button class="btn btn-primary" id="excelImportBtn" onclick="showExcelImportSelection()" disabled>
+                                    📥 選擇匯入記錄
+                                </button>
+                                <button class="btn btn-secondary" onclick="clearExcelImportResult()">
+                                    🔄 重新比對
+                                </button>
+                            </div>
+                            
+                            <div id="excelImportNewRecordsList" class="records-list" style="display: none;">
+                                <h5>🆕 新記錄預覽</h5>
+                                <div class="records-preview" id="excelImportNewRecordsPreview"></div>
+                            </div>
+                            
+                            <div id="excelImportDuplicateRecordsList" class="records-list" style="display: none;">
+                                <h5>🔄 重複記錄</h5>
+                                <div class="records-preview" id="excelImportDuplicateRecordsPreview"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Excel 匯入選擇界面 -->
+                        <div id="excelImportSelection" class="import-selection" style="display: none;">
+                            <h4>📋 選擇要匯入的記錄</h4>
+                            <div class="selection-controls">
+                                <button class="btn btn-secondary" onclick="selectAllExcelImportRecords()">全選</button>
+                                <button class="btn btn-secondary" onclick="selectNewExcelImportRecordsOnly()">只選新記錄</button>
+                                <button class="btn btn-secondary" onclick="clearExcelImportSelection()">清除選擇</button>
+                            </div>
+                            <div class="records-selection" id="excelImportRecordsSelection"></div>
+                            <div class="selection-actions">
+                                <button class="btn btn-success" onclick="confirmExcelImportSelected()">確認匯入選中記錄</button>
+                                <button class="btn btn-secondary" onclick="cancelExcelImportSelection()">取消</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -3632,6 +3706,7 @@
 
         // Excel 匯入功能
         let currentCompareData = null;
+        let currentExcelImportData = null;
 
         // 初始化檔案上傳功能
         function initExcelUpload() {
@@ -4252,6 +4327,432 @@
             currentCompareData = null;
         }
 
+        // ==================== 新的 Excel 匯入功能 ====================
+        
+        // 初始化新的 Excel 匯入功能
+        function initExcelImportUpload() {
+            const fileInput = document.getElementById('excelImportFileInput');
+            const uploadArea = document.getElementById('excelImportUploadArea');
+
+            // 檔案選擇事件
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleExcelImportUpload(e.target.files[0]);
+                }
+            });
+
+            // 拖拽功能
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleExcelImportUpload(files[0]);
+                }
+            });
+
+            // 點擊上傳區域
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+        }
+
+        // 處理新的 Excel 匯入檔案上傳
+        async function handleExcelImportUpload(file) {
+            console.log('📁 開始處理 Excel 匯入檔案上傳:', file.name);
+            console.log('📁 檔案大小:', file.size, 'bytes');
+            console.log('📁 檔案類型:', file.type);
+            console.log('📁 API 地址:', ENV_CONFIG.getApiBase() + '/excel/compare');
+            
+            // 驗證檔案類型
+            if (!file.name.match(/\.(xlsx|xls)$/i)) {
+                alert('❌ 請選擇 Excel 檔案 (.xlsx 或 .xls)');
+                return;
+            }
+
+            // 驗證檔案大小
+            if (file.size > 10 * 1024 * 1024) {
+                alert('❌ 檔案大小不能超過 10MB');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('excelFile', file);
+
+            try {
+                console.log('📡 開始發送請求到:', ENV_CONFIG.getApiBase() + '/excel/compare');
+                console.log('📡 FormData 內容:', formData);
+                
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/excel/compare', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                console.log('📡 收到回應狀態:', response.status);
+                console.log('📡 收到回應標頭:', response.headers);
+                
+                const result = await response.json();
+                console.log('📡 收到回應內容:', result);
+                
+                if (result.success) {
+                    console.log('✅ Excel 比對成功:', result.data);
+                    displayExcelImportCompareResult(result.data);
+                } else {
+                    console.error('❌ Excel 比對失敗:', result.message);
+                    alert('❌ Excel 比對失敗: ' + result.message);
+                }
+            } catch (error) {
+                console.error('❌ 上傳失敗:', error);
+                alert('❌ 上傳失敗: ' + error.message);
+            }
+        }
+
+        // 顯示新的 Excel 匯入比對結果
+        function displayExcelImportCompareResult(data) {
+            currentExcelImportData = data;
+            
+            // 更新統計數據
+            document.getElementById('excelImportTotalRecords').textContent = data.totalExcelRecords;
+            document.getElementById('excelImportSystemRecords').textContent = data.systemRecords;
+            document.getElementById('excelImportNewRecords').textContent = data.newRecords;
+            document.getElementById('excelImportDuplicateRecords').textContent = data.duplicateRecords;
+            
+            // 顯示比對結果
+            document.getElementById('excelImportCompareResult').style.display = 'block';
+            
+            // 啟用/禁用匯入按鈕
+            const importBtn = document.getElementById('excelImportBtn');
+            if (data.newRecords > 0) {
+                importBtn.disabled = false;
+                importBtn.textContent = `📥 選擇匯入 ${data.newRecords} 筆記錄`;
+            } else {
+                importBtn.disabled = true;
+                importBtn.textContent = '📥 選擇匯入記錄';
+            }
+            
+            // 顯示新記錄預覽
+            if (data.newRecordsData && data.newRecordsData.length > 0) {
+                const preview = document.getElementById('excelImportNewRecordsPreview');
+                preview.innerHTML = data.newRecordsData.slice(0, 5).map(record => 
+                    `<div class="record-preview-item">
+                        <span class="record-date">${record.date}</span>
+                        <span class="record-member">${record.member}</span>
+                        <span class="record-description">${record.description || record.mainCategory}</span>
+                        <span class="record-amount">$${record.amount}</span>
+                    </div>`
+                ).join('');
+                document.getElementById('excelImportNewRecordsList').style.display = 'block';
+            }
+            
+            // 顯示重複記錄預覽
+            if (data.duplicateRecordsData && data.duplicateRecordsData.length > 0) {
+                const preview = document.getElementById('excelImportDuplicateRecordsPreview');
+                preview.innerHTML = data.duplicateRecordsData.slice(0, 5).map(record => 
+                    `<div class="record-preview-item">
+                        <span class="record-date">${record.date}</span>
+                        <span class="record-member">${record.member}</span>
+                        <span class="record-description">${record.description || record.mainCategory}</span>
+                        <span class="record-amount">$${record.amount}</span>
+                    </div>`
+                ).join('');
+                document.getElementById('excelImportDuplicateRecordsList').style.display = 'block';
+            }
+        }
+
+        // 顯示新的 Excel 匯入選擇界面
+        function showExcelImportSelection() {
+            console.log('🔍 [DEBUG] showExcelImportSelection 被調用');
+            console.log('🔍 [DEBUG] currentExcelImportData:', currentExcelImportData);
+            
+            if (!currentExcelImportData || currentExcelImportData.newRecords === 0) {
+                console.log('❌ [DEBUG] 沒有可匯入的新記錄');
+                alert('❌ 沒有可匯入的新記錄');
+                return;
+            }
+
+            console.log('🔍 [DEBUG] 準備顯示匯入選擇界面');
+            
+            // 隱藏比對結果
+            const compareResult = document.getElementById('excelImportCompareResult');
+            if (compareResult) {
+                compareResult.style.display = 'none';
+                console.log('✅ [DEBUG] 已隱藏比對結果');
+            } else {
+                console.error('❌ [DEBUG] 找不到 excelImportCompareResult 元素');
+            }
+            
+            // 顯示匯入選擇界面
+            const importSelection = document.getElementById('excelImportSelection');
+            if (importSelection) {
+                importSelection.style.display = 'block';
+                console.log('✅ [DEBUG] 已顯示匯入選擇界面');
+            } else {
+                console.error('❌ [DEBUG] 找不到 excelImportSelection 元素');
+            }
+            
+            // 生成記錄選擇清單
+            console.log('🔍 [DEBUG] 準備生成記錄清單，記錄數:', currentExcelImportData.newRecordsData ? currentExcelImportData.newRecordsData.length : 'undefined');
+            generateExcelImportRecordsSelectionList(currentExcelImportData.newRecordsData);
+        }
+
+        // 生成新的 Excel 匯入記錄選擇清單
+        function generateExcelImportRecordsSelectionList(records) {
+            console.log('🔍 [DEBUG] generateExcelImportRecordsSelectionList 被調用');
+            console.log('🔍 [DEBUG] records:', records);
+            
+            const listContainer = document.getElementById('excelImportRecordsSelection');
+            if (!listContainer) {
+                console.error('❌ [DEBUG] 找不到 excelImportRecordsSelection 元素');
+                return;
+            }
+            
+            console.log('✅ [DEBUG] 找到 excelImportRecordsSelection 元素');
+            listContainer.innerHTML = '';
+            
+            if (!records || !Array.isArray(records)) {
+                console.error('❌ [DEBUG] records 不是有效數組:', records);
+                return;
+            }
+            
+            // 合併所有記錄（新記錄 + 重複記錄）
+            const allRecords = [];
+            
+            // 添加新記錄
+            if (currentExcelImportData.newRecordsData) {
+                allRecords.push(...currentExcelImportData.newRecordsData.map(record => ({
+                    ...record,
+                    isNew: true
+                })));
+            }
+            
+            // 添加重複記錄
+            if (currentExcelImportData.duplicateRecordsData) {
+                allRecords.push(...currentExcelImportData.duplicateRecordsData.map(record => ({
+                    ...record,
+                    isNew: false
+                })));
+            }
+            
+            console.log('🔍 [DEBUG] 合併後總記錄數:', allRecords.length);
+            
+            // 按日期從新到舊排序
+            allRecords.sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                return dateB - dateA; // 新到舊
+            });
+            
+            console.log('🔍 [DEBUG] 排序完成，開始生成記錄清單');
+            
+            allRecords.forEach((record, index) => {
+                console.log(`🔍 [DEBUG] 處理記錄 ${index}:`, record);
+                
+                const item = document.createElement('div');
+                item.className = 'record-selection-item';
+                
+                // 檢查是否有重複資料
+                const duplicateInfo = checkForDuplicateRecord(record);
+                const duplicateNote = duplicateInfo ? 
+                    `<div class="duplicate-note">⚠️ 可能與系統中現有記錄重複</div>` : '';
+                
+                // 添加記錄類型標記
+                const recordTypeNote = record.isNew ? 
+                    `<div class="record-type-note new">🆕 新記錄</div>` : 
+                    `<div class="record-type-note duplicate">🔄 重複記錄</div>`;
+                
+                item.innerHTML = `
+                    <div class="record-selection-content">
+                        <input type="checkbox" value="${index}" onchange="updateExcelImportSelectedCount()">
+                        <div class="record-info">
+                            <div class="record-header">
+                                ${recordTypeNote}
+                                <span class="record-date">${record.date}</span>
+                                <span class="record-member">${record.member}</span>
+                                <span class="record-amount ${record.type}">$${record.amount}</span>
+                            </div>
+                            <div class="record-details">
+                                <span class="record-category">${record.mainCategory}</span>
+                                <span class="record-subcategory">${record.subCategory || '未設定'}</span>
+                                ${record.description ? `<span class="record-description">${record.description}</span>` : ''}
+                            </div>
+                            ${duplicateNote}
+                        </div>
+                    </div>
+                `;
+                
+                listContainer.appendChild(item);
+                console.log(`✅ [DEBUG] 已添加記錄 ${index} 到清單`);
+            });
+            
+            console.log('✅ [DEBUG] 所有記錄已添加到清單，開始初始化選擇計數');
+            // 初始化選擇計數
+            updateExcelImportSelectedCount();
+        }
+
+        // 更新新的 Excel 匯入選擇計數
+        function updateExcelImportSelectedCount() {
+            const checkboxes = document.querySelectorAll('#excelImportRecordsSelection input[type="checkbox"]');
+            const checkedBoxes = document.querySelectorAll('#excelImportRecordsSelection input[type="checkbox"]:checked');
+            const count = checkedBoxes.length;
+            
+            // 更新確認按鈕狀態
+            const confirmBtn = document.querySelector('#excelImportSelection .btn-success');
+            if (confirmBtn) {
+                confirmBtn.disabled = count === 0;
+                confirmBtn.textContent = count === 0 ? '確認匯入選中記錄' : `確認匯入選中記錄 (${count})`;
+            }
+        }
+
+        // 全選新的 Excel 匯入記錄
+        function selectAllExcelImportRecords() {
+            const checkboxes = document.querySelectorAll('#excelImportRecordsSelection input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            updateExcelImportSelectedCount();
+        }
+
+        // 只選新的 Excel 匯入記錄
+        function selectNewExcelImportRecordsOnly() {
+            const checkboxes = document.querySelectorAll('#excelImportRecordsSelection input[type="checkbox"]');
+            checkboxes.forEach((checkbox, index) => {
+                // 找到對應的記錄類型標記
+                const recordItem = checkbox.closest('.record-selection-item');
+                const typeNote = recordItem.querySelector('.record-type-note.new');
+                checkbox.checked = typeNote !== null;
+            });
+            updateExcelImportSelectedCount();
+        }
+
+        // 清除新的 Excel 匯入選擇
+        function clearExcelImportSelection() {
+            const checkboxes = document.querySelectorAll('#excelImportRecordsSelection input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            updateExcelImportSelectedCount();
+        }
+
+        // 確認新的 Excel 匯入選中的記錄
+        async function confirmExcelImportSelected() {
+            const checkedBoxes = document.querySelectorAll('#excelImportRecordsSelection input[type="checkbox"]:checked');
+            
+            if (checkedBoxes.length === 0) {
+                alert('❌ 請至少選擇一筆記錄');
+                return;
+            }
+
+            if (!confirm(`確定要匯入選中的 ${checkedBoxes.length} 筆記錄嗎？`)) {
+                return;
+            }
+
+            // 收集選中的記錄
+            const selectedRecords = [];
+            checkedBoxes.forEach(checkbox => {
+                const index = parseInt(checkbox.value);
+                const allRecords = [
+                    ...(currentExcelImportData.newRecordsData || []),
+                    ...(currentExcelImportData.duplicateRecordsData || [])
+                ];
+                selectedRecords.push(allRecords[index]);
+            });
+
+            try {
+                console.log('📥 開始向SQLite數據庫匯入選中的記錄...');
+                
+                let successCount = 0;
+                let errorCount = 0;
+                const errors = [];
+                
+                // 逐筆添加到SQLite數據庫
+                for (const record of selectedRecords) {
+                    try {
+                        const addResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(record)
+                        });
+                        
+                        const addResult = await addResponse.json();
+                        
+                        if (addResult.success) {
+                            successCount++;
+                            console.log('✅ 記錄已添加:', record.id);
+                        } else {
+                            errorCount++;
+                            errors.push(`記錄 ${record.id}: ${addResult.message}`);
+                            console.error('❌ 記錄添加失敗:', record.id, addResult.message);
+                        }
+                    } catch (recordError) {
+                        errorCount++;
+                        errors.push(`記錄 ${record.id}: ${recordError.message}`);
+                        console.error('❌ 記錄添加錯誤:', record.id, recordError.message);
+                    }
+                }
+                
+                if (successCount > 0) {
+                    console.log(`✅ 成功匯入 ${successCount} 筆記錄到SQLite數據庫`);
+                    
+                    // 重新載入資料
+                    await loadDataFromFile();
+                    
+                    // 更新所有顯示
+                    updateAllDisplays();
+                    
+                    // 自動提交到Git（不更新版本號）
+                    await commitToGitWithoutVersion(`Excel匯入 ${successCount} 筆記錄`);
+                    
+                    // 清除所有結果
+                    clearExcelImportResult();
+                    hideExcelImportSelection();
+                    
+                    if (errorCount > 0) {
+                        alert(`✅ 成功匯入 ${successCount} 筆記錄！\n\n⚠️ 有 ${errorCount} 筆記錄匯入失敗：\n${errors.join('\n')}`);
+                    } else {
+                        alert(`✅ 成功匯入 ${successCount} 筆記錄！`);
+                    }
+                } else {
+                    console.error('❌ 所有記錄匯入失敗');
+                    alert(`❌ 所有記錄匯入失敗：\n${errors.join('\n')}`);
+                }
+            } catch (error) {
+                console.error('❌ 匯入過程發生錯誤:', error);
+                alert('❌ 匯入過程發生錯誤：' + error.message);
+            }
+        }
+
+        // 隱藏新的 Excel 匯入選擇界面
+        function hideExcelImportSelection() {
+            document.getElementById('excelImportSelection').style.display = 'none';
+            document.getElementById('excelImportCompareResult').style.display = 'block';
+        }
+
+        // 取消新的 Excel 匯入選擇
+        function cancelExcelImportSelection() {
+            hideExcelImportSelection();
+        }
+
+        // 清除新的 Excel 匯入結果
+        function clearExcelImportResult() {
+            document.getElementById('excelImportCompareResult').style.display = 'none';
+            document.getElementById('excelImportSelection').style.display = 'none';
+            document.getElementById('excelImportFileInput').value = '';
+            currentExcelImportData = null;
+        }
+
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 DOM已載入，開始初始化...');
@@ -4261,6 +4762,9 @@
             
             // 初始化 Excel 上傳功能
             initExcelUpload();
+            
+            // 初始化新的 Excel 匯入功能
+            initExcelImportUpload();
             
             // 防止過度滾動
             preventOverScroll();
@@ -4367,7 +4871,7 @@
                 // 使用新的SQLite API端點
                 const response = await fetch(ENV_CONFIG.getApiBase() + '/api/records');
                 
-                if (response.ok) {
+                    if (response.ok) {
                     const result = await response.json();
                     
                     if (result.success && Array.isArray(result.records)) {
@@ -4385,14 +4889,14 @@
                 
                 // 如果SQLite API失敗，嘗試從localStorage載入
                 console.log('🔄 嘗試從localStorage載入備份數據...');
-                const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
-                if (localRecords.length > 0) {
-                    records = localRecords;
+                    const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
+                    if (localRecords.length > 0) {
+                        records = localRecords;
                     console.log('✅ 從localStorage載入了', records.length, '筆記錄');
-                } else {
+                    } else {
                     records = [];
                     console.log('📝 沒有找到任何數據，records設為空數組');
-                }
+                    }
                 
             } catch (error) {
                 console.error('❌ 從SQLite數據庫載入失敗:', error);
@@ -4400,11 +4904,11 @@
                 // 如果SQLite API完全失敗，嘗試從localStorage載入
                 try {
                     console.log('🔄 嘗試從localStorage載入備份數據...');
-                    const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
-                    if (localRecords.length > 0) {
-                        records = localRecords;
+                const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
+                if (localRecords.length > 0) {
+                    records = localRecords;
                         console.log('✅ 從localStorage載入了', records.length, '筆記錄');
-                    } else {
+                } else {
                         records = [];
                         console.log('📝 沒有找到任何數據，records設為空數組');
                     }
@@ -5390,15 +5894,15 @@
                     // 添加到前端數組
                     records.push(record);
                     localStorage.setItem('familyRecords', JSON.stringify(records));
-                    
-                    // 重置表單
-                    this.reset();
-                    setTodayDate();
-                    
-                    // 更新顯示
-                    updateStats();
-                    updateRecentRecords();
-                    updateAllRecords();
+            
+            // 重置表單
+            this.reset();
+            setTodayDate();
+            
+            // 更新顯示
+            updateStats();
+            updateRecentRecords();
+            updateAllRecords();
                     updateCalendar();
                     updateSyncStatus();
                     
@@ -5619,13 +6123,13 @@
                         console.log('✅ SQLite數據庫記錄已刪除:', deleteResult.message);
                         
                         // 從前端數組中移除記錄
-                        records = records.filter(record => record.id !== id);
+                records = records.filter(record => record.id !== id);
                         localStorage.setItem('familyRecords', JSON.stringify(records));
                         
                         // 更新所有顯示
-                        updateStats();
-                        updateRecentRecords();
-                        updateAllRecords();
+                updateStats();
+                updateRecentRecords();
+                updateAllRecords();
                         updateCalendar();
                         updateSyncStatus();
                         
@@ -6622,19 +7126,19 @@
                                 console.log('✅ SQLite數據庫已清空:', clearResult.message);
                                 
                                 // 清除前端數據
-                                records = [];
+                        records = [];
                                 localStorage.removeItem('familyRecords');
                                 localStorage.removeItem('lastSyncTime');
                                 localStorage.removeItem('lastGitHubBackup');
                                 localStorage.removeItem('lastLocalBackup');
                                 
                                 // 更新所有顯示
-                                updateStats();
-                                updateRecentRecords();
-                                updateAllRecords();
+                        updateStats();
+                        updateRecentRecords();
+                        updateAllRecords();
                                 updateCalendar();
-                                updateDataStats();
-                                
+                        updateDataStats();
+                        
                                 alert(`✅ 所有數據已成功清空！\n\n清除了 ${clearResult.changes} 筆記錄`);
                             } else {
                                 console.error('❌ SQLite數據庫清除失敗:', clearResult.message);

@@ -1,6 +1,6 @@
 {
-  "version": "2025-09-25 15:50:55",
-  "buildTime": "2025-09-25T07:50:55.000Z",
-  "commitHash": "18ff236",
-  "description": "家庭收支管理平台版本信息 - 恢復並完善Excel匯入功能：更新confirmSelectedImport使用SQLite API，添加缺失的函數，確保Excel匯入功能完全正常"
+  "version": "2025-09-25 15:57:25",
+  "buildTime": "2025-09-25T07:57:25.000Z",
+  "commitHash": "16e82ad",
+  "description": "家庭收支管理平台版本信息 - 在數據匯出區塊新增Excel匯入功能：完整的匯入流程，支援檔案上傳、比對、選擇匯入，使用SQLite數據庫存儲"
 }
