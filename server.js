@@ -497,13 +497,19 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
             
             // 移除千分位逗號和貨幣符號
             if (typeof amount === 'string') {
+                console.log(`🔍 [processExcelRowNewFormat] 第 ${rowNumber} 行原始金額字串:`, amount);
+                
+                // 移除所有貨幣符號和逗號
+                amount = amount.replace(/[$,¥￥€£]/g, ''); // 移除所有貨幣符號
                 amount = amount.replace(/,/g, ''); // 移除千分位逗號
-                amount = amount.replace(/\$/g, ''); // 移除美元符號
                 amount = amount.replace(/NT\$/g, ''); // 移除台幣符號
-                amount = amount.replace(/¥/g, ''); // 移除日圓符號
-                amount = amount.replace(/€/g, ''); // 移除歐元符號
-                amount = amount.replace(/£/g, ''); // 移除英鎊符號
                 amount = amount.trim(); // 移除前後空白
+                
+                // 處理多餘的負號（如：-$-100）
+                amount = amount.replace(/^-+\$*-+/, ''); // 移除開頭的多餘負號和貨幣符號
+                amount = amount.replace(/\$-+/, ''); // 移除貨幣符號後的多餘負號
+                
+                console.log(`🔍 [processExcelRowNewFormat] 第 ${rowNumber} 行清理後金額字串:`, amount);
             }
             
             // 轉換為數字
