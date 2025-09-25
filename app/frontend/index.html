@@ -4215,7 +4215,10 @@
                     alert(`✅ 成功匯入 ${result.data.importedCount} 筆記錄！`);
                     
                     // 重新載入資料
-                    loadData();
+                    await loadDataFromFile();
+                    
+                    // 更新所有顯示
+                    updateAllDisplays();
                     
                     // 自動提交到Git
                     await autoCommitToGit(`Excel匯入 ${result.data.importedCount} 筆記錄`);
