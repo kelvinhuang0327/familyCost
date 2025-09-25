@@ -1449,6 +1449,26 @@
         .excel-import-section {
             margin-top: 20px;
         }
+        
+        /* 匯入格式選擇器樣式 */
+        .import-format-selector {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .import-format-selector label {
+            display: inline-block;
+            margin-right: 20px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .import-format-selector input[type="radio"] {
+            margin-right: 8px;
+        }
 
         /* 匯入選擇界面樣式 */
         .import-selection {
@@ -2743,13 +2763,25 @@
                 <!-- 數據匯入功能 -->
                 <div class="import-section">
                     <h3>📥 數據匯入</h3>
-                    <p>支援 Google 雲端 Excel 格式匯入</p>
+                    <p>支援 Google Sheets 和 Excel 檔案匯入</p>
+                    
+                    <!-- 匯入格式選擇 -->
+                    <div class="import-format-selector">
+                        <label>
+                            <input type="radio" name="importFormat" value="googlesheets" checked>
+                            Google Sheets 格式
+                        </label>
+                        <label>
+                            <input type="radio" name="importFormat" value="excel">
+                            Excel 檔案格式
+                        </label>
+                    </div>
                     
                     <div class="excel-import-section">
                         <div class="upload-area" id="uploadArea">
                             <div class="upload-content">
                                 <div class="upload-icon">📁</div>
-                                <p>點擊或拖拽 Google Sheets 檔案到此處</p>
+                                <p id="uploadDescription">點擊或拖拽 Google Sheets 檔案到此處</p>
                                 <p class="upload-hint">支援 .xlsx 和 .xls 格式，最大 10MB</p>
                                 <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;">
                                 <button class="btn" onclick="document.getElementById('excelFileInput').click()">選擇檔案</button>
@@ -2823,79 +2855,7 @@
                     </div>
                 </div>
                 
-                <!-- Excel 匯入功能 -->
-                <div class="import-section">
-                    <h3>📥 Excel 匯入</h3>
-                    <p>從 Excel 檔案匯入收支記錄</p>
-                    
-                    <div class="excel-import-section">
-                        <div class="upload-area" id="excelImportUploadArea">
-                            <div class="upload-content">
-                                <div class="upload-icon">📁</div>
-                                <p>點擊或拖拽 Excel 檔案到此處</p>
-                                <p class="upload-hint">支援 .xlsx 和 .xls 格式，最大 10MB</p>
-                                <input type="file" id="excelImportFileInput" accept=".xlsx,.xls" style="display: none;">
-                                <button class="btn" onclick="document.getElementById('excelImportFileInput').click()">選擇檔案</button>
-                            </div>
-                        </div>
-                        
-                        <div id="excelImportCompareResult" class="compare-result" style="display: none;">
-                            <h4>📋 比對結果</h4>
-                            <div class="result-summary">
-                                <div class="summary-item">
-                                    <span class="label">Excel 總記錄數:</span>
-                                    <span class="value" id="excelImportTotalRecords">0</span>
-                                </div>
-                                <div class="summary-item">
-                                    <span class="label">系統現有記錄數:</span>
-                                    <span class="value" id="excelImportSystemRecords">0</span>
-                                </div>
-                                <div class="summary-item new">
-                                    <span class="label">可新增記錄數:</span>
-                                    <span class="value" id="excelImportNewRecords">0</span>
-                                </div>
-                                <div class="summary-item duplicate">
-                                    <span class="label">重複記錄數:</span>
-                                    <span class="value" id="excelImportDuplicateRecords">0</span>
-                                </div>
-                            </div>
-                            
-                            <div class="result-actions">
-                                <button class="btn btn-primary" id="excelImportBtn" onclick="showExcelImportSelection()" disabled>
-                                    📥 選擇匯入記錄
-                                </button>
-                                <button class="btn btn-secondary" onclick="clearExcelImportResult()">
-                                    🔄 重新比對
-                                </button>
-                            </div>
-                            
-                            <div id="excelImportNewRecordsList" class="records-list" style="display: none;">
-                                <h5>🆕 新記錄預覽</h5>
-                                <div class="records-preview" id="excelImportNewRecordsPreview"></div>
-                            </div>
-                            
-                            <div id="excelImportDuplicateRecordsList" class="records-list" style="display: none;">
-                                <h5>🔄 重複記錄</h5>
-                                <div class="records-preview" id="excelImportDuplicateRecordsPreview"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Excel 匯入選擇界面 -->
-                        <div id="excelImportSelection" class="import-selection" style="display: none;">
-                            <h4>📋 選擇要匯入的記錄</h4>
-                            <div class="selection-controls">
-                                <button class="btn btn-secondary" onclick="selectAllExcelImportRecords()">全選</button>
-                                <button class="btn btn-secondary" onclick="selectNewExcelImportRecordsOnly()">只選新記錄</button>
-                                <button class="btn btn-secondary" onclick="clearExcelImportSelection()">清除選擇</button>
-                            </div>
-                            <div class="records-selection" id="excelImportRecordsSelection"></div>
-                            <div class="selection-actions">
-                                <button class="btn btn-success" onclick="confirmExcelImportSelected()">確認匯入選中記錄</button>
-                                <button class="btn btn-secondary" onclick="cancelExcelImportSelection()">取消</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Excel 匯入功能已整合到數據匯入區塊 -->
                 
                 <!-- 資料清除功能 -->
                 <div class="clear-section">
@@ -3630,17 +3590,31 @@
 
         // Excel 匯入功能
         let currentCompareData = null;
-        let currentExcelImportData = null;
+        // currentExcelImportData 已移除 - 使用統一的 currentCompareData
 
         // 初始化檔案上傳功能
         function initExcelUpload() {
             const fileInput = document.getElementById('excelFileInput');
             const uploadArea = document.getElementById('uploadArea');
+            const uploadDescription = document.getElementById('uploadDescription');
+
+            // 格式選擇事件
+            const formatRadios = document.querySelectorAll('input[name="importFormat"]');
+            formatRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'googlesheets') {
+                        uploadDescription.textContent = '點擊或拖拽 Google Sheets 檔案到此處';
+                    } else if (this.value === 'excel') {
+                        uploadDescription.textContent = '點擊或拖拽 Excel 檔案到此處';
+                    }
+                });
+            });
 
             // 檔案選擇事件
             fileInput.addEventListener('change', function(e) {
                 if (e.target.files.length > 0) {
-                    handleFileUpload(e.target.files[0]);
+                    const selectedFormat = document.querySelector('input[name="importFormat"]:checked').value;
+                    handleFileUpload(e.target.files[0], selectedFormat);
                 }
             });
 
@@ -3661,7 +3635,8 @@
                 
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
-                    handleFileUpload(files[0]);
+                    const selectedFormat = document.querySelector('input[name="importFormat"]:checked').value;
+                    handleFileUpload(files[0], selectedFormat);
                 }
             });
 
@@ -3672,15 +3647,17 @@
         }
 
         // 處理檔案上傳
-        async function handleFileUpload(file) {
+        async function handleFileUpload(file, format = 'googlesheets') {
             console.log('📁 開始處理檔案上傳:', file.name);
             console.log('📁 檔案大小:', file.size, 'bytes');
             console.log('📁 檔案類型:', file.type);
+            console.log('📁 匯入格式:', format);
             console.log('📁 API 地址:', ENV_CONFIG.getApiBase() + '/excel/compare');
             
             // 驗證檔案類型
             if (!file.name.match(/\.(xlsx|xls)$/i)) {
-                alert('❌ 請選擇 Google Sheets 檔案 (.xlsx 或 .xls)');
+                const formatName = format === 'googlesheets' ? 'Google Sheets' : 'Excel';
+                alert(`❌ 請選擇 ${formatName} 檔案 (.xlsx 或 .xls)`);
                 return;
             }
 
@@ -3692,10 +3669,12 @@
 
             const formData = new FormData();
             formData.append('excelFile', file);
+            formData.append('format', format); // 添加格式參數
 
             try {
                 console.log('📡 開始發送請求到:', ENV_CONFIG.getApiBase() + '/excel/compare');
                 console.log('📡 FormData 內容:', formData);
+                console.log('📡 匯入格式:', format);
                 
                 const response = await fetch(ENV_CONFIG.getApiBase() + '/excel/compare', {
                     method: 'POST',
@@ -4176,7 +4155,7 @@
             currentCompareData = null;
         }
 
-        // ==================== 新的 Excel 匯入功能 ====================
+        // ==================== 新的 Excel 匯入功能已整合到數據匯入區塊 ====================
         
         // 初始化新的 Excel 匯入功能
         function initExcelImportUpload() {
@@ -4611,8 +4590,7 @@
             // 初始化 Excel 上傳功能
             initExcelUpload();
             
-            // 初始化新的 Excel 匯入功能
-            initExcelImportUpload();
+            // 初始化新的 Excel 匯入功能已移除 - 已整合到數據匯入區塊
             
             // 防止過度滾動
             preventOverScroll();
