@@ -1,6 +1,6 @@
 {
-  "version": "2025-09-25 18:06:23",
-  "buildTime": "2025-09-25T10:06:23.000Z",
-  "commitHash": "bbb456d",
-  "description": "家庭收支管理平台版本信息 - 新增Excel總筆數顯示：在匯入結果中顯示Excel偵測到的總筆數，讓用戶清楚了解匯入範圍"
+  "version": "2025-09-25 18:11:23",
+  "buildTime": "2025-09-25T10:11:23.000Z",
+  "commitHash": "779b61d",
+  "description": "家庭收支管理平台版本信息 - 修復匯入錯誤處理：修復catch塊中allRecordsData變數未定義的問題，確保錯誤處理時也能顯示完整的統計信息"
 }
