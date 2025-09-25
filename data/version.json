@@ -1,6 +1,6 @@
 {
-  "version": "2025-09-25 15:30:06",
-  "buildTime": "2025-09-25T07:30:06.000Z",
-  "commitHash": "786a596",
-  "description": "家庭收支管理平台版本信息 - 修復tokenManager實例化問題，解決checkTokenStatus函數調用錯誤"
+  "version": "2025-09-25 15:33:43",
+  "buildTime": "2025-09-25T07:33:43.000Z",
+  "commitHash": "450ecb0",
+  "description": "家庭收支管理平台版本信息 - 強制部署最新tokenManager修復，確保清除數據功能正常"
 }
