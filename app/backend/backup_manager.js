@@ -112,7 +112,8 @@ class BackupManager {
             console.log('🔄 開始創建Git備份...');
 
             // 檢查GitHub Token
-            const tokenManager = require('./token_manager');
+            const TokenManager = require('./token_manager');
+            const tokenManager = new TokenManager();
             const tokenStatus = await tokenManager.checkTokenStatus();
             
             if (!tokenStatus.hasToken) {

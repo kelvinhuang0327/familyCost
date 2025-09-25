@@ -1,6 +1,6 @@
 {
-  "version": "2025-09-25 15:26:25",
-  "buildTime": "2025-09-25T07:26:25.000Z",
-  "commitHash": "aefbd1e",
-  "description": "家庭收支管理平台版本信息 - 修復後端Git pull分支分歧問題，使用rebase和強制重置"
+  "version": "2025-09-25 15:30:06",
+  "buildTime": "2025-09-25T07:30:06.000Z",
+  "commitHash": "786a596",
+  "description": "家庭收支管理平台版本信息 - 修復tokenManager實例化問題，解決checkTokenStatus函數調用錯誤"
 }
