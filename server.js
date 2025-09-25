@@ -1154,7 +1154,15 @@ app.use('/api/*', (req, res) => {
             'POST /api/backup',
             'GET /api/restore',
             'GET /api/git-status',
-            'POST /api/sync'
+            'POST /api/sync',
+            'POST /api/token/save',
+            'GET /api/token/status',
+            'DELETE /api/token',
+            'POST /api/version/update',
+            'POST /api/excel/compare',
+            'POST /api/excel/import',
+            'DELETE /api/data/clear',
+            'GET /api/data/clear/test'
         ]
     });
 });

@@ -1,6 +1,6 @@
 {
-  "version": "2025-09-25 14:53:19",
-  "buildTime": "2025-09-25T06:53:19.000Z",
-  "commitHash": "9cf4f88",
-  "description": "家庭收支管理平台版本信息 - 修復多項功能：版本號更新、清除數據API、匯出功能清理、Token持久化、主類別選項"
+  "version": "2025-09-25 14:57:57",
+  "buildTime": "2025-09-25T06:57:57.000Z",
+  "commitHash": "c8f7eff",
+  "description": "家庭收支管理平台版本信息 - 修復清除數據API端點問題，更新API端點列表"
 }
