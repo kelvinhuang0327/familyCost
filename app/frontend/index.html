@@ -3713,14 +3713,20 @@
             // 顯示比對結果
             document.getElementById('compareResult').style.display = 'block';
             
-            // 啟用/禁用匯入按鈕
-            const importBtn = document.getElementById('importBtn');
+            // 如果有新記錄，直接確認匯入
             if (data.newRecords > 0) {
-                importBtn.disabled = false;
-                importBtn.textContent = `📥 選擇匯入 ${data.newRecords} 筆記錄`;
+                console.log(`📥 發現 ${data.newRecords} 筆新記錄，直接確認匯入`);
+                
+                // 顯示確認對話框
+                if (confirm(`發現 ${data.newRecords} 筆新記錄，${data.duplicateRecords} 筆重複記錄。\n\n確定要匯入所有新記錄嗎？`)) {
+                    // 直接匯入所有新記錄
+                    importAllNewRecords(data.newRecordsData);
+                } else {
+                    console.log('❌ 用戶取消匯入');
+                }
             } else {
-                importBtn.disabled = true;
-                importBtn.textContent = '📥 選擇匯入記錄';
+                console.log('ℹ️ 沒有新記錄需要匯入');
+                alert('ℹ️ 沒有新記錄需要匯入');
             }
             
             // 顯示記錄預覽
@@ -3936,6 +3942,70 @@
                 checkbox.checked = typeNote !== null; // 只有新記錄才選中
             });
             updateSelectedCount();
+        }
+
+        // 直接匯入所有新記錄
+        async function importAllNewRecords(newRecordsData) {
+            console.log('📥 開始直接匯入所有新記錄:', newRecordsData.length, '筆');
+            
+            try {
+                let successCount = 0;
+                let errorCount = 0;
+                const errors = [];
+                
+                // 逐筆添加到SQLite數據庫
+                for (const record of newRecordsData) {
+                    try {
+                        const addResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(record)
+                        });
+                        
+                        const addResult = await addResponse.json();
+                        
+                        if (addResult.success) {
+                            successCount++;
+                            console.log('✅ 記錄已添加:', record.id);
+                        } else {
+                            errorCount++;
+                            errors.push(`記錄 ${record.id}: ${addResult.message}`);
+                            console.error('❌ 記錄添加失敗:', record.id, addResult.message);
+                        }
+                    } catch (recordError) {
+                        errorCount++;
+                        errors.push(`記錄 ${record.id}: ${recordError.message}`);
+                        console.error('❌ 記錄添加錯誤:', record.id, recordError.message);
+                    }
+                }
+                
+                if (successCount > 0) {
+                    console.log(`✅ 成功匯入 ${successCount} 筆記錄到SQLite數據庫`);
+                    
+                    // 重新載入資料
+                    await loadDataFromFile();
+                    
+                    // 更新所有顯示
+                    updateAllDisplays();
+                    
+                    // 清除比對結果
+                    clearCompareResult();
+                    
+                    if (errorCount > 0) {
+                        alert(`✅ 成功匯入 ${successCount} 筆記錄！\n\n⚠️ 有 ${errorCount} 筆記錄匯入失敗：\n${errors.join('\n')}`);
+                    } else {
+                        alert(`✅ 成功匯入 ${successCount} 筆記錄！`);
+                    }
+                } else {
+                    console.error('❌ 所有記錄匯入失敗');
+                    alert(`❌ 所有記錄匯入失敗：\n${errors.join('\n')}`);
+                }
+            } catch (error) {
+                console.error('❌ 匯入過程發生錯誤:', error);
+                alert('❌ 匯入過程發生錯誤：' + error.message);
+            }
         }
 
         // 確認匯入選中的記錄
