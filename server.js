@@ -1164,7 +1164,16 @@ app.use('/api/*', (req, res) => {
             'POST /api/excel/compare',
             'POST /api/excel/import',
             'DELETE /api/data/clear',
-            'GET /api/data/clear/test'
+            'GET /api/data/clear/test',
+            'GET /api/records',
+            'GET /api/records/stats',
+            'POST /api/records',
+            'PUT /api/records/:id',
+            'DELETE /api/records/:id',
+            'DELETE /api/records',
+            'DELETE /api/records/clear',
+            'GET /api/records/integrity',
+            'POST /api/migrate'
         ]
     });
 });
