@@ -10,6 +10,11 @@ const path = require('path');
 const multer = require('multer');
 const XLSX = require('xlsx');
 
+// 生成唯一ID的函數
+function generateUniqueId() {
+    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+}
+
 // 添加錯誤處理
 try {
     const TokenManager = require('./app/backend/token_manager');
