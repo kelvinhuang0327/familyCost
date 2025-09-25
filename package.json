@@ -1,6 +1,6 @@
 {
   "name": "family-cost",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "家庭收支管理平台",
   "main": "server.js",
   "scripts": {
