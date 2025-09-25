@@ -1162,6 +1162,9 @@ app.use('/api/*', (req, res) => {
 app.delete('/api/data/clear', async (req, res) => {
     try {
         console.log('🗑️ [API] 開始清除所有數據...');
+        console.log('🗑️ [API] 請求方法:', req.method);
+        console.log('🗑️ [API] 請求路徑:', req.path);
+        console.log('🗑️ [API] 請求URL:', req.url);
         
         const dataPath = path.join(__dirname, 'data', 'data.json');
         const emptyData = { records: [] };
@@ -1184,6 +1187,16 @@ app.delete('/api/data/clear', async (req, res) => {
             error: error.message
         });
     }
+});
+
+// 測試清除數據API是否存在
+app.get('/api/data/clear/test', (req, res) => {
+    res.json({
+        success: true,
+        message: '清除數據API端點存在',
+        method: 'DELETE',
+        endpoint: '/api/data/clear'
+    });
 });
 
 // 靜態文件服務 - 數據文件
