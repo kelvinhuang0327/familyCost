@@ -6709,6 +6709,7 @@
                     if (userInput === 'YES') {
                         try {
                             console.log('🗑️ 開始清除所有數據...');
+                            console.log('🔗 API地址:', ENV_CONFIG.getApiBase() + '/data/clear');
                             
                             // 調用後端API清除數據
                             const response = await fetch(ENV_CONFIG.getApiBase() + '/data/clear', {
@@ -6717,6 +6718,9 @@
                                     'Content-Type': 'application/json'
                                 }
                             });
+                            
+                            console.log('📡 響應狀態:', response.status);
+                            console.log('📡 響應狀態文本:', response.statusText);
                             
                             const result = await response.json();
                             
