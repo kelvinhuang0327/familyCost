@@ -6773,44 +6773,47 @@
                     if (userInput === 'YES') {
                         try {
                             console.log('🗑️ 開始清除所有數據...');
-                            console.log('🔗 API地址:', ENV_CONFIG.getApiBase() + '/data/clear');
                             
-                            // 調用後端API清除數據
-                            const response = await fetch(ENV_CONFIG.getApiBase() + '/data/clear', {
-                                method: 'DELETE',
+                            // 直接清除前端數據
+                            records = [];
+                            localStorage.removeItem('familyRecords');
+                            localStorage.removeItem('lastSyncTime');
+                            localStorage.removeItem('lastGitHubBackup');
+                            localStorage.removeItem('lastLocalBackup');
+                            
+                            // 更新所有顯示
+                            updateStats();
+                            updateRecentRecords();
+                            updateAllRecords();
+                            updateCalendar();
+                            updateDataStats();
+                            
+                            // 使用備份API提交空的數據到後端
+                            console.log('📦 提交空數據到後端...');
+                            const backupResponse = await fetch(ENV_CONFIG.getApiBase() + '/backup', {
+                                method: 'POST',
                                 headers: {
-                                    'Content-Type': 'application/json'
-                                }
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    records: [],
+                                    timestamp: new Date().toISOString(),
+                                    count: 0,
+                                    commitMessage: '清除所有數據'
+                                })
                             });
                             
-                            console.log('📡 響應狀態:', response.status);
-                            console.log('📡 響應狀態文本:', response.statusText);
+                            const backupResult = await backupResponse.json();
                             
-                            const result = await response.json();
-                            
-                            if (result.success) {
+                            if (backupResult.success) {
                                 console.log('✅ 後端數據已清除');
-                                
-                                // 清除前端數據
-                                records = [];
-                                localStorage.removeItem('familyRecords');
-                                localStorage.removeItem('lastSyncTime');
-                                localStorage.removeItem('lastGitHubBackup');
-                                localStorage.removeItem('lastLocalBackup');
-                                
-                                // 更新所有顯示
-                                updateStats();
-                                updateRecentRecords();
-                                updateAllRecords();
-                                updateCalendar();
-                                updateDataStats();
-                                
                                 alert('✅ 所有數據已成功清空！');
-                                console.log('✅ 清除數據完成');
                             } else {
-                                console.error('❌ 後端清除失敗:', result.message);
-                                alert('❌ 清除數據失敗：' + result.message);
+                                console.warn('⚠️ 後端清除失敗，但前端已清空:', backupResult.message);
+                                alert('✅ 前端數據已清空，但後端同步失敗：' + backupResult.message);
                             }
+                            
+                            console.log('✅ 清除數據完成');
                         } catch (error) {
                             console.error('❌ 清除數據時發生錯誤:', error);
                             alert('❌ 清除數據時發生錯誤：' + error.message);
