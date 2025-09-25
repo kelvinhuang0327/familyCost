@@ -3200,43 +3200,7 @@
             }
         }
 
-        // GitHub自動備份功能
-        async function backupToGitHub() {
-            try {
-                console.log('開始自動備份到GitHub...');
-                
-                // 直接調用後端API備份
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/backup', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        records: records,
-                        timestamp: new Date().toISOString(),
-                        count: records.length
-                    })
-                });
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    console.log('✅ 成功備份到GitHub:', result.message);
-                    localStorage.setItem('lastGitHubBackup', new Date().toISOString());
-                    updateDataStats();
-                    return true;
-                } else {
-                    const errorData = await response.json();
-                    console.warn('⚠️ 備份失敗:', errorData.message);
-                    localStorage.setItem('lastLocalBackup', new Date().toISOString());
-                    return false;
-                }
-                
-            } catch (error) {
-                console.warn('⚠️ GitHub備份失敗:', error.message);
-                localStorage.setItem('lastLocalBackup', new Date().toISOString());
-                return false;
-            }
-        }
+        // GitHub自動備份功能 - 已移除
 
         // 從GitHub還原數據
         async function restoreFromGitHub() {
@@ -3287,7 +3251,7 @@
         }
         let importData = []; // 儲存要匯入的數據
         let deleteData = []; // 儲存要刪除的數據
-        let dataBackup = null; // 數據備份
+        // let dataBackup = null; // 數據備份 - 已移除
         
         // 圖表相關變數
         let trendChart = null;
@@ -4099,8 +4063,7 @@
                     // 更新所有顯示
                     updateAllDisplays();
                     
-                    // 自動提交到Git（不更新版本號）
-                    await commitToGitWithoutVersion(`Excel匯入 ${successCount} 筆記錄`);
+                    // 自動提交到Git（不更新版本號） - 已移除
                     
                     // 清除所有結果
                     clearCompareResult();
@@ -4141,83 +4104,9 @@
             updateSelectedCount();
         }
 
-        // 自動提交到Git（包含版本號更新）
-        async function autoCommitToGit(commitMessage) {
-            try {
-                console.log('🔄 開始自動提交到Git...');
-                
-                // 先更新版本號
-                const newVersion = await updateVersionNumber();
-                
-                // 構建包含版本號的提交訊息
-                const versionedCommitMessage = `${commitMessage} - v${newVersion}`;
-                
-                // 備份資料到GitHub，使用包含版本號的提交訊息
-                const backupResponse = await fetch(ENV_CONFIG.getApiBase() + '/backup', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        records: records,
-                        timestamp: new Date().toISOString(),
-                        count: records.length,
-                        commitMessage: versionedCommitMessage
-                    })
-                });
+        // 自動提交到Git（包含版本號更新） - 已移除
 
-                const backupResult = await backupResponse.json();
-                
-                if (backupResult.success) {
-                    console.log('✅ 自動Git提交成功:', backupResult.message);
-                    
-                    // 顯示成功訊息，包含版本號
-                    showNotification(`✅ 資料已自動提交到GitHub - 版本: ${newVersion}`, 'success');
-                } else {
-                    console.warn('⚠️ Git提交失敗:', backupResult.message);
-                    showNotification('⚠️ 資料匯入成功，但Git提交失敗: ' + backupResult.message, 'warning');
-                }
-            } catch (error) {
-                console.error('❌ 自動Git提交失敗:', error);
-                showNotification('⚠️ 資料匯入成功，但Git提交失敗: ' + error.message, 'warning');
-            }
-        }
-
-        // 提交到Git（不更新版本號）
-        async function commitToGitWithoutVersion(commitMessage) {
-            try {
-                console.log('🔄 開始提交到Git（不更新版本號）...');
-                
-                // 直接備份資料到GitHub，不更新版本號
-                const backupResponse = await fetch(ENV_CONFIG.getApiBase() + '/backup', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        records: records,
-                        timestamp: new Date().toISOString(),
-                        count: records.length,
-                        commitMessage: commitMessage
-                    })
-                });
-
-                const backupResult = await backupResponse.json();
-                
-                if (backupResult.success) {
-                    console.log('✅ Git提交成功:', backupResult.message);
-                    
-                    // 顯示成功訊息，不包含版本號
-                    showNotification(`✅ 資料已自動提交到GitHub`, 'success');
-                } else {
-                    console.warn('⚠️ Git提交失敗:', backupResult.message);
-                    showNotification('⚠️ 資料匯入成功，但Git提交失敗: ' + backupResult.message, 'warning');
-                }
-            } catch (error) {
-                console.error('❌ Git提交失敗:', error);
-                showNotification('⚠️ 資料匯入成功，但Git提交失敗: ' + error.message, 'warning');
-            }
-        }
+        // 提交到Git（不更新版本號） - 已移除
 
         // 更新版本號
         async function updateVersionNumber() {
@@ -4712,8 +4601,7 @@
                     // 更新所有顯示
                     updateAllDisplays();
                     
-                    // 自動提交到Git（不更新版本號）
-                    await commitToGitWithoutVersion(`Excel匯入 ${successCount} 筆記錄`);
+                    // 自動提交到Git（不更新版本號） - 已移除
                     
                     // 清除所有結果
                     clearExcelImportResult();
@@ -4888,7 +4776,7 @@
                 }
                 
                 // 如果SQLite API失敗，嘗試從localStorage載入
-                console.log('🔄 嘗試從localStorage載入備份數據...');
+                console.log('🔄 嘗試從localStorage載入數據...');
                     const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
                     if (localRecords.length > 0) {
                         records = localRecords;
@@ -4903,7 +4791,7 @@
                 
                 // 如果SQLite API完全失敗，嘗試從localStorage載入
                 try {
-                    console.log('🔄 嘗試從localStorage載入備份數據...');
+                    console.log('🔄 嘗試從localStorage載入數據...');
                 const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
                 if (localRecords.length > 0) {
                     records = localRecords;
@@ -6084,14 +5972,7 @@
                 
                 saveRecords();
                 
-                // 自動備份到GitHub
-                backupToGitHub().then(success => {
-                    if (success) {
-                        console.log('✅ 編輯記錄後自動備份成功');
-                    } else {
-                        console.log('⚠️ 編輯記錄後自動備份失敗，但本地已保存');
-                    }
-                });
+                // 自動備份到GitHub - 已移除
                 
                 updateStats();
                 updateRecentRecords();
@@ -6149,14 +6030,7 @@
             // 寫入 localStorage
             localStorage.setItem('familyRecords', JSON.stringify(records));
             
-            // 定期自動備份到 data.json（每10次操作備份一次）
-            const backupCount = parseInt(localStorage.getItem('backupCount') || '0') + 1;
-            localStorage.setItem('backupCount', backupCount.toString());
-            
-            if (backupCount % 10 === 0) {
-                console.log(`已進行 ${backupCount} 次操作，自動備份 data.json`);
-                saveToDataJson();
-            }
+            // 定期自動備份到 data.json（每10次操作備份一次） - 已移除
         }
 
         // 寫入 data.json 檔案（通過下載方式）
@@ -6250,14 +6124,7 @@
                         updateAllRecords();
                         updateCalendar();
                         
-                        // 自動備份到GitHub
-                        backupToGitHub().then(success => {
-                            if (success) {
-                                console.log('✅ 固定支出記錄後自動備份成功');
-                            } else {
-                                console.log('⚠️ 固定支出記錄後自動備份失敗，但本地已保存');
-                            }
-                        });
+                        // 自動備份到GitHub - 已移除
                         
                         alert(`${expense.name} 記錄已新增！`);
                     }
@@ -6529,14 +6396,7 @@
                 records = records.concat(newRecords);
                 saveRecords();
                 
-                // 自動備份到GitHub
-                backupToGitHub().then(success => {
-                    if (success) {
-                        console.log('✅ 匯入數據後自動備份成功');
-                    } else {
-                        console.log('⚠️ 匯入數據後自動備份失敗，但本地已保存');
-                    }
-                });
+                // 自動備份到GitHub - 已移除
                 
                 updateStats();
                 updateRecentRecords();
@@ -6635,24 +6495,11 @@
 
 
         // 更新數據統計
-        // 更新同步狀態
+        // 更新同步狀態 - 已移除備份相關功能
         function updateSyncStatus() {
-            // 檢查備份狀態
-            const lastGitHubBackup = localStorage.getItem('lastGitHubBackup');
-            const lastLocalBackup = localStorage.getItem('lastLocalBackup');
-            const lastBackupTime = localStorage.getItem('lastBackupTime');
-            
-            let backupStatus = '未備份';
-            if (lastGitHubBackup) {
-                const backupDate = new Date(lastGitHubBackup);
-                backupStatus = `GitHub: ${backupDate.toLocaleString('zh-TW')}`;
-            } else if (lastLocalBackup) {
-                const backupDate = new Date(lastLocalBackup);
-                backupStatus = `本地: ${backupDate.toLocaleString('zh-TW')}`;
-            } else if (lastBackupTime) {
-                backupStatus = lastBackupTime;
-            }
-
+            // 檢查備份狀態 - 已移除
+            let backupStatus = '已移除備份功能';
+            // 備份狀態檢查 - 已移除
             document.getElementById('lastBackup').textContent = backupStatus;
             
             // 自動檢查數據健康
@@ -6982,16 +6829,7 @@
                 updateSyncStatus();
                 fixes.push('✅ 更新所有顯示');
                 
-                // 6. 自動備份到GitHub
-                console.log('📦 步驟6: 自動備份到GitHub...');
-                try {
-                    await backupToGitHub();
-                    fixes.push('✅ 成功備份到GitHub');
-                } catch (error) {
-                    console.log('⚠️ GitHub備份失敗，嘗試本地備份...');
-                    saveToDataJson();
-                    fixes.push('✅ 本地備份成功');
-                }
+                // 6. 自動備份到GitHub - 已移除
                 
                 // 顯示修復結果
                 const message = `🔧 快速修復完成！\n\n修復項目：\n${fixes.join('\n')}\n\n當前記錄數：${records.length}`;
@@ -7070,14 +6908,7 @@
                 updateDataStats();
                 cancelDelete();
                 
-                // 自動備份到GitHub
-                backupToGitHub().then(success => {
-                    if (success) {
-                        console.log('✅ 批量刪除記錄後自動備份成功');
-                    } else {
-                        console.log('⚠️ 批量刪除記錄後自動備份失敗，但本地已保存');
-                    }
-                });
+                // 自動備份到GitHub - 已移除
                 
                 alert(`成功刪除 ${deleteData.length} 筆記錄！`);
             }
