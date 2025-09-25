@@ -125,6 +125,29 @@ class BackupManager {
 
             await fs.writeFile(this.dataFile, JSON.stringify(dataToSave, null, 2));
 
+            // 配置Git用戶信息（如果未配置）
+            try {
+                // 檢查並設置用戶名稱
+                try {
+                    await execAsync('git config user.name');
+                } catch (e) {
+                    await execAsync('git config --global user.name "FamilyCost Bot"');
+                    console.log('✅ 已設置Git用戶名稱');
+                }
+                
+                // 檢查並設置用戶郵箱
+                try {
+                    await execAsync('git config user.email');
+                } catch (e) {
+                    await execAsync('git config --global user.email "familycost@bot.com"');
+                    console.log('✅ 已設置Git用戶郵箱');
+                }
+                
+                console.log('✅ Git用戶配置已確保');
+            } catch (configError) {
+                console.log('⚠️ Git配置警告:', configError.message);
+            }
+
             // Git操作
             const { stdout: status } = await execAsync('git status --porcelain');
             if (!status.trim()) {
