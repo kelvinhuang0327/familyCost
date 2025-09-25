@@ -3323,13 +3323,13 @@
             getApiBase() {
                 const env = this.getEnvironment();
                 if (env === 'vercel') {
-                    return window.location.origin + '/api'; // Vercel 支持後端
+                    return window.location.origin; // Vercel 支持後端
                 } else if (env === 'render') {
-                    return window.location.origin + '/api'; // Render 支持後端
+                    return window.location.origin; // Render 支持後端
                 } else if (env === 'sit') {
-                    return window.location.origin + '/api'; // GitHub Pages 不支持後端
+                    return window.location.origin; // GitHub Pages 不支持後端
                 } else {
-                    return 'http://localhost:3001/api'; // 本地環境
+                    return 'http://localhost:3001'; // 本地環境
                 }
             },
             
