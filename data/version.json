@@ -1,6 +1,6 @@
 {
-  "version": "2025-01-21 15:25:30",
-  "buildTime": "2025-01-21T07:25:30.000Z",
-  "commitHash": "6f9dacb",
-  "description": "家庭收支管理平台版本信息 - 新增Excel匯入選擇功能"
+  "version": "2025-09-25 10:54:31",
+  "buildTime": "2025-09-25T02:54:31.000Z",
+  "commitHash": "c887416",
+  "description": "家庭收支管理平台版本信息 - 添加版本號更新API和完善自動Git提交功能"
 }
