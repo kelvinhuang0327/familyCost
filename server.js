@@ -1103,28 +1103,7 @@ app.post('/api/excel/import', async (req, res) => {
     }
 });
 
-// 404處理 - 僅處理API請求
-app.use('/api/*', (req, res) => {
-    res.status(404).json({
-        success: false,
-        message: 'API端點不存在',
-        availableEndpoints: [
-            'GET /api/health',
-            'POST /api/version/update',
-            'POST /api/excel/compare',
-            'POST /api/excel/import',
-            'GET /api/records',
-            'GET /api/records/stats',
-            'POST /api/records',
-            'PUT /api/records/:id',
-            'DELETE /api/records/:id',
-            'DELETE /api/records',
-            'DELETE /api/records/clear',
-            'GET /api/records/integrity',
-            'POST /api/migrate'
-        ]
-    });
-});
+// 404處理器將在最後定義
 
 // 清除所有數據 API - 已移除（使用SQLite API替代）
 
@@ -1459,6 +1438,30 @@ app.listen(PORT, () => {
 process.on('SIGINT', () => {
     console.log('\n🛑 正在關閉服務...');
     process.exit(0);
+});
+
+// 404處理 - 僅處理API請求（必須在所有API路由之後）
+app.use('/api/*', (req, res) => {
+    res.status(404).json({
+        success: false,
+        message: 'API端點不存在',
+        availableEndpoints: [
+            'GET /api/health',
+            'POST /api/version/update',
+            'POST /api/excel/compare',
+            'POST /api/excel/import',
+            'GET /api/test',
+            'GET /api/records',
+            'GET /api/records/stats',
+            'POST /api/records',
+            'PUT /api/records/:id',
+            'DELETE /api/records/:id',
+            'DELETE /api/records',
+            'DELETE /api/records/clear',
+            'GET /api/records/integrity',
+            'POST /api/migrate'
+        ]
+    });
 });
 
 process.on('SIGTERM', () => {
