@@ -733,6 +733,52 @@ app.post('/api/backup/check-integrity', async (req, res) => {
     }
 });
 
+// 更新版本號API
+app.post('/api/version/update', async (req, res) => {
+    try {
+        console.log('🔄 開始更新版本號...');
+        
+        const now = new Date();
+        const versionString = now.getFullYear() + '-' + 
+            String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+            String(now.getDate()).padStart(2, '0') + ' ' +
+            String(now.getHours()).padStart(2, '0') + ':' +
+            String(now.getMinutes()).padStart(2, '0') + ':' +
+            String(now.getSeconds()).padStart(2, '0');
+
+        const versionData = {
+            version: versionString,
+            buildTime: now.toISOString(),
+            commitHash: req.body.commitHash || 'unknown',
+            description: req.body.description || "自動更新版本號"
+        };
+
+        // 更新版本號檔案
+        const versionPath = path.join(__dirname, 'data', 'version.json');
+        await fs.writeFile(versionPath, JSON.stringify(versionData, null, 2), 'utf8');
+        
+        console.log('✅ 版本號已更新:', versionString);
+        
+        res.json({
+            success: true,
+            message: '版本號更新成功',
+            data: {
+                version: versionString,
+                buildTime: now.toISOString(),
+                description: versionData.description
+            }
+        });
+        
+    } catch (error) {
+        console.error('❌ 版本號更新失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: `版本號更新失敗: ${error.message}`,
+            error: error.message
+        });
+    }
+});
+
 // 測試 API - 檢查資料格式
 app.get('/api/debug/data-format', async (req, res) => {
     try {

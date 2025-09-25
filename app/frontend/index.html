@@ -4162,28 +4162,37 @@
         // 更新版本號
         async function updateVersionNumber() {
             try {
-                const now = new Date();
-                const versionString = now.getFullYear() + '-' + 
-                    String(now.getMonth() + 1).padStart(2, '0') + '-' + 
-                    String(now.getDate()).padStart(2, '0') + ' ' +
-                    String(now.getHours()).padStart(2, '0') + ':' +
-                    String(now.getMinutes()).padStart(2, '0') + ':' +
-                    String(now.getSeconds()).padStart(2, '0');
-
-                const versionData = {
-                    version: versionString,
-                    buildTime: now.toISOString(),
-                    description: "自動更新版本號 - Excel匯入"
-                };
-
-                // 這裡可以調用後端API更新版本號，或者直接在前端顯示
-                console.log('🔄 版本號已更新:', versionString);
+                console.log('🔄 開始更新版本號...');
                 
-                // 更新前端顯示的版本號
-                updateVersionDisplay(versionString);
+                // 調用後端API更新版本號
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/version/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        commitHash: 'auto-update',
+                        description: "Excel匯入後自動更新版本號"
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('✅ 版本號更新成功:', result.data.version);
+                    
+                    // 更新前端顯示的版本號
+                    updateVersionDisplay(result.data.version);
+                    
+                    return result.data.version;
+                } else {
+                    console.error('❌ 版本號更新失敗:', result.message);
+                    throw new Error(result.message);
+                }
                 
             } catch (error) {
                 console.error('❌ 版本號更新失敗:', error);
+                throw error;
             }
         }
 
