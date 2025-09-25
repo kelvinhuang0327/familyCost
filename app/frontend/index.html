@@ -3963,27 +3963,64 @@
 
         // 顯示匯入選擇界面
         function showImportSelection() {
+            console.log('🔍 [DEBUG] showImportSelection 被調用');
+            console.log('🔍 [DEBUG] currentCompareData:', currentCompareData);
+            
             if (!currentCompareData || currentCompareData.newRecords === 0) {
+                console.log('❌ [DEBUG] 沒有可匯入的新記錄');
                 alert('❌ 沒有可匯入的新記錄');
                 return;
             }
 
+            console.log('🔍 [DEBUG] 準備顯示匯入選擇界面');
+            
             // 隱藏比對結果
-            document.getElementById('compareResult').style.display = 'none';
+            const compareResult = document.getElementById('compareResult');
+            if (compareResult) {
+                compareResult.style.display = 'none';
+                console.log('✅ [DEBUG] 已隱藏比對結果');
+            } else {
+                console.error('❌ [DEBUG] 找不到 compareResult 元素');
+            }
             
             // 顯示匯入選擇界面
-            document.getElementById('importSelection').style.display = 'block';
+            const importSelection = document.getElementById('importSelection');
+            if (importSelection) {
+                importSelection.style.display = 'block';
+                console.log('✅ [DEBUG] 已顯示匯入選擇界面');
+            } else {
+                console.error('❌ [DEBUG] 找不到 importSelection 元素');
+            }
             
             // 生成記錄選擇清單
+            console.log('🔍 [DEBUG] 準備生成記錄清單，記錄數:', currentCompareData.newRecordsData ? currentCompareData.newRecordsData.length : 'undefined');
             generateRecordsSelectionList(currentCompareData.newRecordsData);
         }
 
         // 生成記錄選擇清單
         function generateRecordsSelectionList(records) {
+            console.log('🔍 [DEBUG] generateRecordsSelectionList 被調用');
+            console.log('🔍 [DEBUG] records:', records);
+            
             const listContainer = document.getElementById('recordsSelectionList');
+            if (!listContainer) {
+                console.error('❌ [DEBUG] 找不到 recordsSelectionList 元素');
+                return;
+            }
+            
+            console.log('✅ [DEBUG] 找到 recordsSelectionList 元素');
             listContainer.innerHTML = '';
             
+            if (!records || !Array.isArray(records)) {
+                console.error('❌ [DEBUG] records 不是有效數組:', records);
+                return;
+            }
+            
+            console.log('🔍 [DEBUG] 開始生成記錄清單，記錄數:', records.length);
+            
             records.forEach((record, index) => {
+                console.log(`🔍 [DEBUG] 處理記錄 ${index}:`, record);
+                
                 const item = document.createElement('div');
                 item.className = 'record-selection-item';
                 
@@ -4009,8 +4046,10 @@
                     ${duplicateNote}
                 `;
                 listContainer.appendChild(item);
+                console.log(`✅ [DEBUG] 已添加記錄 ${index} 到清單`);
             });
             
+            console.log('✅ [DEBUG] 所有記錄已添加到清單，開始初始化選擇計數');
             // 初始化選擇計數
             updateSelectedCount();
         }
