@@ -3302,6 +3302,15 @@
             }
         }
 
+        // 生成唯一ID的函數
+        function generateUniqueId() {
+            // 使用更可靠的ID生成方式：時間戳 + 隨機數 + 計數器
+            const timestamp = Date.now().toString();
+            const random = Math.random().toString(36).substr(2, 9);
+            const counter = (generateUniqueId.counter = (generateUniqueId.counter || 0) + 1);
+            return `${timestamp}_${random}_${counter}`;
+        }
+
         // 環境配置
         const ENV_CONFIG = {
             // 檢測當前環境
@@ -3980,7 +3989,7 @@
                         // 為每筆記錄生成新的唯一ID，避免重複
                         const newRecord = {
                             ...record,
-                            id: Date.now().toString() + Math.random().toString(36).substr(2, 9)
+                            id: generateUniqueId()
                         };
                         
                         const addResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
@@ -6377,7 +6386,7 @@
             }
 
             return {
-                id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                id: generateUniqueId(),
                 member: row['成員'],
                 type: type,
                 amount: absAmount,
