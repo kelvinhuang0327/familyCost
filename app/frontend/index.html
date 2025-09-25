@@ -3005,37 +3005,28 @@
         // 從服務器同步數據
         async function syncFromServer() {
             try {
-                console.log('🔄 開始檢查服務器數據...');
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/restore');
-                if (response.ok) {
-                    const result = await response.json();
-                    console.log('📡 服務器響應:', result);
-                    
-                    if (result.hasNewData) {
-                        console.log('🔄 發現服務器有新數據，正在同步...');
-                        await loadDataFromFile();
-                        updateAllDisplays();
-                        localStorage.setItem('lastSyncTime', Date.now());
-                        return true;
-                    } else {
-                        console.log('📊 服務器數據已是最新');
-                        // 即使沒有新數據，也強制重新讀取data.json以確保同步
-                        await loadDataFromFile();
-                        updateAllDisplays();
-                        return false;
-                    }
-                } else {
-                    console.warn('⚠️ 服務器響應錯誤:', response.status);
-                }
+                console.log('🔄 開始從SQLite數據庫同步數據...');
+                
+                // 直接從SQLite數據庫載入數據
+                await loadDataFromFile();
+                updateAllDisplays();
+                localStorage.setItem('lastSyncTime', Date.now());
+                
+                console.log('✅ SQLite數據同步完成');
+                return true;
             } catch (error) {
-                console.warn('⚠️ 服務器同步失敗:', error.message);
-                // 如果API不可用，嘗試從本地文件讀取
+                console.warn('⚠️ SQLite數據同步失敗:', error.message);
+                // 如果SQLite API不可用，嘗試從localStorage讀取
                 try {
-                    await loadDataFromFile();
-                    console.log('📁 已從本地文件讀取數據');
-                    return true;
-                } catch (fileError) {
-                    console.warn('⚠️ 本地文件讀取也失敗:', fileError.message);
+                    const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
+                    if (localRecords.length > 0) {
+                        records = localRecords;
+                        updateAllDisplays();
+                        console.log('📁 已從localStorage讀取數據');
+                        return true;
+                    }
+                } catch (localError) {
+                    console.warn('⚠️ localStorage讀取也失敗:', localError.message);
                 }
             }
             return false;
@@ -3043,12 +3034,18 @@
 
         // 更新所有顯示
         function updateAllDisplays() {
+            console.log('🔄 updateAllDisplays: 開始更新所有顯示');
+            console.log('📊 當前records數量:', records.length);
+            console.log('📊 records內容:', records.slice(0, 3)); // 顯示前3筆記錄
+            
             updateStats();
             updateRecentRecords();
             updateAllRecords();
             updateCalendar();
             updateDataStats();
             updateMemberStats();
+            
+            console.log('✅ updateAllDisplays: 所有顯示更新完成');
         }
 
         // 啟動自動同步
@@ -3202,36 +3199,20 @@
 
         // GitHub自動備份功能 - 已移除
 
-        // 從GitHub還原數據
-        async function restoreFromGitHub() {
+        // 從SQLite數據庫還原數據（GitHub還原功能已移除）
+        async function restoreFromDatabase() {
             try {
-                console.log('檢查GitHub上的最新數據...');
+                console.log('🔄 從SQLite數據庫還原數據...');
                 
-                // 直接調用後端API檢查
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/restore');
+                // 直接從SQLite數據庫載入數據
+                await loadDataFromFile();
+                updateAllDisplays();
                 
-                if (response.ok) {
-                    const result = await response.json();
-                    
-                    if (result.hasNewData) {
-                        console.log('發現GitHub上有新數據，正在同步...');
-                        
-                        // 重新載入data.json
-                        await loadDataFromFile();
-                        
-                        console.log('✅ 成功從GitHub還原數據');
-                        return true;
-                    } else {
-                        console.log('GitHub數據已是最新');
-                        return false;
-                    }
-                } else {
-                    console.warn('⚠️ 還原檢查失敗:', response.status);
-                    return false;
-                }
+                console.log('✅ 成功從SQLite數據庫還原數據');
+                return true;
                 
             } catch (error) {
-                console.warn('⚠️ GitHub還原失敗:', error.message);
+                console.warn('⚠️ SQLite數據庫還原失敗:', error.message);
                 return false;
             }
         }
@@ -4702,23 +4683,8 @@
             console.log('🔄 初始化完成，當前記錄數量:', records.length);
             console.log('🔄 記錄內容:', records);
             
-            // 檢查是否有GitHub更新，但不要覆蓋已載入的數據
-            console.log('🔍 檢查GitHub更新...');
-            try {
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/restore');
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.hasNewData) {
-                        console.log('📊 GitHub數據已是最新，無需覆蓋本地數據');
-                    } else {
-                        console.log('📊 GitHub數據已是最新');
-                    }
-                } else {
-                    console.log('📊 GitHub檢查失敗，使用本地數據');
-                }
-            } catch (error) {
-                console.log('📊 GitHub檢查失敗，使用本地數據:', error.message);
-            }
+            // GitHub更新檢查已移除（備份功能已移除）
+            console.log('📊 備份功能已移除，使用SQLite數據庫');
             
             console.log('初始化完成，當前記錄數量:', records.length);
             console.log('記錄內容:', records);
@@ -5570,6 +5536,9 @@
         }
 
         function updateDayRecords() {
+            console.log('📅 updateDayRecords: 開始更新日曆記錄');
+            console.log('📅 當前records數量:', records.length);
+            
             // 先清空所有日期的記錄
             document.querySelectorAll('.day-records').forEach(element => {
                 element.innerHTML = '';
