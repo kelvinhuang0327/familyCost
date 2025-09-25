@@ -279,7 +279,17 @@ function processExcelRow(row, currentMember = null) {
                 amount = amount.replace(/£/g, ''); // 移除英鎊符號
                 amount = amount.trim(); // 移除前後空白
             }
-            amount = parseFloat(amount);
+            
+            // 轉換為數字
+            const parsedAmount = parseFloat(amount);
+            
+            // 檢查是否為有效數字
+            if (isNaN(parsedAmount)) {
+                console.log('⚠️ [processExcelRow] 金額解析失敗:', amount, '-> NaN');
+                amount = 0; // 設為0
+            } else {
+                amount = parsedAmount;
+            }
             
             // 如果沒有類型欄位，根據金額正負判斷
             if (!type) {
@@ -288,7 +298,8 @@ function processExcelRow(row, currentMember = null) {
             
             console.log('🔍 [processExcelRow] 處理金額後:', {
                 amount: amount,
-                type: type
+                type: type,
+                isNegative: amount < 0
             });
         }
         
@@ -442,7 +453,7 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
         
         // 處理金額格式
         if (amount !== undefined && amount !== null) {
-            console.log('🔍 [processExcelRowNewFormat] 處理金額前:', amount, '類型:', typeof amount);
+            console.log(`🔍 [processExcelRowNewFormat] 第 ${rowNumber} 行處理金額前:`, amount, '類型:', typeof amount);
             
             // 移除千分位逗號和貨幣符號
             if (typeof amount === 'string') {
@@ -454,16 +465,27 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
                 amount = amount.replace(/£/g, ''); // 移除英鎊符號
                 amount = amount.trim(); // 移除前後空白
             }
-            amount = parseFloat(amount);
+            
+            // 轉換為數字
+            const parsedAmount = parseFloat(amount);
+            
+            // 檢查是否為有效數字
+            if (isNaN(parsedAmount)) {
+                console.log(`⚠️ [processExcelRowNewFormat] 第 ${rowNumber} 行金額解析失敗:`, amount, '-> NaN');
+                amount = 0; // 設為0
+            } else {
+                amount = parsedAmount;
+            }
             
             // 如果沒有類型欄位，根據金額正負判斷
             if (!type) {
                 type = amount >= 0 ? '收入' : '支出';
             }
             
-            console.log('🔍 [processExcelRowNewFormat] 處理金額後:', {
+            console.log(`🔍 [processExcelRowNewFormat] 第 ${rowNumber} 行處理金額後:`, {
                 amount: amount,
-                type: type
+                type: type,
+                isNegative: amount < 0
             });
         }
         
@@ -781,9 +803,28 @@ app.post('/api/excel/compare', (req, res, next) => {
         });
         
         // 根據格式處理 Excel 資料
+        console.log('🔍 [API] 開始處理Excel資料，格式:', format);
         const processedData = format === 'excel' ? processExcelDataNewFormat(excelData) : processExcelData(excelData);
         console.log('🔍 [API] 處理後資料筆數:', processedData.length);
         console.log('🔍 [API] 處理後資料類型:', Array.isArray(processedData) ? 'Array' : typeof processedData);
+        
+        // 檢查處理後的資料是否有問題
+        if (!Array.isArray(processedData)) {
+            console.error('❌ [API] 處理後的資料不是數組:', processedData);
+            return res.status(500).json({ 
+                success: false, 
+                message: 'Excel 資料處理失敗：處理結果不是有效數組',
+                error: 'Invalid processed data format'
+            });
+        }
+        
+        // 檢查是否有有效記錄
+        const validRecords = processedData.filter(record => record && record.id && record.date);
+        console.log('🔍 [API] 有效記錄數:', validRecords.length);
+        
+        if (validRecords.length === 0) {
+            console.log('⚠️ [API] 沒有有效記錄，可能所有記錄都被跳過');
+        }
         
         // 按成員分組統計
         const memberStats = {};
