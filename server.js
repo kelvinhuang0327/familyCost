@@ -139,26 +139,41 @@ function processExcelData(excelData) {
 // Excel 資料處理函數 (新格式 - 標準Excel格式)
 function processExcelDataNewFormat(excelData) {
     const processedData = [];
+    let skippedRows = 0;
+    let processedRows = 0;
+    
+    console.log('🔍 [processExcelDataNewFormat] 開始處理，總行數:', excelData.length);
     
     excelData.forEach((row, index) => {
         try {
             // 跳過標題行（第一行）
             if (index === 0) {
                 console.log('🔍 [processExcelDataNewFormat] 跳過標題行:', row);
+                skippedRows++;
                 return;
             }
             
-            // 處理數據行
-            const processedRow = processExcelRowNewFormat(row);
+            // 處理所有數據行（包括空行）
+            const processedRow = processExcelRowNewFormat(row, index + 1);
             if (processedRow) {
                 processedData.push(processedRow);
+                processedRows++;
+            } else {
+                console.log(`⚠️ [processExcelDataNewFormat] 第 ${index + 1} 行處理失敗，跳過:`, row);
+                skippedRows++;
             }
         } catch (error) {
             console.error(`❌ [processExcelDataNewFormat] 處理第 ${index + 1} 行失敗:`, error, row);
+            skippedRows++;
         }
     });
     
-    console.log('🔍 [processExcelDataNewFormat] 處理完成，有效記錄數:', processedData.length);
+    console.log('🔍 [processExcelDataNewFormat] 處理完成:');
+    console.log('  - 總行數:', excelData.length);
+    console.log('  - 有效記錄數:', processedData.length);
+    console.log('  - 跳過行數:', skippedRows);
+    console.log('  - 處理行數:', processedRows);
+    
     return processedData;
 }
 
@@ -336,8 +351,10 @@ function processExcelRow(row, currentMember = null) {
 }
 
 // 處理單行 Excel 資料 (新格式)
-function processExcelRowNewFormat(row) {
+function processExcelRowNewFormat(row, rowNumber = 0) {
     try {
+        console.log(`🔍 [processExcelRowNewFormat] 處理第 ${rowNumber} 行:`, row);
+        
         // 根據圖片格式，Excel有以下欄位：
         // 成員, 金額, 主類別, 子類別, 描述, 日期
         
@@ -450,16 +467,15 @@ function processExcelRowNewFormat(row) {
             });
         }
         
-        // 驗證必要欄位
-        if (!date || amount === undefined || amount === null) {
-            console.log('⚠️ [processExcelRowNewFormat] 跳過不完整的記錄:', { date, amount, member });
+        // 驗證必要欄位 - 允許空值，但需要基本結構
+        if (date === undefined && amount === undefined && member === undefined) {
+            console.log(`⚠️ [processExcelRowNewFormat] 第 ${rowNumber} 行完全空白，跳過`);
             return null;
         }
         
-        // 如果沒有成員信息，跳過這行
-        if (!member || member === '未知') {
-            console.log('⚠️ [processExcelRowNewFormat] 跳過無成員信息記錄:', { date, amount, member });
-            return null;
+        // 如果完全沒有成員信息，設為默認值
+        if (!member) {
+            member = '未知';
         }
         
         // 如果沒有主類別，嘗試從描述中解析
@@ -481,7 +497,7 @@ function processExcelRowNewFormat(row) {
             description = mainCategory || '其他';
         }
         
-        console.log('🔍 [processExcelRowNewFormat] 最終數據:', {
+        console.log(`🔍 [processExcelRowNewFormat] 第 ${rowNumber} 行最終數據:`, {
             date: date,
             member: member,
             amount: amount,
@@ -491,16 +507,25 @@ function processExcelRowNewFormat(row) {
             type: type
         });
         
-        return {
-            date: date,
+        // 生成唯一ID
+        const id = generateUniqueId();
+        
+        // 確定收入或支出類型
+        const recordType = amount >= 0 ? 'income' : 'expense';
+        
+        const processedRecord = {
+            id: id,
+            date: date || '',
             member: member || '未知',
-            amount: amount,
+            amount: amount || 0,
             mainCategory: mainCategory || '其他',
             subCategory: subCategory || '信用卡',
             description: description || mainCategory || '其他',
-            type: type || (amount >= 0 ? '收入' : '支出'),
-            paymentMethod: '信用卡' // 預設付款方式
+            type: recordType
         };
+        
+        console.log(`✅ [processExcelRowNewFormat] 第 ${rowNumber} 行成功處理記錄:`, processedRecord);
+        return processedRecord;
         
     } catch (error) {
         console.error('❌ [processExcelRowNewFormat] 處理行資料失敗:', error, row);
