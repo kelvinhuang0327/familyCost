@@ -4031,14 +4031,14 @@
                     
                     if (errorCount > 0) {
                         // 顯示詳細的匯入結果
-                        const resultMessage = `📊 匯入結果統計：\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
+                        const resultMessage = `📊 匯入結果統計：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
                         alert(resultMessage);
                     } else {
-                        alert(`✅ 匯入完成！\n\n📊 統計結果：\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：0 筆記錄`);
+                        alert(`✅ 匯入完成！\n\n📊 統計結果：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：0 筆記錄`);
                     }
                 } else {
                     console.error('❌ 所有記錄匯入失敗');
-                    const failMessage = `❌ 匯入失敗！\n\n📊 統計結果：\n✅ 成功匯入：0 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
+                    const failMessage = `❌ 匯入失敗！\n\n📊 統計結果：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：0 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
                     alert(failMessage);
                 }
             } catch (error) {
@@ -4105,14 +4105,14 @@
                     
                     if (errorCount > 0) {
                         // 顯示詳細的匯入結果
-                        const resultMessage = `📊 匯入結果統計：\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
+                        const resultMessage = `📊 匯入結果統計：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
                         alert(resultMessage);
                     } else {
-                        alert(`✅ 匯入完成！\n\n📊 統計結果：\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：0 筆記錄`);
+                        alert(`✅ 匯入完成！\n\n📊 統計結果：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：0 筆記錄`);
                     }
                 } else {
                     console.error('❌ 所有記錄匯入失敗');
-                    const failMessage = `❌ 匯入失敗！\n\n📊 統計結果：\n✅ 成功匯入：0 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
+                    const failMessage = `❌ 匯入失敗！\n\n📊 統計結果：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：0 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
                     alert(failMessage);
                 }
             } catch (error) {
@@ -4193,14 +4193,14 @@
                     
                     if (errorCount > 0) {
                         // 顯示詳細的匯入結果
-                        const resultMessage = `📊 匯入結果統計：\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
+                        const resultMessage = `📊 匯入結果統計：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
                         alert(resultMessage);
                     } else {
-                        alert(`✅ 匯入完成！\n\n📊 統計結果：\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：0 筆記錄`);
+                        alert(`✅ 匯入完成！\n\n📊 統計結果：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：0 筆記錄`);
                     }
                 } else {
                     console.error('❌ 所有記錄匯入失敗');
-                    const failMessage = `❌ 匯入失敗！\n\n📊 統計結果：\n✅ 成功匯入：0 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
+                    const failMessage = `❌ 匯入失敗！\n\n📊 統計結果：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：0 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
                     alert(failMessage);
                 }
             } catch (error) {
@@ -4734,14 +4734,14 @@
                     
                     if (errorCount > 0) {
                         // 顯示詳細的匯入結果
-                        const resultMessage = `📊 匯入結果統計：\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
+                        const resultMessage = `📊 匯入結果統計：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
                         alert(resultMessage);
                     } else {
-                        alert(`✅ 匯入完成！\n\n📊 統計結果：\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：0 筆記錄`);
+                        alert(`✅ 匯入完成！\n\n📊 統計結果：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：0 筆記錄`);
                     }
                 } else {
                     console.error('❌ 所有記錄匯入失敗');
-                    const failMessage = `❌ 匯入失敗！\n\n📊 統計結果：\n✅ 成功匯入：0 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
+                    const failMessage = `❌ 匯入失敗！\n\n📊 統計結果：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：0 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
                     alert(failMessage);
                 }
             } catch (error) {
