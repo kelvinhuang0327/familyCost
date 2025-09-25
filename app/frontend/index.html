@@ -2842,13 +2842,9 @@
                 
                 <div class="export-section">
                     <h3>📤 匯出功能</h3>
-                    <p>將現有記錄匯出為 CSV 或 Google 雲端 Excel 檔案</p>
+                    <p>將現有記錄匯出為 Excel 檔案</p>
                     <div class="export-actions">
-                        <button class="btn" onclick="exportToCSV()">匯出為 CSV</button>
-                        <button class="btn" onclick="exportToExcel()">匯出為 Google Sheets</button>
-                        <button class="btn" onclick="createSampleExcel()">創建示例 Google Sheets</button>
-                        <button class="btn" onclick="downloadDataJson()">📁 下載 data.json 備份</button>
-                        <button class="btn" onclick="downloadExcelBackup()">📊 下載 Google Sheets 備份</button>
+                        <button class="btn" onclick="downloadExcelBackup()">📊 下載 Excel 備份</button>
                     </div>
                 </div>
                 
@@ -6202,149 +6198,9 @@
             document.getElementById('excelFile').value = '';
         }
 
-        // 匯出為 CSV
-        function exportToCSV() {
-            if (records.length === 0) {
-                alert('沒有記錄可以匯出！');
-                return;
-            }
 
-            const csvContent = convertToCSV(records);
-            downloadFile(csvContent, 'family_records.csv', 'text/csv');
-        }
 
-        // 匯出為 Excel
-        function exportToExcel() {
-            if (records.length === 0) {
-                alert('沒有記錄可以匯出！');
-                return;
-            }
 
-            const worksheet = XLSX.utils.json_to_sheet(records.map(record => ({
-                '成員': record.member,
-                '金額': record.type === 'income' ? record.amount : -record.amount,
-                '主類別': record.mainCategory,
-                '子類別': record.subCategory,
-                '描述': record.description,
-                '日期': record.date
-            })));
-
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, '收支記錄');
-            
-            XLSX.writeFile(workbook, 'family_records.xlsx');
-        }
-
-        // 轉換為 CSV 格式
-        function convertToCSV(data) {
-            const headers = ['成員', '金額', '主類別', '子類別', '描述', '日期'];
-            const csvRows = [headers.join(',')];
-            
-            data.forEach(record => {
-                const amount = record.type === 'income' ? record.amount : -record.amount;
-                const values = [
-                    record.member,
-                    amount,
-                    record.mainCategory,
-                    record.subCategory,
-                    `"${record.description}"`,
-                    record.date
-                ];
-                csvRows.push(values.join(','));
-            });
-            
-            return csvRows.join('\n');
-        }
-
-        // 下載檔案
-        function downloadFile(content, filename, contentType) {
-            const blob = new Blob([content], { type: contentType });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            link.click();
-            URL.revokeObjectURL(url);
-        }
-
-        // 創建示例 Excel 檔案
-        function createSampleExcel() {
-            const sampleData = [
-                {
-                    '成員': 'Kelvin',
-                    '金額': '-1,200',
-                    '主類別': '日常',
-                    '子類別': '信用卡',
-                    '描述': '手機費 - 2025-01',
-                    '日期': '2025-01-15'
-                },
-                {
-                    '成員': 'Phuong',
-                    '金額': '-1,598',
-                    '主類別': '日常',
-                    '子類別': '現金',
-                    '描述': '網路費 - 2025-01',
-                    '日期': '2025-01-15'
-                },
-                {
-                    '成員': '家用',
-                    '金額': '-15,000',
-                    '主類別': '居住',
-                    '子類別': '信用卡',
-                    '描述': '房租 - 2025-01',
-                    '日期': '2025-01-01'
-                },
-                {
-                    '成員': '家用',
-                    '金額': '50,000',
-                    '主類別': '薪資',
-                    '子類別': '現金',
-                    '描述': 'Kelvin 薪資',
-                    '日期': '2025-01-05'
-                },
-                {
-                    '成員': 'Kelvin',
-                    '金額': '-1,979',
-                    '主類別': '日常',
-                    '子類別': '信用卡',
-                    '描述': '手機欠費',
-                    '日期': '2025-01-20'
-                }
-            ];
-
-            const worksheet = XLSX.utils.json_to_sheet(sampleData);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, '示例數據');
-            
-            XLSX.writeFile(workbook, 'sample_family_records.xlsx');
-            alert('示例 Google Sheets 檔案已創建！您可以下載並修改後重新上傳測試。');
-        }
-
-        // 手動下載 data.json 備份
-        function downloadDataJson() {
-            if (records.length === 0) {
-                alert('沒有記錄可以備份！');
-                return;
-            }
-
-            const dataToSave = {
-                records: records,
-                settings: {
-                    version: "1.0",
-                    lastUpdated: new Date().toISOString()
-                }
-            };
-            
-            const blob = new Blob([JSON.stringify(dataToSave, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `family_records_backup_${formatDateToYYYYMMDD(new Date())}.json`;
-            link.click();
-            URL.revokeObjectURL(url);
-
-            alert(`成功下載備份檔案！\n備份了 ${records.length} 筆記錄。\n檔案名: family_records_backup_${formatDateToYYYYMMDD(new Date())}.json`);
-        }
 
         // 下載 Excel 格式備份（可重新匯入）
         function downloadExcelBackup() {
