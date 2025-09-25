@@ -393,163 +393,11 @@ app.get('/api/health', (req, res) => {
 
 // 從GitHub還原的API - 已移除
 
-// 獲取Git狀態
-app.get('/api/git-status', async (req, res) => {
-    try {
-        const { stdout: status } = await execAsync('git status --porcelain');
-        const { stdout: log } = await execAsync('git log --oneline -5');
-        
-        res.json({
-            success: true,
-            status: status.trim(),
-            recentCommits: log.trim().split('\n'),
-            timestamp: new Date().toISOString()
-        });
-    } catch (error) {
-        console.error('❌ 獲取Git狀態失敗:', error);
-        res.status(500).json({
-            success: false,
-            message: `獲取Git狀態失敗: ${error.message}`,
-            error: error.message
-        });
-    }
-});
+// Git狀態API已移除 - 備份功能已移除
 
-// 手動同步API
-app.post('/api/sync', async (req, res) => {
-    try {
-        console.log('🔄 開始手動同步...');
-        
-        // 拉取最新變更
-        await execAsync('git pull origin main');
-        console.log('📥 已拉取最新變更');
-        
-        // 添加所有變更
-        await execAsync('git add .');
-        
-        // 提交變更
-        const commitMessage = `手動同步 - ${new Date().toLocaleString('zh-TW')}`;
-        await execAsync(`git commit -m "${commitMessage}"`);
-        
-        // 推送到GitHub
-        try {
-            await execAsync('git push origin main');
-            console.log('🚀 手動同步已推送到GitHub');
-        } catch (pushError) {
-            console.log('⚠️ Git推送失敗，嘗試重新配置遠端:', pushError.message);
-            // 檢查遠端是否存在
-            try {
-                const { stdout: remoteList } = await execAsync('git remote -v');
-                console.log('📋 當前遠端配置:', remoteList);
-                if (!remoteList.includes('origin')) {
-                    console.log('⚠️ origin 遠端不存在，創建遠端');
-                    await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
-                }
-            } catch (remoteError) {
-                console.log('⚠️ 無法檢查遠端配置，創建遠端');
-                await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
-            }
-            try {
-                await execAsync('git push origin main');
-                console.log('🚀 重新配置後推送成功');
-            } catch (retryError) {
-                console.log('❌ 重新配置後推送仍然失敗:', retryError.message);
-                console.log('📝 本地同步已完成，但GitHub推送失敗');
-            }
-        }
-        
-        res.json({
-            success: true,
-            message: '手動同步成功',
-            commitMessage: commitMessage
-        });
-        
-    } catch (error) {
-        console.error('❌ 手動同步失敗:', error);
-        res.status(500).json({
-            success: false,
-            message: `手動同步失敗: ${error.message}`,
-            error: error.message
-        });
-    }
-});
+// 手動同步API已移除 - 備份功能已移除
 
-// Token管理API
-app.post('/api/token/save', async (req, res) => {
-    try {
-        console.log('🔍 [API] POST /api/token/save 開始處理...');
-        const { token } = req.body;
-        console.log('🔍 [API] 收到Token長度:', token ? token.length : 'null');
-        console.log('🔍 [API] Token前綴:', token ? token.substring(0, 10) + '...' : 'null');
-        
-        if (!token) {
-            console.log('❌ [API] Token為空');
-            return res.status(400).json({ success: false, message: 'Token不能為空' });
-        }
-
-        const cleanToken = token.trim();
-        console.log('🔍 [API] 清理後Token長度:', cleanToken.length);
-        
-        if (!/^[\x00-\x7F]+$/.test(cleanToken)) {
-            console.log('❌ [API] Token包含非ASCII字符');
-            return res.status(400).json({ success: false, message: 'Token包含非ASCII字符，請檢查輸入' });
-        }
-        if (cleanToken.length < 20 || cleanToken.length > 100) {
-            console.log('❌ [API] Token長度不正確:', cleanToken.length);
-            return res.status(400).json({ success: false, message: 'Token長度不正確，GitHub Token通常為40個字符' });
-        }
-
-        console.log('🔍 [API] 開始驗證Token...');
-        const validation = await tokenManager.validateToken(cleanToken);
-        console.log('🔍 [API] Token驗證結果:', validation);
-        
-        if (!validation.valid) {
-            console.log('❌ [API] Token驗證失敗:', validation.error);
-            return res.status(400).json({ success: false, message: `Token無效: ${validation.error}` });
-        }
-
-        console.log('✅ [API] Token驗證成功，開始儲存...');
-        tokenManager.saveToken(cleanToken);
-        tokenManager.setGitRemote(cleanToken);
-        
-        const response = { success: true, message: `Token已儲存，用戶: ${validation.user}`, user: validation.user };
-        console.log('✅ [API] Token儲存成功，返回響應:', response);
-        res.json(response);
-    } catch (error) {
-        console.error('❌ [API] Token儲存失敗:', error);
-        console.error('❌ [API] 錯誤堆疊:', error.stack);
-        res.status(500).json({ success: false, message: `Token儲存失敗: ${error.message}`, error: error.message });
-    }
-});
-
-app.get('/api/token/status', async (req, res) => {
-    try {
-        console.log('🔍 [API] GET /api/token/status 開始處理...');
-        const hasToken = tokenManager.hasToken();
-        console.log('🔍 [API] hasToken結果:', hasToken);
-        
-        const tokenInfo = hasToken ? await tokenManager.getTokenInfo() : null;
-        console.log('🔍 [API] tokenInfo結果:', tokenInfo);
-        
-        const response = { success: true, hasToken, tokenInfo };
-        console.log('✅ [API] Token狀態檢查完成，返回響應:', response);
-        res.json(response);
-    } catch (error) {
-        console.error('❌ [API] Token狀態檢查失敗:', error);
-        console.error('❌ [API] 錯誤堆疊:', error.stack);
-        res.status(500).json({ success: false, message: `Token狀態檢查失敗: ${error.message}`, error: error.message });
-    }
-});
-
-app.delete('/api/token', (req, res) => {
-    try {
-        tokenManager.deleteToken();
-        res.json({ success: true, message: 'Token已刪除' });
-    } catch (error) {
-        console.error('❌ Token刪除失敗:', error);
-        res.status(500).json({ success: false, message: `Token刪除失敗: ${error.message}`, error: error.message });
-    }
-});
+// Token管理API已移除 - 備份功能已移除
 
 // 備份管理API - 已移除
 
@@ -966,11 +814,6 @@ app.use('/api/*', (req, res) => {
         message: 'API端點不存在',
         availableEndpoints: [
             'GET /api/health',
-            'GET /api/git-status',
-            'POST /api/sync',
-            'POST /api/token/save',
-            'GET /api/token/status',
-            'DELETE /api/token',
             'POST /api/version/update',
             'POST /api/excel/compare',
             'POST /api/excel/import',
@@ -1283,13 +1126,15 @@ app.listen(PORT, () => {
     console.log(`📁 數據目錄: ${path.join(__dirname, 'data')}`);
     console.log('📋 可用API:');
     console.log('   GET  /api/health     - 健康檢查');
-    console.log('   GET  /api/git-status - 獲取Git狀態');
-    console.log('   POST /api/sync       - 手動同步');
-    console.log('   POST /api/token/save - 儲存GitHub Token');
-    console.log('   GET  /api/token/status - 檢查Token狀態');
-    console.log('   DELETE /api/token    - 刪除Token');
+    console.log('   POST /api/version/update - 更新版本號');
     console.log('   POST /api/excel/compare - Excel資料比對');
     console.log('   POST /api/excel/import - 匯入Excel資料');
+    console.log('   GET  /api/records    - 獲取所有記錄');
+    console.log('   GET  /api/records/stats - 獲取統計數據');
+    console.log('   POST /api/records    - 新增記錄');
+    console.log('   PUT  /api/records/:id - 更新記錄');
+    console.log('   DELETE /api/records/:id - 刪除記錄');
+    console.log('   DELETE /api/records/clear - 清除所有記錄');
     
     console.log('按 Ctrl+C 停止服務');
 });
