@@ -3655,7 +3655,7 @@
             console.log('📁 檔案大小:', file.size, 'bytes');
             console.log('📁 檔案類型:', file.type);
             console.log('📁 匯入格式:', format);
-            console.log('📁 API 地址:', ENV_CONFIG.getApiBase() + '/excel/compare');
+            console.log('📁 API 地址:', ENV_CONFIG.getApiBase() + '/api/excel/compare');
             
             // 驗證檔案類型
             if (!file.name.match(/\.(xlsx|xls)$/i)) {
@@ -3675,11 +3675,11 @@
             formData.append('format', format); // 添加格式參數
 
             try {
-                console.log('📡 開始發送請求到:', ENV_CONFIG.getApiBase() + '/excel/compare');
+                console.log('📡 開始發送請求到:', ENV_CONFIG.getApiBase() + '/api/excel/compare');
                 console.log('📡 FormData 內容:', formData);
                 console.log('📡 匯入格式:', format);
                 
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/excel/compare', {
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/excel/compare', {
                     method: 'POST',
                     body: formData
                 });
@@ -4221,7 +4221,7 @@
                 console.log('🔄 開始更新版本號...');
                 
                 // 調用後端API更新版本號
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/version/update', {
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/version/update', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -4369,7 +4369,7 @@
             console.log('📁 開始處理 Excel 匯入檔案上傳:', file.name);
             console.log('📁 檔案大小:', file.size, 'bytes');
             console.log('📁 檔案類型:', file.type);
-            console.log('📁 API 地址:', ENV_CONFIG.getApiBase() + '/excel/compare');
+            console.log('📁 API 地址:', ENV_CONFIG.getApiBase() + '/api/excel/compare');
             
             // 驗證檔案類型
             if (!file.name.match(/\.(xlsx|xls)$/i)) {
@@ -4387,10 +4387,10 @@
             formData.append('excelFile', file);
 
             try {
-                console.log('📡 開始發送請求到:', ENV_CONFIG.getApiBase() + '/excel/compare');
+                console.log('📡 開始發送請求到:', ENV_CONFIG.getApiBase() + '/api/excel/compare');
                 console.log('📡 FormData 內容:', formData);
                 
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/excel/compare', {
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/excel/compare', {
                     method: 'POST',
                     body: formData
                 });
@@ -6663,7 +6663,7 @@
         // GitHub Token 管理功能
         async function checkTokenStatus() {
             try {
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/token/status');
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/token/status');
                 const data = await response.json();
                 
                 const tokenStatus = document.getElementById('tokenStatus');
@@ -6719,7 +6719,7 @@
             try {
                 // 先測試後端連接
                 console.log('🔍 測試後端連接...');
-                const healthResponse = await fetch(ENV_CONFIG.getApiBase() + '/health');
+                const healthResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/health');
                 if (!healthResponse.ok) {
                     throw new Error(`後端服務不可用: ${healthResponse.status}`);
                 }
@@ -6727,7 +6727,7 @@
 
                 // 儲存Token
                 console.log('💾 儲存Token到後端...');
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/token/save', {
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/token/save', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -6789,7 +6789,7 @@
             }
             
             try {
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/token', {
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/token', {
                     method: 'DELETE'
                 });
                 
@@ -6818,7 +6818,7 @@
                 console.log('🔄 開始從備份恢復Token...');
                 
                 // 觸發後端的Token恢復邏輯（通過檢查狀態）
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/token/status');
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/token/status');
                 const data = await response.json();
                 
                 if (data.success) {
