@@ -2810,8 +2810,11 @@
                 </div>
 
                             <div class="result-actions">
-                                <button class="btn btn-primary" id="importBtn" onclick="showImportSelection()" disabled>
+                                <button class="btn btn-primary" id="importBtn" disabled>
                                     📥 選擇匯入記錄
+                                </button>
+                                <button class="btn btn-success" id="importAllBtn" style="display: none;">
+                                    📥 匯入全部記錄
                                 </button>
                                 <button class="btn btn-secondary" onclick="clearCompareResult()">
                                     🔄 重新比對
@@ -3713,34 +3716,38 @@
             // 顯示比對結果
             document.getElementById('compareResult').style.display = 'block';
             
-            // 如果有新記錄，顯示匯入選項
+            // 啟用/禁用匯入按鈕
+            const importBtn = document.getElementById('importBtn');
+            const importAllBtn = document.getElementById('importAllBtn');
+            
             if (data.newRecords > 0) {
-                console.log(`📥 發現 ${data.newRecords} 筆新記錄，${data.duplicateRecords} 筆重複記錄`);
+                // 有新記錄時，顯示兩個按鈕
+                importBtn.disabled = false;
+                importBtn.textContent = `📥 匯入 ${data.newRecords} 筆新記錄`;
+                importBtn.onclick = () => importAllNewRecords(data.newRecordsData);
                 
-                // 顯示匯入選項對話框
-                const choice = confirm(`發現 ${data.newRecords} 筆新記錄，${data.duplicateRecords} 筆重複記錄。\n\n點擊"確定"匯入新記錄\n點擊"取消"匯入全部記錄（包括重複）`);
-                
-                if (choice) {
-                    // 匯入新記錄
-                    console.log('📥 用戶選擇匯入新記錄');
-                    importAllNewRecords(data.newRecordsData);
+                if (data.duplicateRecords > 0) {
+                    // 也有重複記錄時，顯示匯入全部按鈕
+                    importAllBtn.style.display = 'inline-block';
+                    importAllBtn.textContent = `📥 匯入全部 ${data.newRecords + data.duplicateRecords} 筆記錄`;
+                    importAllBtn.onclick = () => {
+                        const allRecords = [...data.newRecordsData, ...data.duplicateRecordsData];
+                        importAllRecords(allRecords);
+                    };
                 } else {
-                    // 匯入全部記錄
-                    console.log('📥 用戶選擇匯入全部記錄');
-                    const allRecords = [...data.newRecordsData, ...data.duplicateRecordsData];
-                    importAllRecords(allRecords);
+                    importAllBtn.style.display = 'none';
                 }
             } else if (data.duplicateRecords > 0) {
-                // 只有重複記錄，詢問是否匯入
-                if (confirm(`沒有新記錄，但有 ${data.duplicateRecords} 筆重複記錄。\n\n確定要匯入這些重複記錄嗎？`)) {
-                    console.log('📥 用戶選擇匯入重複記錄');
-                    importAllRecords(data.duplicateRecordsData);
-                } else {
-                    console.log('❌ 用戶取消匯入');
-                }
+                // 只有重複記錄時，只顯示匯入重複記錄按鈕
+                importBtn.disabled = false;
+                importBtn.textContent = `📥 匯入 ${data.duplicateRecords} 筆重複記錄`;
+                importBtn.onclick = () => importAllRecords(data.duplicateRecordsData);
+                importAllBtn.style.display = 'none';
             } else {
-                console.log('ℹ️ 沒有記錄需要匯入');
-                alert('ℹ️ 沒有記錄需要匯入');
+                // 沒有記錄時，禁用按鈕
+                importBtn.disabled = true;
+                importBtn.textContent = '📥 選擇匯入記錄';
+                importAllBtn.style.display = 'none';
             }
             
             // 顯示記錄預覽
