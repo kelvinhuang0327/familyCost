@@ -1,6 +1,6 @@
 {
-  "version": "2025-09-25 15:24:25",
-  "buildTime": "2025-09-25T07:24:25.000Z",
-  "commitHash": "a1d9fb7",
-  "description": "家庭收支管理平台版本信息 - 修復Render部署問題，解決Git分支分歧"
+  "version": "2025-09-25 15:26:25",
+  "buildTime": "2025-09-25T07:26:25.000Z",
+  "commitHash": "aefbd1e",
+  "description": "家庭收支管理平台版本信息 - 修復後端Git pull分支分歧問題，使用rebase和強制重置"
 }
