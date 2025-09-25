@@ -4442,6 +4442,10 @@
             console.log('🔄 從服務器讀取最新數據...');
             await loadDataFromFile();
             
+            // 自動檢查Token狀態
+            console.log('🔑 檢查Token狀態...');
+            await checkTokenStatus();
+            
             // 確保records變量已更新
             console.log('🔄 初始化完成，當前記錄數量:', records.length);
             console.log('🔄 記錄內容:', records);
@@ -4478,6 +4482,10 @@
             updateCalendar();
             setTodayDate();
             updateDataStats();
+            
+            // 確保Token狀態正確顯示
+            console.log('🔑 最終檢查Token狀態...');
+            await checkTokenStatus();
             updateSyncStatus(); // 更新同步狀態顯示
             
             // 如果沒有記錄，不自動添加示例數據
