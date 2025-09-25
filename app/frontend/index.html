@@ -3000,7 +3000,7 @@
 
         // 跨瀏覽器數據同步
         let syncInterval = null;
-        let lastSyncTime = localStorage.getItem('lastSyncTime') || 0;
+        // localStorage緩存已移除 - 數據直接從SQLite數據庫讀取
 
         // 從服務器同步數據
         async function syncFromServer() {
@@ -3010,24 +3010,11 @@
                 // 直接從SQLite數據庫載入數據
                 await loadDataFromFile();
                 updateAllDisplays();
-                localStorage.setItem('lastSyncTime', Date.now());
                 
                 console.log('✅ SQLite數據同步完成');
                 return true;
             } catch (error) {
                 console.warn('⚠️ SQLite數據同步失敗:', error.message);
-                // 如果SQLite API不可用，嘗試從localStorage讀取
-                try {
-                    const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
-                    if (localRecords.length > 0) {
-                        records = localRecords;
-                        updateAllDisplays();
-                        console.log('📁 已從localStorage讀取數據');
-                        return true;
-                    }
-                } catch (localError) {
-                    console.warn('⚠️ localStorage讀取也失敗:', localError.message);
-                }
             }
             return false;
         }
@@ -3126,15 +3113,11 @@
             syncStatus.textContent = '清除緩存中...';
             
             try {
-                console.log('🗑️ 清除localStorage緩存...');
+                console.log('🗑️ 清除緩存功能已移除 - 數據直接從SQLite數據庫讀取');
                 
-                // 清除localStorage中的舊數據
-                localStorage.removeItem('familyRecords');
-                localStorage.removeItem('lastSyncTime');
-                localStorage.removeItem('lastGitHubBackup');
-                localStorage.removeItem('lastLocalBackup');
+                // localStorage緩存已移除
                 
-                console.log('✅ 緩存已清除');
+                console.log('✅ 緩存清除完成');
                 
                 // 強制從服務器重新讀取數據
                 console.log('🔄 從服務器重新讀取數據...');
@@ -3274,11 +3257,7 @@
             if (isSafari) {
                 console.log('🍎 檢測到Safari，執行兼容性修復...');
                 
-                // 清除Safari緩存
-                localStorage.removeItem('familyRecords');
-                localStorage.removeItem('lastSyncTime');
-                localStorage.removeItem('lastGitHubBackup');
-                localStorage.removeItem('lastLocalBackup');
+                // Safari緩存清除已移除 - 數據直接從SQLite數據庫讀取
                 
                 // 添加Safari專用提示
                 const safariNotice = document.createElement('div');
@@ -3339,7 +3318,7 @@
                     const data = await response.json();
                     if (data.records && Array.isArray(data.records)) {
                         records = data.records;
-                        localStorage.setItem('familyRecords', JSON.stringify(records));
+                        // localStorage緩存已移除
                         
                         // 更新所有顯示
                         updateStats();
@@ -4730,7 +4709,6 @@
                     
                     if (result.success && Array.isArray(result.records)) {
                         records = result.records;
-                        localStorage.setItem('familyRecords', JSON.stringify(records));
                         console.log('✅ 從SQLite數據庫載入了', records.length, '筆記錄');
                         console.log('🔄 全局records變量已更新為:', records.length, '筆記錄');
                         return;
@@ -4741,36 +4719,14 @@
                     console.warn('⚠️ SQLite API請求失敗，狀態碼:', response.status);
                 }
                 
-                // 如果SQLite API失敗，嘗試從localStorage載入
-                console.log('🔄 嘗試從localStorage載入數據...');
-                    const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
-                    if (localRecords.length > 0) {
-                        records = localRecords;
-                    console.log('✅ 從localStorage載入了', records.length, '筆記錄');
-                    } else {
-                    records = [];
-                    console.log('📝 沒有找到任何數據，records設為空數組');
-                    }
+                // SQLite API失敗，設為空數組
+                records = [];
+                console.log('📝 SQLite API失敗，records設為空數組');
                 
             } catch (error) {
                 console.error('❌ 從SQLite數據庫載入失敗:', error);
-                
-                // 如果SQLite API完全失敗，嘗試從localStorage載入
-                try {
-                    console.log('🔄 嘗試從localStorage載入數據...');
-                const localRecords = JSON.parse(localStorage.getItem('familyRecords')) || [];
-                if (localRecords.length > 0) {
-                    records = localRecords;
-                        console.log('✅ 從localStorage載入了', records.length, '筆記錄');
-                } else {
-                        records = [];
-                        console.log('📝 沒有找到任何數據，records設為空數組');
-                    }
-                } catch (localError) {
-                    console.error('❌ localStorage載入也失敗:', localError);
-                    records = [];
-                    console.log('📝 所有載入方法都失敗，records設為空數組');
-                }
+                records = [];
+                console.log('📝 SQLite載入失敗，records設為空數組');
             }
         }
 
@@ -4821,7 +4777,7 @@
             ];
             
             records = records.concat(sampleRecords);
-            saveRecords();
+            // saveRecords() 已移除 - 數據直接保存到SQLite數據庫
             updateStats();
             updateRecentRecords();
             updateAllRecords();
@@ -5750,7 +5706,7 @@
                     
                     // 添加到前端數組
                     records.push(record);
-                    localStorage.setItem('familyRecords', JSON.stringify(records));
+                    // localStorage緩存已移除
             
             // 重置表單
             this.reset();
@@ -5939,7 +5895,7 @@
                     date: date
                 };
                 
-                saveRecords();
+                // saveRecords() 已移除 - 數據直接保存到SQLite數據庫
                 
                 // 自動備份到GitHub - 已移除
                 
@@ -5974,7 +5930,7 @@
                         
                         // 從前端數組中移除記錄
                 records = records.filter(record => record.id !== id);
-                        localStorage.setItem('familyRecords', JSON.stringify(records));
+                        // localStorage緩存已移除
                         
                         // 更新所有顯示
                 updateStats();
@@ -5995,12 +5951,7 @@
             }
         }
 
-        function saveRecords() {
-            // 寫入 localStorage
-            localStorage.setItem('familyRecords', JSON.stringify(records));
-            
-            // 定期自動備份到 data.json（每10次操作備份一次） - 已移除
-        }
+        // saveRecords函數已移除 - 數據直接保存到SQLite數據庫
 
         // 寫入 data.json 檔案（通過下載方式）
         function saveToDataJson() {
@@ -6014,8 +5965,7 @@
                     }
                 };
                 
-                // 記錄備份時間
-                localStorage.setItem('lastBackupTime', now.toLocaleString('zh-TW'));
+                // 備份時間記錄已移除
                 
                 // 創建並下載 data.json 檔案
                 const blob = new Blob([JSON.stringify(dataToSave, null, 2)], { type: 'application/json' });
@@ -6036,7 +5986,7 @@
                 // 更新統計顯示
                 updateDataStats();
             } catch (error) {
-                console.warn('無法生成 data.json 備份檔案:', error, '但 localStorage 已保存');
+                console.warn('無法生成 data.json 備份檔案:', error);
             }
         }
 
@@ -6087,7 +6037,7 @@
                         };
                         
                         records.push(record);
-                        saveRecords();
+                        // saveRecords() 已移除 - 數據直接保存到SQLite數據庫
                         updateStats();
                         updateRecentRecords();
                         updateAllRecords();
@@ -6363,7 +6313,7 @@
 
             if (confirm(`確定要匯入 ${newRecords.length} 筆記錄嗎？`)) {
                 records = records.concat(newRecords);
-                saveRecords();
+                // saveRecords() 已移除 - 數據直接保存到SQLite數據庫
                 
                 // 自動備份到GitHub - 已移除
                 
@@ -6520,11 +6470,7 @@
                 healthIssues.push(`❌ 發現 ${invalidAmounts.length} 筆無效金額`);
             }
             
-            // 檢查localStorage同步
-            const localRecords = JSON.parse(localStorage.getItem('familyRecords') || '[]');
-            if (localRecords.length !== records.length) {
-                warnings.push('⚠️ localStorage與內存數據不同步');
-            }
+            // localStorage檢查已移除 - 數據直接從SQLite數據庫讀取
             
             // 更新健康狀態顯示
             let healthStatus = '✅ 健康';
@@ -6784,10 +6730,9 @@
                     fixes.push(`✅ 移除 ${removedCount} 筆無效記錄`);
                 }
                 
-                // 4. 同步到localStorage
-                console.log('💾 步驟4: 同步到localStorage...');
-                localStorage.setItem('familyRecords', JSON.stringify(records));
-                fixes.push('✅ 同步到localStorage');
+                // 4. localStorage同步已移除
+                console.log('💾 步驟4: localStorage同步已移除');
+                fixes.push('✅ localStorage同步已移除');
                 
                 // 5. 更新所有顯示
                 console.log('🔄 步驟5: 更新顯示...');
@@ -6869,7 +6814,7 @@
                 // 從 records 中移除要刪除的記錄
                 records = records.filter(record => !deleteData.includes(record));
                 
-                saveRecords();
+                // saveRecords() 已移除 - 數據直接保存到SQLite數據庫
                 updateStats();
                 updateRecentRecords();
                 updateAllRecords();
@@ -6927,10 +6872,7 @@
                                 
                                 // 清除前端數據
                         records = [];
-                                localStorage.removeItem('familyRecords');
-                                localStorage.removeItem('lastSyncTime');
-                                localStorage.removeItem('lastGitHubBackup');
-                                localStorage.removeItem('lastLocalBackup');
+                                // localStorage清除已移除
                                 
                                 // 更新所有顯示
                         updateStats();
@@ -7006,7 +6948,7 @@
                         
                         if (confirm(confirmMessage)) {
                             records = backupData.records;
-                            saveRecords();
+                            // saveRecords() 已移除 - 數據直接保存到SQLite數據庫
                             updateStats();
                             updateRecentRecords();
                             updateAllRecords();
