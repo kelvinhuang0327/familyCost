@@ -1117,6 +1117,16 @@ app.use('/api/*', (req, res) => {
 
 // ==================== SQLite 數據庫 API 端點 ====================
 
+// 測試端點 - 確認部署狀態
+app.get('/api/test', (req, res) => {
+    res.json({
+        success: true,
+        message: 'API端點正常',
+        timestamp: new Date().toISOString(),
+        version: '2025-09-25 17:50:00'
+    });
+});
+
 // 獲取所有記錄
 app.get('/api/records', (req, res) => {
     try {
