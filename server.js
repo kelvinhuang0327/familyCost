@@ -274,6 +274,7 @@ function processExcelRow(row, currentMember = null) {
             amount: amount,
             member: member || '未知',
             type: type || (amount >= 0 ? '收入' : '支出'),
+            subCategory: '信用卡', // Excel預設subCategory為信用卡
             paymentMethod: '信用卡' // 預設付款方式
         };
         
@@ -874,7 +875,8 @@ app.post('/api/excel/compare', (req, res, next) => {
         }
         
         for (const excelRecord of processedData) {
-            // 檢查是否已存在（比較：成員 + 日期 + 主類別 + 金額 + 描述）
+            // 檢查是否已存在（比較：成員 + 日期 + 主類別 + 金額數值）
+            // 注意：不再比較 description 和 subCategory
             const isDuplicate = systemData.some(systemRecord => {
                 if (!systemRecord) return false;
                 
@@ -884,8 +886,8 @@ app.post('/api/excel/compare', (req, res, next) => {
                 // 比較日期
                 const dateMatch = systemRecord.date === excelRecord.date;
                 
-                // 比較金額
-                const amountMatch = systemRecord.amount === excelRecord.amount;
+                // 比較金額數值（忽略正負號）
+                const amountMatch = Math.abs(systemRecord.amount) === Math.abs(excelRecord.amount);
                 
                 // 比較主類別
                 let systemMainCategory = '';
@@ -900,23 +902,8 @@ app.post('/api/excel/compare', (req, res, next) => {
                 
                 const mainCategoryMatch = systemMainCategory === excelRecord.mainCategory;
                 
-                // 比較描述（子描述部分）
-                let systemDescription = '';
-                let excelDescription = '';
-                
-                // 系統記錄的描述處理
-                if (systemRecord.description && systemRecord.description.includes('-')) {
-                    systemDescription = systemRecord.description.split('-').slice(1).join('-').trim();
-                } else {
-                    systemDescription = systemRecord.description || '';
-                }
-                
-                // Excel記錄的描述處理
-                excelDescription = excelRecord.subDescription || '';
-                
-                const descriptionMatch = systemDescription === excelDescription;
-                
-                const isMatch = memberMatch && dateMatch && amountMatch && mainCategoryMatch && descriptionMatch;
+                // 不再比較描述和subCategory
+                const isMatch = memberMatch && dateMatch && amountMatch && mainCategoryMatch;
                 
                 // 詳細的比對日誌（每10筆記錄顯示一次）
                 if (processedData.indexOf(excelRecord) % 10 === 0) {
@@ -925,50 +912,44 @@ app.post('/api/excel/compare', (req, res, next) => {
                             member: excelRecord.member,
                             date: excelRecord.date,
                             mainCategory: excelRecord.mainCategory,
-                            amount: excelRecord.amount,
-                            description: excelDescription
+                            amount: excelRecord.amount
                         },
                         system: {
                             member: systemRecord.member,
                             date: systemRecord.date,
                             mainCategory: systemMainCategory,
-                            amount: systemRecord.amount,
-                            description: systemDescription
+                            amount: systemRecord.amount
                         },
                         matches: {
                             member: memberMatch,
                             date: dateMatch,
                             amount: amountMatch,
                             mainCategory: mainCategoryMatch,
-                            description: descriptionMatch,
                             overall: isMatch
                         }
                     });
                 }
                 
                 // 顯示比對不一致的詳細原因
-                if (!isMatch && (memberMatch || dateMatch || amountMatch || mainCategoryMatch || descriptionMatch)) {
+                if (!isMatch && (memberMatch || dateMatch || amountMatch || mainCategoryMatch)) {
                     console.log('⚠️ [API] 比對不一致:', {
                         excel: {
                             member: excelRecord.member,
                             date: excelRecord.date,
                             mainCategory: excelRecord.mainCategory,
-                            amount: excelRecord.amount,
-                            description: excelDescription
+                            amount: excelRecord.amount
                         },
                         system: {
                             member: systemRecord.member,
                             date: systemRecord.date,
                             mainCategory: systemMainCategory,
-                            amount: systemRecord.amount,
-                            description: systemDescription
+                            amount: systemRecord.amount
                         },
                         differences: {
                             member: memberMatch ? '✅' : `❌ (Excel: ${excelRecord.member} vs System: ${systemRecord.member})`,
                             date: dateMatch ? '✅' : `❌ (Excel: ${excelRecord.date} vs System: ${systemRecord.date})`,
                             amount: amountMatch ? '✅' : `❌ (Excel: ${excelRecord.amount} vs System: ${systemRecord.amount})`,
-                            mainCategory: mainCategoryMatch ? '✅' : `❌ (Excel: ${excelRecord.mainCategory} vs System: ${systemMainCategory})`,
-                            description: descriptionMatch ? '✅' : `❌ (Excel: ${excelDescription} vs System: ${systemDescription})`
+                            mainCategory: mainCategoryMatch ? '✅' : `❌ (Excel: ${excelRecord.mainCategory} vs System: ${systemMainCategory})`
                         }
                     });
                 }
@@ -979,15 +960,13 @@ app.post('/api/excel/compare', (req, res, next) => {
                             member: excelRecord.member,
                             date: excelRecord.date,
                             mainCategory: excelRecord.mainCategory,
-                            amount: excelRecord.amount,
-                            description: excelDescription
+                            amount: excelRecord.amount
                         },
                         system: {
                             member: systemRecord.member,
                             date: systemRecord.date,
                             mainCategory: systemMainCategory,
-                            amount: systemRecord.amount,
-                            description: systemDescription
+                            amount: systemRecord.amount
                         }
                     });
                 }
