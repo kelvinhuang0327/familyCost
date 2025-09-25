@@ -1449,6 +1449,126 @@
         .excel-import-section {
             margin-top: 20px;
         }
+        
+        /* 匯入選擇界面樣式 */
+        .import-selection {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .selection-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .selection-controls .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+        
+        #selectedCount {
+            margin-left: auto;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .records-selection {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background: white;
+        }
+        
+        .record-selection-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #f1f3f4;
+            transition: background-color 0.2s;
+        }
+        
+        .record-selection-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .record-selection-item:last-child {
+            border-bottom: none;
+        }
+        
+        .record-selection-item input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+        
+        .record-info {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 80px 120px 100px 200px 80px;
+            gap: 10px;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .record-info .label {
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .record-info .value {
+            color: #6c757d;
+        }
+        
+        .duplicate-note {
+            margin-top: 8px;
+            padding: 6px 10px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #856404;
+            font-weight: bold;
+        }
+        
+        .selection-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        /* 通知動畫樣式 */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
 
         .upload-area {
             border: 2px dashed #ddd;
@@ -2870,8 +2990,8 @@
                             </div>
                             
                             <div class="result-actions">
-                                <button class="btn btn-primary" id="importBtn" onclick="importNewRecords()" disabled>
-                                    📥 匯入新記錄
+                                <button class="btn btn-primary" id="importBtn" onclick="showImportSelection()" disabled>
+                                    📥 選擇匯入記錄
                                 </button>
                                 <button class="btn btn-secondary" onclick="clearCompareResult()">
                                     🔄 重新比對
@@ -2886,6 +3006,25 @@
                             <div id="duplicateRecordsList" class="records-list" style="display: none;">
                                 <h5>🔄 重複記錄</h5>
                                 <div class="records-preview" id="duplicateRecordsPreview"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 匯入選擇界面 -->
+                        <div id="importSelection" class="import-selection" style="display: none;">
+                            <h4>📋 選擇要匯入的記錄</h4>
+                            <div class="selection-controls">
+                                <button class="btn btn-sm" onclick="selectAllRecords()">全選</button>
+                                <button class="btn btn-sm" onclick="deselectAllRecords()">全不選</button>
+                                <span id="selectedCount">已選擇 0 筆記錄</span>
+                            </div>
+                            <div class="records-selection" id="recordsSelectionList"></div>
+                            <div class="selection-actions">
+                                <button class="btn btn-success" id="confirmImportBtn" onclick="confirmSelectedImport()" disabled>
+                                    📥 確認匯入選中的記錄
+                                </button>
+                                <button class="btn btn-secondary" onclick="hideImportSelection()">
+                                    ❌ 取消
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -3784,10 +3923,10 @@
             const importBtn = document.getElementById('importBtn');
             if (data.newRecords > 0) {
                 importBtn.disabled = false;
-                importBtn.textContent = `📥 匯入 ${data.newRecords} 筆新記錄`;
+                importBtn.textContent = `📥 選擇匯入 ${data.newRecords} 筆記錄`;
             } else {
                 importBtn.disabled = true;
-                importBtn.textContent = '📥 匯入新記錄';
+                importBtn.textContent = '📥 選擇匯入記錄';
             }
             
             // 顯示記錄預覽
@@ -3822,16 +3961,123 @@
             }
         }
 
-        // 匯入新記錄
-        async function importNewRecords() {
+        // 顯示匯入選擇界面
+        function showImportSelection() {
             if (!currentCompareData || currentCompareData.newRecords === 0) {
                 alert('❌ 沒有可匯入的新記錄');
                 return;
             }
 
-            if (!confirm(`確定要匯入 ${currentCompareData.newRecords} 筆新記錄嗎？`)) {
+            // 隱藏比對結果
+            document.getElementById('compareResult').style.display = 'none';
+            
+            // 顯示匯入選擇界面
+            document.getElementById('importSelection').style.display = 'block';
+            
+            // 生成記錄選擇清單
+            generateRecordsSelectionList(currentCompareData.newRecordsData);
+        }
+
+        // 生成記錄選擇清單
+        function generateRecordsSelectionList(records) {
+            const listContainer = document.getElementById('recordsSelectionList');
+            listContainer.innerHTML = '';
+            
+            records.forEach((record, index) => {
+                const item = document.createElement('div');
+                item.className = 'record-selection-item';
+                
+                // 檢查是否有重複資料
+                const duplicateInfo = checkForDuplicateRecord(record);
+                const duplicateNote = duplicateInfo ? 
+                    `<div class="duplicate-note">⚠️ 可能與系統中現有記錄重複</div>` : '';
+                
+                item.innerHTML = `
+                    <input type="checkbox" id="record_${index}" value="${index}" onchange="updateSelectedCount()" checked>
+                    <div class="record-info">
+                        <span class="label">成員:</span>
+                        <span class="value">${record.member}</span>
+                        <span class="label">日期:</span>
+                        <span class="value">${record.date}</span>
+                        <span class="label">金額:</span>
+                        <span class="value">$${record.amount}</span>
+                        <span class="label">類別:</span>
+                        <span class="value">${record.mainCategory}</span>
+                        <span class="label">描述:</span>
+                        <span class="value">${record.description}</span>
+                    </div>
+                    ${duplicateNote}
+                `;
+                listContainer.appendChild(item);
+            });
+            
+            // 初始化選擇計數
+            updateSelectedCount();
+        }
+
+        // 檢查記錄是否可能重複
+        function checkForDuplicateRecord(excelRecord) {
+            // 使用簡化的比對邏輯檢查是否有相似的記錄
+            return records.some(systemRecord => {
+                if (!systemRecord) return false;
+                
+                // 比較核心欄位
+                const memberMatch = systemRecord.member === excelRecord.member;
+                const dateMatch = systemRecord.date === excelRecord.date;
+                const amountMatch = Math.abs(systemRecord.amount) === Math.abs(excelRecord.amount);
+                
+                // 如果成員、日期、金額都匹配，可能是重複記錄
+                return memberMatch && dateMatch && amountMatch;
+            });
+        }
+
+        // 更新選擇計數
+        function updateSelectedCount() {
+            const checkboxes = document.querySelectorAll('#recordsSelectionList input[type="checkbox"]');
+            const checkedBoxes = document.querySelectorAll('#recordsSelectionList input[type="checkbox"]:checked');
+            const count = checkedBoxes.length;
+            
+            document.getElementById('selectedCount').textContent = `已選擇 ${count} 筆記錄`;
+            document.getElementById('confirmImportBtn').disabled = count === 0;
+        }
+
+        // 全選記錄
+        function selectAllRecords() {
+            const checkboxes = document.querySelectorAll('#recordsSelectionList input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            updateSelectedCount();
+        }
+
+        // 全不選記錄
+        function deselectAllRecords() {
+            const checkboxes = document.querySelectorAll('#recordsSelectionList input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            updateSelectedCount();
+        }
+
+        // 確認匯入選中的記錄
+        async function confirmSelectedImport() {
+            const checkedBoxes = document.querySelectorAll('#recordsSelectionList input[type="checkbox"]:checked');
+            
+            if (checkedBoxes.length === 0) {
+                alert('❌ 請至少選擇一筆記錄');
                 return;
             }
+
+            if (!confirm(`確定要匯入選中的 ${checkedBoxes.length} 筆記錄嗎？`)) {
+                return;
+            }
+
+            // 收集選中的記錄
+            const selectedRecords = [];
+            checkedBoxes.forEach(checkbox => {
+                const index = parseInt(checkbox.value);
+                selectedRecords.push(currentCompareData.newRecordsData[index]);
+            });
 
             try {
                 const response = await fetch(ENV_CONFIG.getApiBase() + '/excel/import', {
@@ -3840,7 +4086,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        records: currentCompareData.newRecordsData
+                        records: selectedRecords
                     })
                 });
 
@@ -3853,8 +4099,12 @@
                     // 重新載入資料
                     loadData();
                     
-                    // 清除比對結果
+                    // 自動提交到Git
+                    await autoCommitToGit(`Excel匯入 ${result.data.importedCount} 筆記錄`);
+                    
+                    // 清除所有結果
                     clearCompareResult();
+                    hideImportSelection();
                 } else {
                     console.error('❌ 匯入失敗:', result.message);
                     alert('❌ 匯入失敗: ' + result.message);
@@ -3865,9 +4115,145 @@
             }
         }
 
+        // 隱藏匯入選擇界面
+        function hideImportSelection() {
+            document.getElementById('importSelection').style.display = 'none';
+            document.getElementById('compareResult').style.display = 'block';
+        }
+
+        // 自動提交到Git
+        async function autoCommitToGit(commitMessage) {
+            try {
+                console.log('🔄 開始自動提交到Git...');
+                
+                // 先備份資料到GitHub
+                const backupResponse = await fetch(ENV_CONFIG.getApiBase() + '/backup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        records: records,
+                        timestamp: new Date().toISOString(),
+                        count: records.length
+                    })
+                });
+
+                const backupResult = await backupResponse.json();
+                
+                if (backupResult.success) {
+                    console.log('✅ 自動Git提交成功:', backupResult.message);
+                    
+                    // 更新版本號
+                    await updateVersionNumber();
+                    
+                    // 顯示成功訊息
+                    showNotification('✅ 資料已自動提交到GitHub並更新版本號', 'success');
+                } else {
+                    console.warn('⚠️ Git提交失敗:', backupResult.message);
+                    showNotification('⚠️ 資料匯入成功，但Git提交失敗: ' + backupResult.message, 'warning');
+                }
+            } catch (error) {
+                console.error('❌ 自動Git提交失敗:', error);
+                showNotification('⚠️ 資料匯入成功，但Git提交失敗: ' + error.message, 'warning');
+            }
+        }
+
+        // 更新版本號
+        async function updateVersionNumber() {
+            try {
+                const now = new Date();
+                const versionString = now.getFullYear() + '-' + 
+                    String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(now.getDate()).padStart(2, '0') + ' ' +
+                    String(now.getHours()).padStart(2, '0') + ':' +
+                    String(now.getMinutes()).padStart(2, '0') + ':' +
+                    String(now.getSeconds()).padStart(2, '0');
+
+                const versionData = {
+                    version: versionString,
+                    buildTime: now.toISOString(),
+                    description: "自動更新版本號 - Excel匯入"
+                };
+
+                // 這裡可以調用後端API更新版本號，或者直接在前端顯示
+                console.log('🔄 版本號已更新:', versionString);
+                
+                // 更新前端顯示的版本號
+                updateVersionDisplay(versionString);
+                
+            } catch (error) {
+                console.error('❌ 版本號更新失敗:', error);
+            }
+        }
+
+        // 更新版本號顯示
+        function updateVersionDisplay(versionString) {
+            const versionElements = document.querySelectorAll('.version-info');
+            versionElements.forEach(element => {
+                if (element.textContent.includes('版本')) {
+                    element.textContent = element.textContent.replace(/版本: [^\s]+/, `版本: ${versionString}`);
+                }
+            });
+        }
+
+        // 顯示通知
+        function showNotification(message, type = 'info') {
+            // 創建通知元素
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            
+            // 添加樣式
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 6px;
+                color: white;
+                font-weight: bold;
+                z-index: 10000;
+                max-width: 400px;
+                word-wrap: break-word;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            // 根據類型設置顏色
+            switch(type) {
+                case 'success':
+                    notification.style.backgroundColor = '#28a745';
+                    break;
+                case 'warning':
+                    notification.style.backgroundColor = '#ffc107';
+                    notification.style.color = '#000';
+                    break;
+                case 'error':
+                    notification.style.backgroundColor = '#dc3545';
+                    break;
+                default:
+                    notification.style.backgroundColor = '#007bff';
+            }
+            
+            // 添加到頁面
+            document.body.appendChild(notification);
+            
+            // 3秒後自動移除
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
         // 清除比對結果
         function clearCompareResult() {
             document.getElementById('compareResult').style.display = 'none';
+            document.getElementById('importSelection').style.display = 'none';
             document.getElementById('excelFileInput').value = '';
             currentCompareData = null;
         }
