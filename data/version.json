@@ -1,6 +1,6 @@
 {
-  "version": "2025-09-25 15:21:25",
-  "buildTime": "2025-09-25T07:21:25.000Z",
-  "commitHash": "6ee79ec",
-  "description": "家庭收支管理平台版本信息 - 添加調試代碼檢查總支出重複計算問題"
+  "version": "2025-09-25 15:24:25",
+  "buildTime": "2025-09-25T07:24:25.000Z",
+  "commitHash": "a1d9fb7",
+  "description": "家庭收支管理平台版本信息 - 修復Render部署問題，解決Git分支分歧"
 }
