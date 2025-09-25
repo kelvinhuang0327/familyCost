@@ -111,6 +111,18 @@ class BackupManager {
         try {
             console.log('🔄 開始創建Git備份...');
 
+            // 檢查GitHub Token
+            const tokenManager = require('./token_manager');
+            const tokenStatus = await tokenManager.checkTokenStatus();
+            
+            if (!tokenStatus.hasToken) {
+                console.log('⚠️ 沒有GitHub Token，跳過Git備份');
+                return { 
+                    success: false, 
+                    message: '沒有配置GitHub Token，無法執行Git備份。請先在設定中配置GitHub Personal Access Token。' 
+                };
+            }
+
             // 更新data.json
             const dataToSave = {
                 records: records,
