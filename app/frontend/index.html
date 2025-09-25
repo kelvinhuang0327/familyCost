@@ -2769,11 +2769,11 @@
                     <div class="import-format-selector">
                         <label>
                             <input type="radio" name="importFormat" value="googlesheets" checked>
-                            Google Sheets 格式
+                            Google Sheets 格式 (舊格式)
                         </label>
                         <label>
                             <input type="radio" name="importFormat" value="excel">
-                            Excel 檔案格式
+                            Excel 檔案格式 (新格式：成員、金額、主類別、子類別、描述、日期)
                         </label>
                     </div>
                     
@@ -3603,9 +3603,9 @@
             formatRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
                     if (this.value === 'googlesheets') {
-                        uploadDescription.textContent = '點擊或拖拽 Google Sheets 檔案到此處';
+                        uploadDescription.textContent = '點擊或拖拽 Google Sheets 檔案到此處 (舊格式)';
                     } else if (this.value === 'excel') {
-                        uploadDescription.textContent = '點擊或拖拽 Excel 檔案到此處';
+                        uploadDescription.textContent = '點擊或拖拽 Excel 檔案到此處 (新格式：成員、金額、主類別、子類別、描述、日期)';
                     }
                 });
             });

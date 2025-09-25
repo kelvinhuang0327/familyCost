@@ -107,7 +107,7 @@ function detectMemberTitle(row) {
     return null;
 }
 
-// Excel 資料處理函數
+// Excel 資料處理函數 (舊格式 - Google Sheets)
 function processExcelData(excelData) {
     const processedData = [];
     let currentMember = null;
@@ -136,24 +136,44 @@ function processExcelData(excelData) {
     return processedData;
 }
 
+// Excel 資料處理函數 (新格式 - 標準Excel格式)
+function processExcelDataNewFormat(excelData) {
+    const processedData = [];
+    
+    excelData.forEach((row, index) => {
+        try {
+            // 跳過標題行（第一行）
+            if (index === 0) {
+                console.log('🔍 [processExcelDataNewFormat] 跳過標題行:', row);
+                return;
+            }
+            
+            // 處理數據行
+            const processedRow = processExcelRowNewFormat(row);
+            if (processedRow) {
+                processedData.push(processedRow);
+            }
+        } catch (error) {
+            console.error(`❌ [processExcelDataNewFormat] 處理第 ${index + 1} 行失敗:`, error, row);
+        }
+    });
+    
+    console.log('🔍 [processExcelDataNewFormat] 處理完成，有效記錄數:', processedData.length);
+    return processedData;
+}
+
 // 處理單行 Excel 資料
 function processExcelRow(row, currentMember = null) {
     try {
-        // 根據圖片格式，假設 Excel 有以下欄位：
-        // 日期, 描述, 金額, 成員 (或類似的欄位名)
+        // 根據圖片格式，Excel有以下欄位：
+        // 成員, 金額, 主類別, 子類別, 描述, 日期
         
         // 嘗試不同的欄位名稱組合
-        let date, description, amount, member, type;
+        let date, description, amount, member, mainCategory, subCategory, type;
         
-        // 日期欄位
-        if (row['日期'] || row['date'] || row['Date'] || row['DATE']) {
-            date = row['日期'] || row['date'] || row['Date'] || row['DATE'];
-            console.log('🔍 [processExcelRow] 找到日期欄位:', date, '類型:', typeof date);
-        }
-        
-        // 描述欄位
-        if (row['描述'] || row['description'] || row['Description'] || row['DESCRIPTION']) {
-            description = row['描述'] || row['description'] || row['Description'] || row['DESCRIPTION'];
+        // 成員欄位
+        if (row['成員'] || row['member'] || row['Member'] || row['MEMBER']) {
+            member = row['成員'] || row['member'] || row['Member'] || row['MEMBER'];
         }
         
         // 金額欄位
@@ -161,9 +181,25 @@ function processExcelRow(row, currentMember = null) {
             amount = row['金額'] || row['amount'] || row['Amount'] || row['AMOUNT'];
         }
         
-        // 成員欄位
-        if (row['成員'] || row['member'] || row['Member'] || row['MEMBER']) {
-            member = row['成員'] || row['member'] || row['Member'] || row['MEMBER'];
+        // 主類別欄位
+        if (row['主類別'] || row['mainCategory'] || row['MainCategory'] || row['MAINCATEGORY']) {
+            mainCategory = row['主類別'] || row['mainCategory'] || row['MainCategory'] || row['MAINCATEGORY'];
+        }
+        
+        // 子類別欄位
+        if (row['子類別'] || row['subCategory'] || row['SubCategory'] || row['SUBCATEGORY']) {
+            subCategory = row['子類別'] || row['subCategory'] || row['SubCategory'] || row['SUBCATEGORY'];
+        }
+        
+        // 描述欄位
+        if (row['描述'] || row['description'] || row['Description'] || row['DESCRIPTION']) {
+            description = row['描述'] || row['description'] || row['Description'] || row['DESCRIPTION'];
+        }
+        
+        // 日期欄位
+        if (row['日期'] || row['date'] || row['Date'] || row['DATE']) {
+            date = row['日期'] || row['date'] || row['Date'] || row['DATE'];
+            console.log('🔍 [processExcelRow] 找到日期欄位:', date, '類型:', typeof date);
         }
         
         // 類型欄位 (收入/支出)
@@ -171,35 +207,38 @@ function processExcelRow(row, currentMember = null) {
             type = row['類型'] || row['type'] || row['Type'] || row['TYPE'];
         }
         
-        // 根據圖片格式：日期 | 描述 | 金額 | 成員
+        // 根據圖片格式：成員 | 金額 | 主類別 | 子類別 | 描述 | 日期
         const keys = Object.keys(row);
-        if (keys.length >= 4) {
-            // 按順序提取：第1欄=日期，第2欄=描述，第3欄=金額，第4欄=成員
-            date = row[keys[0]];
-            description = row[keys[1]];
-            amount = row[keys[2]];
-            member = row[keys[3]] || currentMember || '未知';
+        if (keys.length >= 6) {
+            // 按順序提取：第1欄=成員，第2欄=金額，第3欄=主類別，第4欄=子類別，第5欄=描述，第6欄=日期
+            member = row[keys[0]] || currentMember || '未知';
+            amount = row[keys[1]];
+            mainCategory = row[keys[2]];
+            subCategory = row[keys[3]];
+            description = row[keys[4]];
+            date = row[keys[5]];
             
-            console.log('🔍 [processExcelRow] 按順序提取 (4欄格式):', {
-                date: date,
-                description: description,
-                amount: amount,
+            console.log('🔍 [processExcelRow] 按順序提取 (6欄格式):', {
                 member: member,
+                amount: amount,
+                mainCategory: mainCategory,
+                subCategory: subCategory,
+                description: description,
+                date: date,
                 keys: keys
             });
-        } else if (keys.length >= 3) {
-            // 如果只有3欄，假設格式是：日期, 描述, 金額
-            date = row[keys[0]];
-            description = row[keys[1]];
-            amount = row[keys[2]];
-            // 使用當前成員（從標題行檢測）
-            member = currentMember || '未知';
+        } else if (keys.length >= 4) {
+            // 如果只有4欄，假設格式是：成員, 金額, 描述, 日期
+            member = row[keys[0]] || currentMember || '未知';
+            amount = row[keys[1]];
+            description = row[keys[2]];
+            date = row[keys[3]];
             
-            console.log('🔍 [processExcelRow] 推測格式 (3欄格式):', {
-                date: date,
-                description: description,
-                amount: amount,
+            console.log('🔍 [processExcelRow] 推測格式 (4欄格式):', {
                 member: member,
+                amount: amount,
+                description: description,
+                date: date,
                 keys: keys
             });
         }
@@ -239,49 +278,232 @@ function processExcelRow(row, currentMember = null) {
         }
         
         // 驗證必要欄位
-        if (!date || !description || amount === undefined || amount === null) {
-            console.log('⚠️ [processExcelRow] 跳過不完整的記錄:', { date, description, amount, member, currentMember });
+        if (!date || amount === undefined || amount === null) {
+            console.log('⚠️ [processExcelRow] 跳過不完整的記錄:', { date, amount, member, currentMember });
             return null;
         }
         
         // 如果沒有成員信息，跳過這行
         if (!member || member === '未知') {
-            console.log('⚠️ [processExcelRow] 跳過無成員信息記錄:', { date, description, amount, member, currentMember });
+            console.log('⚠️ [processExcelRow] 跳過無成員信息記錄:', { date, amount, member, currentMember });
             return null;
         }
         
-        // 解析描述格式：主類別-描述
-        let mainCategory = '';
-        let subDescription = description;
-        
-        if (description && description.includes('-')) {
+        // 如果沒有主類別，嘗試從描述中解析
+        if (!mainCategory && description && description.includes('-')) {
             const parts = description.split('-');
             if (parts.length >= 2) {
                 mainCategory = parts[0].trim();
-                subDescription = parts.slice(1).join('-').trim();
+                description = parts.slice(1).join('-').trim();
             }
         }
         
-        console.log('🔍 [processExcelRow] 描述解析:', {
-            original: description,
+        // 如果沒有子類別，設為默認值
+        if (!subCategory) {
+            subCategory = '信用卡'; // 默認子類別
+        }
+        
+        // 如果沒有描述，使用主類別作為描述
+        if (!description) {
+            description = mainCategory || '其他';
+        }
+        
+        console.log('🔍 [processExcelRow] 最終數據:', {
+            date: date,
+            member: member,
+            amount: amount,
             mainCategory: mainCategory,
-            subDescription: subDescription
+            subCategory: subCategory,
+            description: description,
+            type: type
         });
         
         return {
             date: date,
-            description: description,
-            mainCategory: mainCategory,
-            subDescription: subDescription,
-            amount: amount,
             member: member || '未知',
+            amount: amount,
+            mainCategory: mainCategory || '其他',
+            subCategory: subCategory || '信用卡',
+            description: description || mainCategory || '其他',
             type: type || (amount >= 0 ? '收入' : '支出'),
-            subCategory: '信用卡', // Excel預設subCategory為信用卡
             paymentMethod: '信用卡' // 預設付款方式
         };
         
     } catch (error) {
         console.error('❌ [processExcelRow] 處理行資料失敗:', error, row);
+        return null;
+    }
+}
+
+// 處理單行 Excel 資料 (新格式)
+function processExcelRowNewFormat(row) {
+    try {
+        // 根據圖片格式，Excel有以下欄位：
+        // 成員, 金額, 主類別, 子類別, 描述, 日期
+        
+        // 嘗試不同的欄位名稱組合
+        let date, description, amount, member, mainCategory, subCategory, type;
+        
+        // 成員欄位
+        if (row['成員'] || row['member'] || row['Member'] || row['MEMBER']) {
+            member = row['成員'] || row['member'] || row['Member'] || row['MEMBER'];
+        }
+        
+        // 金額欄位
+        if (row['金額'] || row['amount'] || row['Amount'] || row['AMOUNT']) {
+            amount = row['金額'] || row['amount'] || row['Amount'] || row['AMOUNT'];
+        }
+        
+        // 主類別欄位
+        if (row['主類別'] || row['mainCategory'] || row['MainCategory'] || row['MAINCATEGORY']) {
+            mainCategory = row['主類別'] || row['mainCategory'] || row['MainCategory'] || row['MAINCATEGORY'];
+        }
+        
+        // 子類別欄位
+        if (row['子類別'] || row['subCategory'] || row['SubCategory'] || row['SUBCATEGORY']) {
+            subCategory = row['子類別'] || row['subCategory'] || row['SubCategory'] || row['SUBCATEGORY'];
+        }
+        
+        // 描述欄位
+        if (row['描述'] || row['description'] || row['Description'] || row['DESCRIPTION']) {
+            description = row['描述'] || row['description'] || row['Description'] || row['DESCRIPTION'];
+        }
+        
+        // 日期欄位
+        if (row['日期'] || row['date'] || row['Date'] || row['DATE']) {
+            date = row['日期'] || row['date'] || row['Date'] || row['DATE'];
+            console.log('🔍 [processExcelRowNewFormat] 找到日期欄位:', date, '類型:', typeof date);
+        }
+        
+        // 類型欄位 (收入/支出)
+        if (row['類型'] || row['type'] || row['Type'] || row['TYPE']) {
+            type = row['類型'] || row['type'] || row['Type'] || row['TYPE'];
+        }
+        
+        // 根據圖片格式：成員 | 金額 | 主類別 | 子類別 | 描述 | 日期
+        const keys = Object.keys(row);
+        if (keys.length >= 6) {
+            // 按順序提取：第1欄=成員，第2欄=金額，第3欄=主類別，第4欄=子類別，第5欄=描述，第6欄=日期
+            member = row[keys[0]] || '未知';
+            amount = row[keys[1]];
+            mainCategory = row[keys[2]];
+            subCategory = row[keys[3]];
+            description = row[keys[4]];
+            date = row[keys[5]];
+            
+            console.log('🔍 [processExcelRowNewFormat] 按順序提取 (6欄格式):', {
+                member: member,
+                amount: amount,
+                mainCategory: mainCategory,
+                subCategory: subCategory,
+                description: description,
+                date: date,
+                keys: keys
+            });
+        } else if (keys.length >= 4) {
+            // 如果只有4欄，假設格式是：成員, 金額, 描述, 日期
+            member = row[keys[0]] || '未知';
+            amount = row[keys[1]];
+            description = row[keys[2]];
+            date = row[keys[3]];
+            
+            console.log('🔍 [processExcelRowNewFormat] 推測格式 (4欄格式):', {
+                member: member,
+                amount: amount,
+                description: description,
+                date: date,
+                keys: keys
+            });
+        }
+        
+        // 處理日期格式 (M/D -> YYYY-MM-DD)
+        if (date) {
+            console.log('🔍 [processExcelRowNewFormat] 處理日期前:', date, '類型:', typeof date);
+            date = formatDate(date);
+            console.log('🔍 [processExcelRowNewFormat] 處理日期後:', date);
+        }
+        
+        // 處理金額格式
+        if (amount !== undefined && amount !== null) {
+            console.log('🔍 [processExcelRowNewFormat] 處理金額前:', amount, '類型:', typeof amount);
+            
+            // 移除千分位逗號和貨幣符號
+            if (typeof amount === 'string') {
+                amount = amount.replace(/,/g, ''); // 移除千分位逗號
+                amount = amount.replace(/\$/g, ''); // 移除美元符號
+                amount = amount.replace(/NT\$/g, ''); // 移除台幣符號
+                amount = amount.replace(/¥/g, ''); // 移除日圓符號
+                amount = amount.replace(/€/g, ''); // 移除歐元符號
+                amount = amount.replace(/£/g, ''); // 移除英鎊符號
+                amount = amount.trim(); // 移除前後空白
+            }
+            amount = parseFloat(amount);
+            
+            // 如果沒有類型欄位，根據金額正負判斷
+            if (!type) {
+                type = amount >= 0 ? '收入' : '支出';
+            }
+            
+            console.log('🔍 [processExcelRowNewFormat] 處理金額後:', {
+                amount: amount,
+                type: type
+            });
+        }
+        
+        // 驗證必要欄位
+        if (!date || amount === undefined || amount === null) {
+            console.log('⚠️ [processExcelRowNewFormat] 跳過不完整的記錄:', { date, amount, member });
+            return null;
+        }
+        
+        // 如果沒有成員信息，跳過這行
+        if (!member || member === '未知') {
+            console.log('⚠️ [processExcelRowNewFormat] 跳過無成員信息記錄:', { date, amount, member });
+            return null;
+        }
+        
+        // 如果沒有主類別，嘗試從描述中解析
+        if (!mainCategory && description && description.includes('-')) {
+            const parts = description.split('-');
+            if (parts.length >= 2) {
+                mainCategory = parts[0].trim();
+                description = parts.slice(1).join('-').trim();
+            }
+        }
+        
+        // 如果沒有子類別，設為默認值
+        if (!subCategory) {
+            subCategory = '信用卡'; // 默認子類別
+        }
+        
+        // 如果沒有描述，使用主類別作為描述
+        if (!description) {
+            description = mainCategory || '其他';
+        }
+        
+        console.log('🔍 [processExcelRowNewFormat] 最終數據:', {
+            date: date,
+            member: member,
+            amount: amount,
+            mainCategory: mainCategory,
+            subCategory: subCategory,
+            description: description,
+            type: type
+        });
+        
+        return {
+            date: date,
+            member: member || '未知',
+            amount: amount,
+            mainCategory: mainCategory || '其他',
+            subCategory: subCategory || '信用卡',
+            description: description || mainCategory || '其他',
+            type: type || (amount >= 0 ? '收入' : '支出'),
+            paymentMethod: '信用卡' // 預設付款方式
+        };
+        
+    } catch (error) {
+        console.error('❌ [processExcelRowNewFormat] 處理行資料失敗:', error, row);
         return null;
     }
 }
@@ -518,6 +740,10 @@ app.post('/api/excel/compare', (req, res, next) => {
         console.log('🔍 [API] Excel 原始資料筆數:', excelData.length);
         console.log('🔍 [API] Excel 原始資料範例:', excelData.slice(0, 5));
         
+        // 獲取格式參數
+        const format = req.body.format || 'googlesheets';
+        console.log('🔍 [API] 匯入格式:', format);
+        
         // 詳細分析每一行的內容
         excelData.forEach((row, index) => {
             const keys = Object.keys(row);
@@ -529,8 +755,8 @@ app.post('/api/excel/compare', (req, res, next) => {
             });
         });
         
-        // 處理 Excel 資料格式
-        const processedData = processExcelData(excelData);
+        // 根據格式處理 Excel 資料
+        const processedData = format === 'excel' ? processExcelDataNewFormat(excelData) : processExcelData(excelData);
         console.log('🔍 [API] 處理後資料筆數:', processedData.length);
         console.log('🔍 [API] 處理後資料類型:', Array.isArray(processedData) ? 'Array' : typeof processedData);
         
@@ -543,30 +769,16 @@ app.post('/api/excel/compare', (req, res, next) => {
         console.log('🔍 [API] 按成員統計:', memberStats);
         console.log('🔍 [API] 處理後資料範例:', processedData.slice(0, 3));
         
-        // 讀取系統現有資料
-        const dataPath = path.join(__dirname, 'data', 'data.json');
+        // 從SQLite數據庫讀取系統現有資料
         let systemData = [];
         
         try {
-            const dataContent = await fs.readFile(dataPath, 'utf8');
-            const parsedData = JSON.parse(dataContent);
-            
-            // 確保 systemData 是數組
-            if (Array.isArray(parsedData)) {
-                systemData = parsedData;
-            } else if (parsedData && Array.isArray(parsedData.records)) {
-                systemData = parsedData.records;
-            } else if (parsedData && typeof parsedData === 'object') {
-                // 如果是對象，嘗試轉換為數組
-                systemData = Object.values(parsedData).filter(item => 
-                    item && typeof item === 'object' && item.date
-                );
-            } else {
-                console.log('⚠️ [API] 系統資料格式不正確，使用空數組');
-                systemData = [];
-            }
+            console.log('🔍 [API] 從SQLite數據庫讀取系統資料...');
+            const dbRecords = dbManager.getAllRecords();
+            systemData = dbRecords || [];
+            console.log('✅ [API] 從SQLite數據庫讀取了', systemData.length, '筆記錄');
         } catch (error) {
-            console.log('⚠️ [API] 系統資料檔案不存在或為空:', error.message);
+            console.log('⚠️ [API] 從SQLite數據庫讀取失敗:', error.message);
             systemData = [];
         }
         
@@ -1149,3 +1361,4 @@ process.on('SIGTERM', () => {
     console.log('\n🛑 正在關閉服務...');
     process.exit(0);
 });
+
