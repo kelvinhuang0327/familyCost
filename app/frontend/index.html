@@ -2619,6 +2619,7 @@
                                 <input type="password" id="githubToken" placeholder="輸入GitHub Personal Access Token" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px;">
                                 <button class="btn" onclick="saveGitHubToken()" style="margin-right: 10px;">💾 儲存Token</button>
                                 <button class="btn" onclick="checkTokenStatus()" style="margin-right: 10px;">🔍 檢查狀態</button>
+                                <button class="btn" onclick="recoverTokenFromBackup()" style="margin-right: 10px;">🔄 從備份恢復</button>
                                 <button class="btn btn-danger" onclick="deleteGitHubToken()" id="deleteTokenBtn" style="display: none;">🗑️ 刪除Token</button>
                             </div>
                         </div>
@@ -6116,6 +6117,39 @@
             } catch (error) {
                 console.error('刪除Token失敗:', error);
                 alert('刪除Token失敗: ' + error.message);
+            }
+        }
+
+        // 從備份恢復Token
+        async function recoverTokenFromBackup() {
+            if (!confirm('確定要從備份檔案恢復Token嗎？\n\n這將嘗試從備份檔案中恢復您之前儲存的Token。')) {
+                return;
+            }
+            
+            try {
+                console.log('🔄 開始從備份恢復Token...');
+                
+                // 觸發後端的Token恢復邏輯（通過檢查狀態）
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/token/status');
+                const data = await response.json();
+                
+                if (data.success) {
+                    if (data.hasToken && data.tokenInfo && data.tokenInfo.valid) {
+                        alert(`✅ Token已從備份恢復！\n\n用戶: ${data.tokenInfo.user}\n狀態: 有效`);
+                        checkTokenStatus();
+                    } else if (data.hasToken && data.tokenInfo && !data.tokenInfo.valid) {
+                        alert(`⚠️ 從備份恢復了Token，但Token已失效\n\n錯誤: ${data.tokenInfo.error}\n\n請重新輸入有效的Token。`);
+                        checkTokenStatus();
+                    } else {
+                        alert('❌ 沒有找到可用的備份Token檔案\n\n請重新輸入您的GitHub Personal Access Token。');
+                    }
+                } else {
+                    alert(`❌ 恢復Token失敗: ${data.message}`);
+                }
+                
+            } catch (error) {
+                console.error('恢復Token失敗:', error);
+                alert('恢復Token失敗: ' + error.message);
             }
         }
 

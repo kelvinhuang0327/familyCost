@@ -18,15 +18,25 @@ try {
 
 class TokenManager {
     constructor() {
-        // 使用相對於項目根目錄的路徑
-        this.tokenFile = path.join(process.cwd(), 'app', 'backend', '.github_token');
-        this.keyFile = path.join(process.cwd(), 'app', 'backend', '.github_key');
+        // 使用相對於項目根目錄的路徑，並確保目錄存在
+        const backendDir = path.join(process.cwd(), 'app', 'backend');
+        
+        // 確保後端目錄存在
+        if (!fs.existsSync(backendDir)) {
+            fs.mkdirSync(backendDir, { recursive: true });
+        }
+        
+        this.tokenFile = path.join(backendDir, '.github_token');
+        this.keyFile = path.join(backendDir, '.github_key');
+        this.backupTokenFile = path.join(backendDir, '.github_token_backup');
         this.algorithm = 'aes-256-gcm';
         
         console.log('🔍 TokenManager 初始化:');
         console.log('🔍 工作目錄:', process.cwd());
+        console.log('🔍 後端目錄:', backendDir);
         console.log('🔍 Token檔案路徑:', this.tokenFile);
         console.log('🔍 密鑰檔案路徑:', this.keyFile);
+        console.log('🔍 備份檔案路徑:', this.backupTokenFile);
     }
 
     // 生成或讀取加密密鑰
@@ -157,10 +167,15 @@ class TokenManager {
             console.log('🔍 [saveToken] 寫入檔案:', this.tokenFile);
             fs.writeFileSync(this.tokenFile, JSON.stringify(encryptedData));
             
+            // 創建備份檔案
+            console.log('🔍 [saveToken] 創建備份檔案:', this.backupTokenFile);
+            fs.writeFileSync(this.backupTokenFile, JSON.stringify(encryptedData));
+            
             // 設置文件權限為只有用戶可讀寫
             fs.chmodSync(this.tokenFile, 0o600);
+            fs.chmodSync(this.backupTokenFile, 0o600);
             
-            console.log('✅ [saveToken] Token已安全儲存');
+            console.log('✅ [saveToken] Token已安全儲存並備份');
             return true;
         } catch (error) {
             console.error('❌ [saveToken] Token儲存失敗:', error.message);
@@ -174,16 +189,37 @@ class TokenManager {
         try {
             console.log('🔍 [loadToken] 開始讀取Token...');
             console.log('🔍 [loadToken] Token檔案路徑:', this.tokenFile);
-            console.log('🔍 [loadToken] 檔案是否存在:', fs.existsSync(this.tokenFile));
+            console.log('🔍 [loadToken] 備份檔案路徑:', this.backupTokenFile);
+            console.log('🔍 [loadToken] 主檔案是否存在:', fs.existsSync(this.tokenFile));
+            console.log('🔍 [loadToken] 備份檔案是否存在:', fs.existsSync(this.backupTokenFile));
             
-            if (!fs.existsSync(this.tokenFile)) {
-                console.log('❌ [loadToken] Token檔案不存在');
+            let tokenFileToUse = null;
+            let encryptedData = null;
+            
+            // 優先使用主檔案
+            if (fs.existsSync(this.tokenFile)) {
+                console.log('🔍 [loadToken] 使用主檔案讀取Token...');
+                tokenFileToUse = this.tokenFile;
+                encryptedData = JSON.parse(fs.readFileSync(this.tokenFile, 'utf8'));
+            } else if (fs.existsSync(this.backupTokenFile)) {
+                console.log('⚠️ [loadToken] 主檔案不存在，嘗試從備份檔案恢復...');
+                tokenFileToUse = this.backupTokenFile;
+                encryptedData = JSON.parse(fs.readFileSync(this.backupTokenFile, 'utf8'));
+                
+                // 嘗試恢復主檔案
+                try {
+                    fs.writeFileSync(this.tokenFile, JSON.stringify(encryptedData));
+                    fs.chmodSync(this.tokenFile, 0o600);
+                    console.log('✅ [loadToken] 已從備份檔案恢復主檔案');
+                } catch (restoreError) {
+                    console.log('⚠️ [loadToken] 恢復主檔案失敗，但繼續使用備份檔案');
+                }
+            } else {
+                console.log('❌ [loadToken] Token檔案和備份檔案都不存在');
                 return null;
             }
 
-            console.log('🔍 [loadToken] 讀取加密數據...');
-            const encryptedData = JSON.parse(fs.readFileSync(this.tokenFile, 'utf8'));
-            console.log('🔍 [loadToken] 加密數據讀取完成');
+            console.log('🔍 [loadToken] 加密數據讀取完成，來源:', tokenFileToUse);
             
             console.log('🔍 [loadToken] 開始解密Token...');
             const token = this.decryptToken(encryptedData);
@@ -201,14 +237,32 @@ class TokenManager {
     // 刪除token
     deleteToken() {
         try {
+            let deletedCount = 0;
+            
             if (fs.existsSync(this.tokenFile)) {
                 fs.unlinkSync(this.tokenFile);
-                console.log('✅ Token已刪除');
+                console.log('✅ 主Token檔案已刪除');
+                deletedCount++;
             }
+            
+            if (fs.existsSync(this.backupTokenFile)) {
+                fs.unlinkSync(this.backupTokenFile);
+                console.log('✅ 備份Token檔案已刪除');
+                deletedCount++;
+            }
+            
             if (fs.existsSync(this.keyFile)) {
                 fs.unlinkSync(this.keyFile);
                 console.log('✅ 加密密鑰已刪除');
+                deletedCount++;
             }
+            
+            if (deletedCount > 0) {
+                console.log(`✅ 共刪除了 ${deletedCount} 個Token相關檔案`);
+            } else {
+                console.log('ℹ️ 沒有找到Token相關檔案需要刪除');
+            }
+            
             return true;
         } catch (error) {
             console.error('❌ Token刪除失敗:', error.message);
@@ -220,8 +274,16 @@ class TokenManager {
     hasToken() {
         console.log('🔍 [hasToken] 檢查Token是否存在...');
         console.log('🔍 [hasToken] Token檔案路徑:', this.tokenFile);
-        const exists = fs.existsSync(this.tokenFile);
-        console.log('🔍 [hasToken] Token檔案存在:', exists);
+        console.log('🔍 [hasToken] 備份檔案路徑:', this.backupTokenFile);
+        
+        const mainExists = fs.existsSync(this.tokenFile);
+        const backupExists = fs.existsSync(this.backupTokenFile);
+        const exists = mainExists || backupExists;
+        
+        console.log('🔍 [hasToken] 主檔案存在:', mainExists);
+        console.log('🔍 [hasToken] 備份檔案存在:', backupExists);
+        console.log('🔍 [hasToken] Token存在:', exists);
+        
         return exists;
     }
 
