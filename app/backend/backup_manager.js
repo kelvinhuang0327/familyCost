@@ -137,9 +137,9 @@ class BackupManager {
             console.log('📁 已添加 data.json 到暫存區');
 
             // 提交變更
-            const commitMessage = `自動備份 - ${new Date().toLocaleString('zh-TW')} (${records ? records.length : 0}筆記錄)`;
+            const commitMessage = metadata.commitMessage || `自動備份 - ${new Date().toLocaleString('zh-TW')} (${records ? records.length : 0}筆記錄)`;
             await execAsync(`git commit -m "${commitMessage}"`);
-            console.log('💾 已提交變更');
+            console.log('💾 已提交變更:', commitMessage);
 
             // 推送到GitHub
             try {
@@ -373,3 +373,4 @@ class BackupManager {
 }
 
 module.exports = BackupManager;
+

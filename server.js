@@ -390,9 +390,12 @@ app.get('/api/health', (req, res) => {
 // 備份到GitHub的API
 app.post('/api/backup', async (req, res) => {
     try {
-        const { records, timestamp, count } = req.body;
+        const { records, timestamp, count, commitMessage } = req.body;
         
         console.log(`📦 收到備份請求: ${count}筆記錄`);
+        if (commitMessage) {
+            console.log(`📝 自定義提交訊息: ${commitMessage}`);
+        }
         
         // 檢查數據完整性
         const integrityCheck = await backupManager.checkDataIntegrity(records);
@@ -408,13 +411,15 @@ app.post('/api/backup', async (req, res) => {
         // 使用新的備份管理器創建完整備份
         const backupResult = await backupManager.createFullBackup(records, {
             lastUpdated: timestamp,
-            description: "家庭收支記錄資料"
+            description: "家庭收支記錄資料",
+            commitMessage: commitMessage || `自動備份 - ${new Date().toLocaleString('zh-TW')} (${count}筆記錄)`
         });
         
         res.json({
             success: true,
             message: `成功備份${count}筆記錄`,
             timestamp: timestamp,
+            commitMessage: commitMessage || `自動備份 - ${new Date().toLocaleString('zh-TW')} (${count}筆記錄)`,
             backupResult: backupResult
         });
         
