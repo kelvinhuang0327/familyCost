@@ -211,15 +211,23 @@ app.get('/api/restore', async (req, res) => {
             
             // 拉取最新變更
             try {
-                await execAsync('git pull origin main');
+                await execAsync('git pull origin main --rebase');
                 console.log('✅ 已同步最新數據');
             } catch (pullError) {
                 console.log('⚠️ Git pull 失敗，嘗試重新配置遠端:', pullError.message);
                 // 重新配置遠端
                 await execAsync('git remote remove origin');
                 await execAsync('git remote add origin https://github.com/kelvinhuang0327/familyCost.git');
-                await execAsync('git pull origin main');
-                console.log('✅ 重新配置後同步成功');
+                try {
+                    await execAsync('git pull origin main --rebase');
+                    console.log('✅ 重新配置後同步成功');
+                } catch (secondPullError) {
+                    console.log('⚠️ 第二次pull失敗，嘗試強制重置:', secondPullError.message);
+                    // 如果rebase也失敗，使用強制重置
+                    await execAsync('git fetch origin main');
+                    await execAsync('git reset --hard origin/main');
+                    console.log('✅ 強制重置成功');
+                }
             }
             
             res.json({
