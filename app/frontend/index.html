@@ -3981,21 +3981,42 @@
             });
 
             try {
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/excel/import', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        records: selectedRecords
-                    })
-                });
-
-                const result = await response.json();
+                console.log('📥 開始向SQLite數據庫匯入選中的記錄...');
                 
-                if (result.success) {
-                    console.log('✅ 匯入成功:', result.data);
-                    alert(`✅ 成功匯入 ${result.data.importedCount} 筆記錄！`);
+                let successCount = 0;
+                let errorCount = 0;
+                const errors = [];
+                
+                // 逐筆添加到SQLite數據庫
+                for (const record of selectedRecords) {
+                    try {
+                        const addResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(record)
+                        });
+                        
+                        const addResult = await addResponse.json();
+                        
+                        if (addResult.success) {
+                            successCount++;
+                            console.log('✅ 記錄已添加:', record.id);
+                        } else {
+                            errorCount++;
+                            errors.push(`記錄 ${record.id}: ${addResult.message}`);
+                            console.error('❌ 記錄添加失敗:', record.id, addResult.message);
+                        }
+                    } catch (recordError) {
+                        errorCount++;
+                        errors.push(`記錄 ${record.id}: ${recordError.message}`);
+                        console.error('❌ 記錄添加錯誤:', record.id, recordError.message);
+                    }
+                }
+                
+                if (successCount > 0) {
+                    console.log(`✅ 成功匯入 ${successCount} 筆記錄到SQLite數據庫`);
                     
                     // 重新載入資料
                     await loadDataFromFile();
@@ -4004,18 +4025,24 @@
                     updateAllDisplays();
                     
                     // 自動提交到Git（不更新版本號）
-                    await commitToGitWithoutVersion(`Excel匯入 ${result.data.importedCount} 筆記錄`);
+                    await commitToGitWithoutVersion(`Excel匯入 ${successCount} 筆記錄`);
                     
                     // 清除所有結果
                     clearCompareResult();
                     hideImportSelection();
+                    
+                    if (errorCount > 0) {
+                        alert(`✅ 成功匯入 ${successCount} 筆記錄！\n\n⚠️ 有 ${errorCount} 筆記錄匯入失敗：\n${errors.join('\n')}`);
+                    } else {
+                        alert(`✅ 成功匯入 ${successCount} 筆記錄！`);
+                    }
                 } else {
-                    console.error('❌ 匯入失敗:', result.message);
-                    alert('❌ 匯入失敗: ' + result.message);
+                    console.error('❌ 所有記錄匯入失敗');
+                    alert(`❌ 所有記錄匯入失敗：\n${errors.join('\n')}`);
                 }
             } catch (error) {
-                console.error('❌ 匯入失敗:', error);
-                alert('❌ 匯入失敗: ' + error.message);
+                console.error('❌ 匯入過程發生錯誤:', error);
+                alert('❌ 匯入過程發生錯誤：' + error.message);
             }
         }
 
@@ -4023,6 +4050,20 @@
         function hideImportSelection() {
             document.getElementById('importSelection').style.display = 'none';
             document.getElementById('compareResult').style.display = 'block';
+        }
+
+        // 取消匯入選擇
+        function cancelImportSelection() {
+            hideImportSelection();
+        }
+
+        // 清除選擇
+        function clearSelection() {
+            const checkboxes = document.querySelectorAll('#recordsSelectionList input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            updateSelectedCount();
         }
 
         // 自動提交到Git（包含版本號更新）
