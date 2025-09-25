@@ -12,7 +12,11 @@ const XLSX = require('xlsx');
 
 // 生成唯一ID的函數
 function generateUniqueId() {
-    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    // 使用更可靠的ID生成方式：時間戳 + 隨機數 + 計數器
+    const timestamp = Date.now().toString();
+    const random = Math.random().toString(36).substr(2, 9);
+    const counter = (generateUniqueId.counter = (generateUniqueId.counter || 0) + 1);
+    return `${timestamp}_${random}_${counter}`;
 }
 
 // 添加錯誤處理
