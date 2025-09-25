@@ -663,8 +663,10 @@ app.get('/api/health', (req, res) => {
         status: 'ok',
         timestamp: new Date().toISOString(),
         service: 'family-cost-backup-service',
-        version: '1.0.0',
+        version: '2025-09-25 18:10:00',
         environment: environment,
+        dbStatus: dbManager ? '已初始化' : '未初始化',
+        testMessage: '這是測試消息 - 確認部署更新',
         config: {
             name: config.name,
             frontendUrl: config.frontendUrl,
