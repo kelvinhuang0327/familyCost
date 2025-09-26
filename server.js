@@ -1174,17 +1174,33 @@ app.get('/api/test', (req, res) => {
 });
 
 // 獲取所有記錄
-app.get('/api/records', (req, res) => {
+app.get('/api/records', async (req, res) => {
     try {
-        console.log('🔍 [API] 開始獲取記錄...');
-        console.log('🔍 [API] dbManager狀態:', dbManager ? '已初始化' : '未初始化');
+        console.log('🔍 [API] 開始從JSON文件獲取記錄...');
         
-        if (!dbManager) {
-            throw new Error('數據庫管理器未初始化');
+        // 從JSON文件讀取數據
+        const dataPath = path.join(__dirname, 'data', 'data.json');
+        let records = [];
+        
+        try {
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            const parsedData = JSON.parse(dataContent);
+            
+            // 處理不同的JSON格式
+            if (Array.isArray(parsedData)) {
+                records = parsedData;
+            } else if (parsedData && Array.isArray(parsedData.records)) {
+                records = parsedData.records;
+            } else {
+                console.log('⚠️ [API] JSON文件格式不正確，使用空數組');
+                records = [];
+            }
+        } catch (error) {
+            console.log('⚠️ [API] JSON文件不存在或讀取失敗，使用空數組:', error.message);
+            records = [];
         }
         
-        const records = dbManager.getAllRecords();
-        console.log('✅ [API] 成功獲取記錄:', records.length, '筆');
+        console.log('✅ [API] 成功從JSON文件獲取記錄:', records.length, '筆');
         
         res.json({
             success: true,
@@ -1196,8 +1212,7 @@ app.get('/api/records', (req, res) => {
         res.status(500).json({
             success: false,
             message: '獲取記錄失敗: ' + error.message,
-            error: error.message,
-            stack: error.stack
+            error: error.message
         });
     }
 });
@@ -1221,7 +1236,7 @@ app.get('/api/records/stats', (req, res) => {
 });
 
 // 添加記錄
-app.post('/api/records', (req, res) => {
+app.post('/api/records', async (req, res) => {
     try {
         const record = req.body;
         
@@ -1230,20 +1245,36 @@ app.post('/api/records', (req, res) => {
             record.id = Date.now() + Math.random().toString(36).substr(2, 9);
         }
         
-        const result = dbManager.insertRecord(record);
-        if (result.success) {
-            res.json({
-                success: true,
-                message: '記錄添加成功',
-                record: record
-            });
-        } else {
-            res.status(400).json({
-                success: false,
-                message: '記錄添加失敗',
-                error: result.error
-            });
+        // 從JSON文件讀取現有數據
+        const dataPath = path.join(__dirname, 'data', 'data.json');
+        let existingData = { records: [] };
+        
+        try {
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            existingData = JSON.parse(dataContent);
+            
+            // 確保records數組存在
+            if (!existingData.records) {
+                existingData.records = [];
+            }
+        } catch (error) {
+            console.log('⚠️ JSON文件不存在或讀取失敗，創建新文件:', error.message);
+            existingData = { records: [] };
         }
+        
+        // 添加新記錄
+        existingData.records.push(record);
+        
+        // 寫回JSON文件
+        await fs.writeFile(dataPath, JSON.stringify(existingData, null, 2), 'utf8');
+        
+        console.log('✅ 記錄已添加到JSON文件:', record.id);
+        
+        res.json({
+            success: true,
+            message: '記錄添加成功',
+            record: record
+        });
     } catch (error) {
         console.error('❌ 添加記錄失敗:', error);
         res.status(500).json({
@@ -1285,24 +1316,52 @@ app.put('/api/records/:id', (req, res) => {
 });
 
 // 刪除記錄
-app.delete('/api/records/:id', (req, res) => {
+app.delete('/api/records/:id', async (req, res) => {
     try {
         const id = req.params.id;
         
-        const result = dbManager.deleteRecord(id);
-        if (result.success) {
-            res.json({
-                success: true,
-                message: '記錄刪除成功',
-                changes: result.changes
-            });
-        } else {
-            res.status(400).json({
+        // 從JSON文件讀取現有數據
+        const dataPath = path.join(__dirname, 'data', 'data.json');
+        let existingData = { records: [] };
+        
+        try {
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            existingData = JSON.parse(dataContent);
+            
+            // 確保records數組存在
+            if (!existingData.records) {
+                existingData.records = [];
+            }
+        } catch (error) {
+            console.log('⚠️ JSON文件不存在或讀取失敗:', error.message);
+            return res.status(404).json({
                 success: false,
-                message: '記錄刪除失敗',
-                error: result.error
+                message: '記錄不存在'
             });
         }
+        
+        // 查找並刪除記錄
+        const originalLength = existingData.records.length;
+        existingData.records = existingData.records.filter(record => record.id !== id);
+        const newLength = existingData.records.length;
+        
+        if (originalLength === newLength) {
+            return res.status(404).json({
+                success: false,
+                message: '記錄不存在'
+            });
+        }
+        
+        // 寫回JSON文件
+        await fs.writeFile(dataPath, JSON.stringify(existingData, null, 2), 'utf8');
+        
+        console.log('✅ 記錄已從JSON文件刪除:', id);
+        
+        res.json({
+            success: true,
+            message: '記錄刪除成功',
+            changes: originalLength - newLength
+        });
     } catch (error) {
         console.error('❌ 刪除記錄失敗:', error);
         res.status(500).json({
@@ -1350,22 +1409,36 @@ app.delete('/api/records', (req, res) => {
 });
 
 // 清空所有記錄
-app.delete('/api/records/clear', (req, res) => {
+app.delete('/api/records/clear', async (req, res) => {
     try {
-        const result = dbManager.clearAllRecords();
-        if (result.success) {
-            res.json({
-                success: true,
-                message: `成功清空所有記錄，刪除了 ${result.changes} 筆記錄`,
-                changes: result.changes
-            });
-        } else {
-            res.status(400).json({
-                success: false,
-                message: '清空記錄失敗',
-                error: result.error
-            });
+        // 從JSON文件讀取現有數據以獲取記錄數量
+        const dataPath = path.join(__dirname, 'data', 'data.json');
+        let recordCount = 0;
+        
+        try {
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            const parsedData = JSON.parse(dataContent);
+            
+            if (parsedData && Array.isArray(parsedData.records)) {
+                recordCount = parsedData.records.length;
+            }
+        } catch (error) {
+            console.log('⚠️ JSON文件不存在或讀取失敗:', error.message);
         }
+        
+        // 創建空的數據結構
+        const emptyData = { records: [] };
+        
+        // 寫入空的JSON文件
+        await fs.writeFile(dataPath, JSON.stringify(emptyData, null, 2), 'utf8');
+        
+        console.log('✅ 所有記錄已從JSON文件清空');
+        
+        res.json({
+            success: true,
+            message: `成功清空所有記錄，刪除了 ${recordCount} 筆記錄`,
+            changes: recordCount
+        });
     } catch (error) {
         console.error('❌ 清空記錄失敗:', error);
         res.status(500).json({
