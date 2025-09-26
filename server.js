@@ -9,6 +9,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const multer = require('multer');
 const XLSX = require('xlsx');
+const GitHubDataManager = require('./app/backend/github_data_manager');
 
 // 生成唯一ID的函數
 function generateUniqueId() {
@@ -94,6 +95,9 @@ const PORT = process.env.PORT || config.port;
 // 初始化Token管理器和數據庫管理器
 const tokenManager = new TokenManager();
 // const backupManager = new BackupManager(); // 已移除
+
+// 初始化 GitHub 數據管理器
+const githubDataManager = new GitHubDataManager();
 
 console.log('🔄 開始初始化數據庫管理器...');
 let dbManager;
@@ -1189,31 +1193,12 @@ app.get('/api/test', (req, res) => {
 // 獲取所有記錄
 app.get('/api/records', async (req, res) => {
     try {
-        console.log('🔍 [API] 開始從JSON文件獲取記錄...');
+        console.log('🔍 [API] 開始獲取記錄...');
         
-        // 從JSON文件讀取數據
-        const dataPath = path.join(__dirname, 'data', 'data.json');
-        let records = [];
+        // 從 GitHub 或本地文件獲取數據
+        const records = await githubDataManager.getDataFromGitHub();
         
-        try {
-            const dataContent = await fs.readFile(dataPath, 'utf8');
-            const parsedData = JSON.parse(dataContent);
-            
-            // 處理不同的JSON格式
-            if (Array.isArray(parsedData)) {
-                records = parsedData;
-            } else if (parsedData && Array.isArray(parsedData.records)) {
-                records = parsedData.records;
-            } else {
-                console.log('⚠️ [API] JSON文件格式不正確，使用空數組');
-                records = [];
-            }
-        } catch (error) {
-            console.log('⚠️ [API] JSON文件不存在或讀取失敗，使用空數組:', error.message);
-            records = [];
-        }
-        
-        console.log('✅ [API] 成功從JSON文件獲取記錄:', records.length, '筆');
+        console.log('✅ [API] 成功獲取記錄:', records.length, '筆');
         
         res.json({
             success: true,
@@ -1255,33 +1240,19 @@ app.post('/api/records', async (req, res) => {
         
         // 生成唯一ID
         if (!record.id) {
-            record.id = Date.now() + Math.random().toString(36).substr(2, 9);
+            record.id = generateUniqueId();
         }
         
-        // 從JSON文件讀取現有數據
-        const dataPath = path.join(__dirname, 'data', 'data.json');
-        let existingData = { records: [] };
-        
-        try {
-            const dataContent = await fs.readFile(dataPath, 'utf8');
-            existingData = JSON.parse(dataContent);
-            
-            // 確保records數組存在
-            if (!existingData.records) {
-                existingData.records = [];
-            }
-        } catch (error) {
-            console.log('⚠️ JSON文件不存在或讀取失敗，創建新文件:', error.message);
-            existingData = { records: [] };
-        }
+        // 獲取現有數據
+        const existingRecords = await githubDataManager.getDataFromGitHub();
         
         // 添加新記錄
-        existingData.records.push(record);
+        existingRecords.push(record);
         
-        // 寫回JSON文件
-        await fs.writeFile(dataPath, JSON.stringify(existingData, null, 2), 'utf8');
+        // 保存到 GitHub 或本地文件
+        const result = await githubDataManager.saveDataToGitHub(existingRecords);
         
-        console.log('✅ 記錄已添加到JSON文件:', record.id);
+        console.log('✅ 記錄已添加:', record.id);
         
         res.json({
             success: true,
@@ -1333,40 +1304,16 @@ app.delete('/api/records/clear', async (req, res) => {
     try {
         console.log('🗑️ [API] 收到清除所有記錄的請求');
         
-        // 從JSON文件讀取現有數據以獲取記錄數量
-        const dataPath = path.join(__dirname, 'data', 'data.json');
-        let recordCount = 0;
+        // 獲取現有數據以獲取記錄數量
+        const existingRecords = await githubDataManager.getDataFromGitHub();
+        const recordCount = existingRecords.length;
         
-        try {
-            const dataContent = await fs.readFile(dataPath, 'utf8');
-            const parsedData = JSON.parse(dataContent);
-            
-            if (parsedData && Array.isArray(parsedData.records)) {
-                recordCount = parsedData.records.length;
-            }
-            console.log(`📊 [API] 當前記錄數量: ${recordCount}`);
-        } catch (error) {
-            console.log('⚠️ [API] JSON文件不存在或讀取失敗:', error.message);
-        }
+        console.log(`📊 [API] 當前記錄數量: ${recordCount}`);
         
-        // 創建空的數據結構
-        const emptyData = { records: [] };
+        // 保存空數組到 GitHub 或本地文件
+        const result = await githubDataManager.saveDataToGitHub([]);
         
-        // 寫入空的JSON文件
-        console.log('💾 [API] 開始寫入空的JSON文件...');
-        await fs.writeFile(dataPath, JSON.stringify(emptyData, null, 2), 'utf8');
-        console.log('✅ [API] 空的JSON文件寫入完成');
-        
-        // 驗證文件是否真的被清空
-        try {
-            const verifyContent = await fs.readFile(dataPath, 'utf8');
-            const verifyData = JSON.parse(verifyContent);
-            console.log(`🔍 [API] 驗證文件內容: ${verifyData.records.length} 筆記錄`);
-        } catch (error) {
-            console.error('❌ [API] 驗證文件失敗:', error);
-        }
-        
-        console.log('✅ 所有記錄已從JSON文件清空');
+        console.log('✅ 所有記錄已清空');
         
         res.json({
             success: true,
@@ -1388,30 +1335,13 @@ app.delete('/api/records/:id', async (req, res) => {
     try {
         const id = req.params.id;
         
-        // 從JSON文件讀取現有數據
-        const dataPath = path.join(__dirname, 'data', 'data.json');
-        let existingData = { records: [] };
-        
-        try {
-            const dataContent = await fs.readFile(dataPath, 'utf8');
-            existingData = JSON.parse(dataContent);
-            
-            // 確保records數組存在
-            if (!existingData.records) {
-                existingData.records = [];
-            }
-        } catch (error) {
-            console.log('⚠️ JSON文件不存在或讀取失敗:', error.message);
-            return res.status(404).json({
-                success: false,
-                message: '記錄不存在'
-            });
-        }
+        // 獲取現有數據
+        const existingRecords = await githubDataManager.getDataFromGitHub();
         
         // 查找並刪除記錄
-        const originalLength = existingData.records.length;
-        existingData.records = existingData.records.filter(record => record.id !== id);
-        const newLength = existingData.records.length;
+        const originalLength = existingRecords.length;
+        const filteredRecords = existingRecords.filter(record => record.id !== id);
+        const newLength = filteredRecords.length;
         
         if (originalLength === newLength) {
             return res.status(404).json({
@@ -1420,10 +1350,10 @@ app.delete('/api/records/:id', async (req, res) => {
             });
         }
         
-        // 寫回JSON文件
-        await fs.writeFile(dataPath, JSON.stringify(existingData, null, 2), 'utf8');
+        // 保存到 GitHub 或本地文件
+        const result = await githubDataManager.saveDataToGitHub(filteredRecords);
         
-        console.log('✅ 記錄已從JSON文件刪除:', id);
+        console.log('✅ 記錄已刪除:', id);
         
         res.json({
             success: true,
