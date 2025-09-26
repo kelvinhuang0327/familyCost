@@ -3,21 +3,45 @@ const fs = require('fs').promises;
 const path = require('path');
 
 class GitHubDataManager {
-    constructor() {
+    constructor(tokenManager = null) {
         this.owner = 'kelvinhuang0327';
         this.repo = 'familyCost';
         this.branch = 'main';
         this.dataPath = 'data/data.json';
+        this.tokenManager = tokenManager;
         this.token = process.env.GITHUB_TOKEN || '';
         
-        if (!this.token) {
-            console.warn('⚠️ GITHUB_TOKEN 環境變數未設置，將使用本地文件存儲');
+        if (!this.token && !this.tokenManager) {
+            console.warn('⚠️ GITHUB_TOKEN 環境變數和 TokenManager 都未設置，將使用本地文件存儲');
         }
+    }
+
+    // 獲取有效的 Token
+    async getValidToken() {
+        // 優先使用環境變數
+        if (this.token) {
+            return this.token;
+        }
+        
+        // 嘗試從 TokenManager 獲取
+        if (this.tokenManager) {
+            try {
+                const token = await this.tokenManager.loadToken();
+                if (token) {
+                    return token;
+                }
+            } catch (error) {
+                console.log('⚠️ 從 TokenManager 獲取 Token 失敗:', error.message);
+            }
+        }
+        
+        return null;
     }
 
     // 從 GitHub 獲取數據
     async getDataFromGitHub() {
-        if (!this.token) {
+        const token = await this.getValidToken();
+        if (!token) {
             return await this.getDataFromLocal();
         }
 
@@ -108,11 +132,16 @@ class GitHubDataManager {
 
     // 發送 GitHub API 請求
     async makeGitHubRequest(url, method = 'GET', data = null) {
+        const token = await this.getValidToken();
+        if (!token) {
+            throw new Error('無法獲取有效的 GitHub Token');
+        }
+        
         return new Promise((resolve, reject) => {
             const options = {
                 method: method,
                 headers: {
-                    'Authorization': `token ${this.token}`,
+                    'Authorization': `token ${token}`,
                     'User-Agent': 'familyCost-app',
                     'Accept': 'application/vnd.github.v3+json'
                 }

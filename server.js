@@ -22,7 +22,7 @@ function generateUniqueId() {
 
 // 添加錯誤處理
 try {
-    const TokenManager = require('./app/backend/token_manager');
+    const GitHubTokenManager = require('./app/backend/github_token_manager');
     const { getConfig, getEnvironment } = require('./app/config/config');
     
     console.log('✅ 所有模組載入成功');
@@ -31,7 +31,7 @@ try {
     process.exit(1);
 }
 
-const TokenManager = require('./app/backend/token_manager');
+const GitHubTokenManager = require('./app/backend/github_token_manager');
 // const BackupManager = require('./app/backend/backup_manager'); // 已移除
 const DatabaseManager = require('./app/backend/database');
 const { getConfig, getEnvironment } = require('./app/config/config');
@@ -93,11 +93,11 @@ const environment = getEnvironment();
 const PORT = process.env.PORT || config.port;
 
 // 初始化Token管理器和數據庫管理器
-const tokenManager = new TokenManager();
+const tokenManager = new GitHubTokenManager();
 // const backupManager = new BackupManager(); // 已移除
 
 // 初始化 GitHub 數據管理器
-const githubDataManager = new GitHubDataManager();
+const githubDataManager = new GitHubDataManager(tokenManager);
 
 console.log('🔄 開始初始化數據庫管理器...');
 let dbManager;
