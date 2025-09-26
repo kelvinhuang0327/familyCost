@@ -2619,13 +2619,13 @@
                         </div>
                         <div class="stat-card">
                             <h3 id="balance">$0</h3>
-                            <p>當月現金流</p>
+                            <p>現金流</p>
                         </div>
                     </div>
                 </div>
                 <div class="swipe-indicator" id="statsSwipeIndicator"></div>
                 <div class="member-stats">
-                    <h3>各成員收支統計</h3>
+                    <h3>成員收支統計</h3>
                     <div class="member-stats-grid" id="memberStats"></div>
                     <div class="member-indicators" id="memberIndicators"></div>
                     <div class="swipe-indicator" id="memberSwipeIndicator"></div>
@@ -5137,7 +5137,7 @@
             
             document.getElementById('creditExpense').textContent = `$${creditExpense.toLocaleString()}`;
             
-            // 當月現金流顯示（現金收入 - 現金支出，帶顏色）
+            // 現金流顯示（所有現金收入 - 所有現金支出，帶顏色）
             const cashFlowElement = document.getElementById('balance');
             const cashFlowPrefix = cashBalance >= 0 ? '+' : '';
             cashFlowElement.textContent = `${cashFlowPrefix}$${Math.abs(cashBalance).toLocaleString()}`;
