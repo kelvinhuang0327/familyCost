@@ -6555,12 +6555,13 @@
                 return;
             }
 
-            // 將記錄轉換為 Excel 格式
+            // 將記錄轉換為 Excel 格式 (7欄格式)
             const excelData = records.map(record => ({
                 '成員': record.member,
-                '金額': record.type === 'income' ? record.amount : -record.amount,
+                '金額': record.amount, // 保持原始金額，不轉換正負號
+                '類別': record.type === 'income' ? '收入' : '支出',
                 '主類別': record.mainCategory,
-                '子類別': record.subCategory || '',
+                '付款方式': record.subCategory || '現金',
                 '描述': record.description || '',
                 '日期': record.date
             }));
