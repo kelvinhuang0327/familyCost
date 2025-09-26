@@ -3187,7 +3187,7 @@
 
         // 類別選項
         const categories = {
-            income: ['薪資', '獎金', '投資收益', '房租收入', '借款收入', '代付收入', '其他收入'],
+            income: ['醫療', '獎金', '投資收益', '房租收入', '借款收入', '代付收入', '其他收入'],
             expense: {
                 '娛樂': [],
                 '日常': [],
@@ -5909,28 +5909,12 @@
             document.getElementById('editType').value = record.type;
             document.getElementById('editAmount').value = record.amount;
             
-            // 檢查是否為自定義主類別
-            const predefinedCategories = [...categories.income, ...Object.keys(categories.expense)];
-            if (predefinedCategories.includes(record.mainCategory)) {
-                document.getElementById('editMainCategory').value = record.mainCategory;
-                document.getElementById('editCustomMainCategory').style.display = 'none';
-                document.getElementById('editCustomMainCategory').value = '';
-            } else {
-                document.getElementById('editMainCategory').value = '其他';
-                document.getElementById('editCustomMainCategory').style.display = 'block';
-                document.getElementById('editCustomMainCategory').value = record.mainCategory;
-            }
-            
-            document.getElementById('editSubCategory').value = record.subCategory;
-            document.getElementById('editDescription').value = record.description;
-            document.getElementById('editDate').value = record.date;
-            
             // 更新類別選項
             const editTypeSelect = document.getElementById('editType');
             const editMainCategorySelect = document.getElementById('editMainCategory');
             const editSubCategorySelect = document.getElementById('editSubCategory');
             
-            // 更新主類別
+            // 先更新主類別選項
             const type = editTypeSelect.value;
             editMainCategorySelect.innerHTML = '<option value="">請選擇</option>';
             if (type === 'income') {
@@ -5955,6 +5939,22 @@
                 otherOption.textContent = '其他';
                 editMainCategorySelect.appendChild(otherOption);
             }
+            
+            // 然後設置主類別值
+            const predefinedCategories = [...categories.income, ...Object.keys(categories.expense)];
+            if (predefinedCategories.includes(record.mainCategory)) {
+                document.getElementById('editMainCategory').value = record.mainCategory;
+                document.getElementById('editCustomMainCategory').style.display = 'none';
+                document.getElementById('editCustomMainCategory').value = '';
+            } else {
+                document.getElementById('editMainCategory').value = '其他';
+                document.getElementById('editCustomMainCategory').style.display = 'block';
+                document.getElementById('editCustomMainCategory').value = record.mainCategory;
+            }
+            
+            document.getElementById('editSubCategory').value = record.subCategory;
+            document.getElementById('editDescription').value = record.description;
+            document.getElementById('editDate').value = record.date;
             
             // 更新子類別（付款方式）
             const mainCategory = editMainCategorySelect.value;
