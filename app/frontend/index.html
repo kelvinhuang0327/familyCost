@@ -4654,10 +4654,10 @@
                 if (now - lastSyncTime > SYNC_COOLDOWN) {
                     console.log('👁️ 頁面重新可見，同步數據...');
                     lastSyncTime = now;
-                    syncFromServer().then(synced => {
-                        if (synced) {
-                            console.log('✅ 頁面可見性同步完成');
-                        }
+                    // 同步功能已移除，直接重新載入數據
+                    loadDataFromFile().then(() => {
+                        updateAllDisplays();
+                        console.log('✅ 頁面可見性數據重新載入完成');
                     });
                 } else {
                     console.log('⏰ 同步冷卻中，跳過本次同步');
@@ -4671,10 +4671,10 @@
             if (now - lastSyncTime > SYNC_COOLDOWN) {
                 console.log('🎯 頁面獲得焦點，檢查數據更新');
                 lastSyncTime = now;
-                syncFromServer().then(synced => {
-                    if (synced) {
-                        console.log('✅ 焦點同步完成');
-                    }
+                // 同步功能已移除，直接重新載入數據
+                loadDataFromFile().then(() => {
+                    updateAllDisplays();
+                    console.log('✅ 焦點數據重新載入完成');
                 });
             } else {
                 console.log('⏰ 焦點同步冷卻中，跳過本次同步');
@@ -5229,7 +5229,7 @@
             });
         }
 
-        // 顯示成員詳細記錄（在總覽頁面內顯示）
+        // 顯示成員詳細記錄（在總覽頁面下方顯示）
         function showMemberRecords(member) {
             const memberRecords = records.filter(record => record.member === member);
             
@@ -5240,82 +5240,78 @@
             
             const totalAmount = memberRecords.reduce((sum, record) => sum + record.amount, 0);
             
-            // 在總覽頁面內顯示成員記錄，不切換到列表頁面
-            displayMemberRecordsInDashboard(memberRecords, member, totalAmount);
+            // 在總覽頁面下方顯示成員記錄
+            displayMemberRecordsBelow(memberRecords, member, totalAmount);
         }
         
-        // 在總覽頁面內顯示成員記錄
-        function displayMemberRecordsInDashboard(memberRecords, member, totalAmount) {
+        // 在總覽頁面下方顯示成員記錄
+        function displayMemberRecordsBelow(memberRecords, member, totalAmount) {
             // 按日期排序（最新的在前）
             memberRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
             
-            let recordsHtml = `
-                <div class="member-records-overlay" style="
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.5);
-                    z-index: 1000;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+            // 查找或創建成員記錄顯示區域
+            let memberRecordsContainer = document.getElementById('memberRecordsContainer');
+            if (!memberRecordsContainer) {
+                // 創建成員記錄顯示容器
+                memberRecordsContainer = document.createElement('div');
+                memberRecordsContainer.id = 'memberRecordsContainer';
+                memberRecordsContainer.style.cssText = `
+                    margin-top: 30px;
+                    background: white;
+                    border-radius: 15px;
                     padding: 20px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                    max-width: 100%;
+                `;
+                
+                // 插入到總覽頁面內容的末尾
+                const dashboardContent = document.getElementById('dashboard');
+                dashboardContent.appendChild(memberRecordsContainer);
+            }
+            
+            // 生成成員記錄HTML
+            let recordsHtml = `
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 20px;
+                    padding-bottom: 15px;
+                    border-bottom: 2px solid #f0f0f0;
                 ">
-                    <div style="
-                        background: white;
-                        border-radius: 15px;
-                        padding: 25px;
-                        max-width: 800px;
-                        width: 100%;
-                        max-height: 80vh;
-                        overflow-y: auto;
-                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                    ">
-                        <div style="
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            margin-bottom: 20px;
-                            padding-bottom: 15px;
-                            border-bottom: 2px solid #f0f0f0;
-                        ">
-                            <h3 style="margin: 0; color: #333; font-size: 24px;">${member} 的記錄</h3>
-                            <button onclick="closeMemberRecords()" style="
-                                background: #ff4757;
-                                color: white;
-                                border: none;
-                                border-radius: 50%;
-                                width: 35px;
-                                height: 35px;
-                                font-size: 18px;
-                                cursor: pointer;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                            ">×</button>
-                        </div>
-                        
-                        <div style="
-                            background: #f8f9fa;
-                            padding: 15px;
-                            border-radius: 10px;
-                            margin-bottom: 20px;
-                            text-align: center;
-                        ">
-                            <p style="margin: 0; font-size: 18px; color: #666;">
-                                共 <strong style="color: #333;">${memberRecords.length}</strong> 筆記錄， 
-                                總金額：<strong style="color: ${totalAmount >= 0 ? '#27ae60' : '#e74c3c'}">$${totalAmount.toLocaleString()}</strong>
-                            </p>
-                        </div>
-                        
-                        <div class="records-list" style="max-height: 400px; overflow-y: auto;">
+                    <h3 style="margin: 0; color: #333; font-size: 24px;">${member} 的記錄</h3>
+                    <button onclick="clearMemberRecords()" style="
+                        background: #6c757d;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        padding: 8px 16px;
+                        font-size: 14px;
+                        cursor: pointer;
+                        transition: background 0.2s;
+                    " onmouseover="this.style.background='#5a6268'" onmouseout="this.style.background='#6c757d'">
+                        關閉
+                    </button>
+                </div>
+                
+                <div style="
+                    background: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 10px;
+                    margin-bottom: 20px;
+                    text-align: center;
+                ">
+                    <p style="margin: 0; font-size: 18px; color: #666;">
+                        共 <strong style="color: #333;">${memberRecords.length}</strong> 筆記錄， 
+                        總金額：<strong style="color: ${totalAmount >= 0 ? '#27ae60' : '#e74c3c'}">$${totalAmount.toLocaleString()}</strong>
+                    </p>
+                </div>
+                
+                <div class="member-records-list" style="max-height: 500px; overflow-y: auto;">
             `;
             
             memberRecords.forEach(record => {
                 const amount = record.type === 'income' ? record.amount : -record.amount;
-                const amountClass = record.type === 'income' ? 'income' : 'expense';
                 const prefix = record.type === 'income' ? '+' : '-';
                 
                 recordsHtml += `
@@ -5325,12 +5321,11 @@
                         align-items: center;
                         padding: 12px 15px;
                         margin: 8px 0;
-                        background: white;
+                        background: #f8f9fa;
                         border-radius: 8px;
                         border-left: 4px solid ${record.type === 'income' ? '#27ae60' : '#e74c3c'};
-                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                         transition: transform 0.2s ease;
-                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.background='#e9ecef'" onmouseout="this.style.transform='translateY(0)'; this.style.background='#f8f9fa'">
                         <div style="flex: 1;">
                             <div style="font-weight: bold; color: #333; margin-bottom: 4px;">
                                 ${record.date} - ${record.member}
@@ -5351,21 +5346,20 @@
                 `;
             });
             
-            recordsHtml += `
-                        </div>
-                    </div>
-                </div>
-            `;
+            recordsHtml += `</div>`;
             
-            // 添加到頁面
-            document.body.insertAdjacentHTML('beforeend', recordsHtml);
+            // 更新容器內容
+            memberRecordsContainer.innerHTML = recordsHtml;
+            
+            // 滾動到成員記錄區域
+            memberRecordsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         
-        // 關閉成員記錄顯示
-        function closeMemberRecords() {
-            const overlay = document.querySelector('.member-records-overlay');
-            if (overlay) {
-                overlay.remove();
+        // 清除成員記錄顯示
+        function clearMemberRecords() {
+            const container = document.getElementById('memberRecordsContainer');
+            if (container) {
+                container.remove();
             }
         }
 
@@ -6635,7 +6629,7 @@
             
             // 檢查金額
             const invalidAmounts = records.filter(record => 
-                isNaN(record.amount) || record.amount <= 0
+                isNaN(record.amount) || record.amount === 0
             );
             if (invalidAmounts.length > 0) {
                 healthIssues.push(`❌ 發現 ${invalidAmounts.length} 筆無效金額`);
