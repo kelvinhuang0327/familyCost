@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>家庭收支平台</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
     <style>
@@ -3266,22 +3269,21 @@
             console.log('🔄 Safari強制刷新數據...');
             
             try {
-                const timestamp = new Date().getTime();
-                const url = `data/data.json?t=${timestamp}`;
-                console.log(`使用強制刷新URL: ${url}`);
-                
-                const response = await fetch(url, {
+                // 直接從SQLite數據庫讀取數據
+                console.log('📡 從SQLite數據庫強制刷新數據...');
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
                     cache: 'no-store',
                     headers: {
                         'Cache-Control': 'no-cache',
                         'Pragma': 'no-cache'
                     }
                 });
+                
                 if (response.ok) {
-                    const data = await response.json();
-                    if (data.records && Array.isArray(data.records)) {
-                        records = data.records;
-                        // localStorage緩存已移除
+                    const result = await response.json();
+                    if (result.success && Array.isArray(result.records)) {
+                        records = result.records;
+                        console.log('✅ Safari強制刷新完成，載入', records.length, '筆記錄');
                         
                         // 更新所有顯示
                         updateStats();
@@ -4886,8 +4888,14 @@
                 console.log('🔗 API基礎URL:', ENV_CONFIG.getApiBase());
                 console.log('🔗 完整API URL:', ENV_CONFIG.getApiBase() + '/api/records');
                 
-                // 使用新的SQLite API端點
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/records');
+                // 使用新的SQLite API端點，添加無緩存標頭確保獲取最新數據
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
                 
                 console.log('📡 API響應狀態:', response.status);
                 console.log('📡 API響應OK:', response.ok);
