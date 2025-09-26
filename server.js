@@ -602,8 +602,8 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
         // 根據類別欄位確定收入或支出類型
         const recordType = (type === '收入') ? 'income' : 'expense';
         
-        // 如果是支出，金額設為負數（用於統計計算）
-        const finalAmount = (recordType === 'expense') ? -(amount || 0) : (amount || 0);
+        // 金額保持正數，通過type字段區分收入/支出
+        const finalAmount = amount || 0;
         
         const processedRecord = {
             id: id,

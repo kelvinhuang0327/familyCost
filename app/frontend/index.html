@@ -5096,7 +5096,7 @@
                 memberCard.innerHTML = `
                     <h4>${member}</h4>
                     <small>收入: $${memberIncome.toLocaleString()}</small>
-                            <small>支出: -$${memberExpense.toLocaleString()}</small>
+                            <small>支出: $${memberExpense.toLocaleString()}</small>
                     <div class="balance" style="color: ${memberBalance >= 0 ? '#51cf66' : '#ff6b6b'};">
                             $${memberBalance.toLocaleString()}
                         </div>
@@ -5297,7 +5297,7 @@
                     <p style="margin: 0; font-size: 18px; color: #666;">
                         共 <strong style="color: #333;">${memberRecords.length}</strong> 筆記錄， 
                         收入：<strong style="color: #27ae60">$${stats.income.toLocaleString()}</strong> | 
-                        支出：<strong style="color: #e74c3c">-$${stats.expense.toLocaleString()}</strong> | 
+                        支出：<strong style="color: #e74c3c">$${stats.expense.toLocaleString()}</strong> | 
                         餘額：<strong style="color: ${stats.balance >= 0 ? '#27ae60' : '#e74c3c'}">$${stats.balance.toLocaleString()}</strong>
                     </p>
                 </div>
