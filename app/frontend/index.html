@@ -2729,7 +2729,7 @@
                         </div>
                         <div class="form-group">
                             <label for="amount">金額</label>
-                            <input type="number" id="amount" step="0.01" required placeholder="正數=收入, 負數=支出">
+                            <input type="number" id="amount" step="0.01" required placeholder="輸入金額（正數）">
                         </div>
                     </div>
                     <div class="form-row">
@@ -5306,7 +5306,7 @@
             `;
             
             memberRecords.forEach(record => {
-                const amount = record.type === 'income' ? record.amount : -record.amount;
+                const amount = record.amount;
                 const prefix = record.type === 'income' ? '+' : '-';
                 
                 recordsHtml += `
@@ -5520,7 +5520,7 @@
             `;
             
             recordsToShow.forEach(record => {
-                const amount = record.type === 'income' ? record.amount : -record.amount;
+                const amount = record.amount;
                 const amountClass = record.type === 'income' ? 'income' : 'expense';
                 const prefix = record.type === 'income' ? '+' : '-';
                 
@@ -5798,7 +5798,7 @@
             }
             
             if (!amount || amount === 0) {
-                alert('請輸入有效的金額（正數=收入，負數=支出）！');
+                alert('請輸入有效的金額（正數）！');
                 return;
             }
             
