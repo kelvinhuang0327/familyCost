@@ -1,6 +1,6 @@
 {
-  "version": "2025-09-26 11:00:30",
-  "buildTime": "2025-09-26T03:00:30.000Z",
+  "version": "2025-09-26 11:08:45",
+  "buildTime": "2025-09-26T03:08:45.000Z",
   "commitHash": "f68cc90",
-  "description": "家庭收支管理平台版本信息 - 修復刪除記錄錯誤：修復updateSyncStatus函數中試圖設置不存在元素textContent的錯誤，移除對lastBackup元素的引用，確保刪除記錄功能正常工作"
+  "description": "家庭收支管理平台版本信息 - 修復同步錯誤和健康檢查：移除殘留的syncFromServer調用，修復數據健康檢查邏輯，支出金額負數不再被視為無效，確保系統正常運行"
 }
