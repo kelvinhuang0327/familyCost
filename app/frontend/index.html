@@ -5096,7 +5096,7 @@
                 memberCard.innerHTML = `
                     <h4>${member}</h4>
                     <small>收入: $${memberIncome.toLocaleString()}</small>
-                            <small>支出: $${memberExpense.toLocaleString()}</small>
+                            <small>支出: -$${memberExpense.toLocaleString()}</small>
                     <div class="balance" style="color: ${memberBalance >= 0 ? '#51cf66' : '#ff6b6b'};">
                             $${memberBalance.toLocaleString()}
                         </div>
