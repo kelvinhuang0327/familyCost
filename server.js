@@ -1315,6 +1315,47 @@ app.put('/api/records/:id', (req, res) => {
     }
 });
 
+// 清空所有記錄 (必須在 /api/records/:id 之前)
+app.delete('/api/records/clear', async (req, res) => {
+    try {
+        // 從JSON文件讀取現有數據以獲取記錄數量
+        const dataPath = path.join(__dirname, 'data', 'data.json');
+        let recordCount = 0;
+        
+        try {
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            const parsedData = JSON.parse(dataContent);
+            
+            if (parsedData && Array.isArray(parsedData.records)) {
+                recordCount = parsedData.records.length;
+            }
+        } catch (error) {
+            console.log('⚠️ JSON文件不存在或讀取失敗:', error.message);
+        }
+        
+        // 創建空的數據結構
+        const emptyData = { records: [] };
+        
+        // 寫入空的JSON文件
+        await fs.writeFile(dataPath, JSON.stringify(emptyData, null, 2), 'utf8');
+        
+        console.log('✅ 所有記錄已從JSON文件清空');
+        
+        res.json({
+            success: true,
+            message: `成功清空所有記錄，刪除了 ${recordCount} 筆記錄`,
+            changes: recordCount
+        });
+    } catch (error) {
+        console.error('❌ 清空記錄失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: '清空記錄失敗',
+            error: error.message
+        });
+    }
+});
+
 // 刪除記錄
 app.delete('/api/records/:id', async (req, res) => {
     try {
@@ -1408,46 +1449,6 @@ app.delete('/api/records', (req, res) => {
     }
 });
 
-// 清空所有記錄
-app.delete('/api/records/clear', async (req, res) => {
-    try {
-        // 從JSON文件讀取現有數據以獲取記錄數量
-        const dataPath = path.join(__dirname, 'data', 'data.json');
-        let recordCount = 0;
-        
-        try {
-            const dataContent = await fs.readFile(dataPath, 'utf8');
-            const parsedData = JSON.parse(dataContent);
-            
-            if (parsedData && Array.isArray(parsedData.records)) {
-                recordCount = parsedData.records.length;
-            }
-        } catch (error) {
-            console.log('⚠️ JSON文件不存在或讀取失敗:', error.message);
-        }
-        
-        // 創建空的數據結構
-        const emptyData = { records: [] };
-        
-        // 寫入空的JSON文件
-        await fs.writeFile(dataPath, JSON.stringify(emptyData, null, 2), 'utf8');
-        
-        console.log('✅ 所有記錄已從JSON文件清空');
-        
-        res.json({
-            success: true,
-            message: `成功清空所有記錄，刪除了 ${recordCount} 筆記錄`,
-            changes: recordCount
-        });
-    } catch (error) {
-        console.error('❌ 清空記錄失敗:', error);
-        res.status(500).json({
-            success: false,
-            message: '清空記錄失敗',
-            error: error.message
-        });
-    }
-});
 
 // 檢查數據完整性
 app.get('/api/records/integrity', (req, res) => {
