@@ -5224,14 +5224,21 @@
                 return;
             }
             
-            const totalAmount = memberRecords.reduce((sum, record) => sum + record.amount, 0);
+            // 計算收入和支出（與成員統計卡片邏輯一致）
+            const memberIncome = memberRecords
+                .filter(record => record.type === 'income')
+                .reduce((sum, record) => sum + record.amount, 0);
+            const memberExpense = memberRecords
+                .filter(record => record.type === 'expense')
+                .reduce((sum, record) => sum + record.amount, 0);
+            const memberBalance = memberIncome - memberExpense;
             
             // 在總覽頁面下方顯示成員記錄
-            displayMemberRecordsBelow(memberRecords, member, totalAmount);
+            displayMemberRecordsBelow(memberRecords, member, { income: memberIncome, expense: memberExpense, balance: memberBalance });
         }
         
         // 在總覽頁面下方顯示成員記錄
-        function displayMemberRecordsBelow(memberRecords, member, totalAmount) {
+        function displayMemberRecordsBelow(memberRecords, member, stats) {
             // 按日期排序（最新的在前）
             memberRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
             
@@ -5289,7 +5296,9 @@
                 ">
                     <p style="margin: 0; font-size: 18px; color: #666;">
                         共 <strong style="color: #333;">${memberRecords.length}</strong> 筆記錄， 
-                        總金額：<strong style="color: ${totalAmount >= 0 ? '#27ae60' : '#e74c3c'}">$${totalAmount.toLocaleString()}</strong>
+                        收入：<strong style="color: #27ae60">$${stats.income.toLocaleString()}</strong> | 
+                        支出：<strong style="color: #e74c3c">-$${stats.expense.toLocaleString()}</strong> | 
+                        餘額：<strong style="color: ${stats.balance >= 0 ? '#27ae60' : '#e74c3c'}">$${stats.balance.toLocaleString()}</strong>
                     </p>
                 </div>
                 
