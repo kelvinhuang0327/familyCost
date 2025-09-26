@@ -246,6 +246,16 @@
                 text-align: center !important;
             }
             
+            .stat-card small {
+                color: rgba(255, 255, 255, 0.7) !important;
+                font-size: 0.75em !important;
+                margin: 5px 0 0 0 !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+                text-align: center !important;
+                display: block !important;
+                line-height: 1.2 !important;
+            }
+            
             .form-group {
                 margin-bottom: 10px;
             }
@@ -2588,6 +2598,7 @@
                     <div class="stat-card">
                         <h3 id="cashExpense">$0</h3>
                         <p>現金餘額</p>
+                        <small>總現金收入 - 總現金支出</small>
                     </div>
                     <div class="stat-card">
                         <h3 id="creditExpense">$0</h3>
@@ -2595,7 +2606,8 @@
                     </div>
                     <div class="stat-card">
                         <h3 id="balance">$0</h3>
-                        <p>現金流</p>
+                        <p>當月現金流</p>
+                        <small>當月家用收入 - 當月現金支出</small>
                     </div>
                 </div>
                 <div class="swipe-indicator" id="statsSwipeIndicator"></div>
@@ -5051,12 +5063,12 @@
                 .filter(record => record.type === 'expense' && record.subCategory === '現金')
                 .reduce((sum, record) => sum + record.amount, 0);
             
-            // 計算現金收入
+            // 計算現金收入（所有成員）
             const cashIncome = records
                 .filter(record => record.type === 'income' && record.subCategory === '現金')
                 .reduce((sum, record) => sum + record.amount, 0);
             
-            // 計算現金餘額 = 現金收入 - 現金支出
+            // 計算現金餘額 = 所有現金收入 - 所有現金支出
             const cashBalance = cashIncome - cashExpense;
             
             // 計算信用卡支出
@@ -5064,18 +5076,48 @@
                 .filter(record => record.type === 'expense' && record.subCategory === '信用卡')
                 .reduce((sum, record) => sum + record.amount, 0);
             
-            // 計算家用收入（現金流）
-            const householdIncome = records
-                .filter(record => record.member === '家用' && record.type === 'income')
+            // 計算當月現金流（當月家用收入 - 當月現金支出）
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            
+            const monthlyHouseholdIncome = records
+                .filter(record => {
+                    const recordDate = new Date(record.date);
+                    return record.member === '家用' && 
+                           record.type === 'income' &&
+                           recordDate.getMonth() === currentMonth && 
+                           recordDate.getFullYear() === currentYear;
+                })
                 .reduce((sum, record) => sum + record.amount, 0);
             
-            // 現金流 = 家用收入 - 現金支出
-            const cashFlow = householdIncome - cashExpense;
+            const monthlyCashExpense = records
+                .filter(record => {
+                    const recordDate = new Date(record.date);
+                    return record.type === 'expense' && 
+                           record.subCategory === '現金' &&
+                           recordDate.getMonth() === currentMonth && 
+                           recordDate.getFullYear() === currentYear;
+                })
+                .reduce((sum, record) => sum + record.amount, 0);
+            
+            // 當月現金流 = 當月家用收入 - 當月現金支出
+            const monthlyCashFlow = monthlyHouseholdIncome - monthlyCashExpense;
 
             document.getElementById('totalExpense').textContent = `$${totalExpense.toLocaleString()}`;
-            document.getElementById('cashExpense').textContent = `$${cashBalance.toLocaleString()}`;
+            
+            // 現金餘額顯示（帶顏色）
+            const cashBalanceElement = document.getElementById('cashExpense');
+            const cashBalancePrefix = cashBalance >= 0 ? '+' : '';
+            cashBalanceElement.textContent = `${cashBalancePrefix}$${Math.abs(cashBalance).toLocaleString()}`;
+            cashBalanceElement.style.color = cashBalance >= 0 ? '#4CAF50' : '#F44336';
+            
             document.getElementById('creditExpense').textContent = `$${creditExpense.toLocaleString()}`;
-            document.getElementById('balance').textContent = `$${cashFlow.toLocaleString()}`;
+            
+            // 當月現金流顯示（帶顏色）
+            const cashFlowElement = document.getElementById('balance');
+            const cashFlowPrefix = monthlyCashFlow >= 0 ? '+' : '';
+            cashFlowElement.textContent = `${cashFlowPrefix}$${Math.abs(monthlyCashFlow).toLocaleString()}`;
+            cashFlowElement.style.color = monthlyCashFlow >= 0 ? '#4CAF50' : '#F44336';
 
             // 更新各成員統計
             updateMemberStats();
