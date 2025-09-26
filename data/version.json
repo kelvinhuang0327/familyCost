@@ -1,6 +1,6 @@
 {
-  "version": "2025-09-26 10:21:18",
-  "buildTime": "2025-09-26T02:21:18.000Z",
-  "commitHash": "991a716",
-  "description": "家庭收支管理平台版本信息 - 修復數據顯示問題：在initializeApp中添加updateAllDisplays調用，確保數據載入後正確更新UI顯示，添加詳細的API響應日誌"
+  "version": "2025-09-26 10:24:59",
+  "buildTime": "2025-09-26T02:24:59.000Z",
+  "commitHash": "78b4ed8",
+  "description": "家庭收支管理平台版本信息 - 修復Render數據持久化問題：添加自動數據遷移機制，每次服務重啟時自動從JSON文件遷移數據到SQLite，解決Render臨時文件系統導致的數據丟失問題"
 }

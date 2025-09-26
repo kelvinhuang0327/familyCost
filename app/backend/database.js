@@ -362,6 +362,99 @@ class DatabaseManager {
         }
     }
     
+    // 獲取記錄總數
+    getRecordCount() {
+        try {
+            const result = this.db.prepare('SELECT COUNT(*) as count FROM records').get();
+            return result.count;
+        } catch (error) {
+            console.error('❌ 獲取記錄總數失敗:', error);
+            return 0;
+        }
+    }
+    
+    // 從JSON文件遷移數據
+    migrateFromJSON() {
+        try {
+            console.log('🔄 開始從JSON文件遷移數據...');
+            
+            // 讀取JSON文件
+            const jsonPath = path.join(process.cwd(), 'data', 'data.json');
+            if (!fs.existsSync(jsonPath)) {
+                return {
+                    success: false,
+                    message: 'JSON文件不存在',
+                    stats: { total: 0 }
+                };
+            }
+            
+            const jsonData = fs.readFileSync(jsonPath, 'utf8');
+            const records = JSON.parse(jsonData);
+            
+            if (!Array.isArray(records)) {
+                return {
+                    success: false,
+                    message: 'JSON文件格式錯誤',
+                    stats: { total: 0 }
+                };
+            }
+            
+            console.log(`📊 找到 ${records.length} 筆記錄需要遷移`);
+            
+            // 清空現有數據
+            this.db.prepare('DELETE FROM records').run();
+            
+            // 插入新數據
+            const insertStmt = this.db.prepare(`
+                INSERT INTO records (id, date, member, amount, mainCategory, subCategory, description, type)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `);
+            
+            let successCount = 0;
+            let errorCount = 0;
+            const errors = [];
+            
+            for (const record of records) {
+                try {
+                    insertStmt.run(
+                        record.id,
+                        record.date,
+                        record.member,
+                        record.amount,
+                        record.mainCategory,
+                        record.subCategory,
+                        record.description,
+                        record.type
+                    );
+                    successCount++;
+                } catch (error) {
+                    errorCount++;
+                    errors.push(`記錄 ${record.id}: ${error.message}`);
+                }
+            }
+            
+            console.log(`✅ 遷移完成: 成功 ${successCount} 筆, 失敗 ${errorCount} 筆`);
+            
+            return {
+                success: true,
+                message: `成功遷移 ${successCount} 筆記錄`,
+                stats: {
+                    total: successCount,
+                    errors: errorCount,
+                    errorDetails: errors
+                }
+            };
+            
+        } catch (error) {
+            console.error('❌ 遷移失敗:', error);
+            return {
+                success: false,
+                message: '遷移失敗: ' + error.message,
+                stats: { total: 0 }
+            };
+        }
+    }
+    
     // 關閉數據庫連接
     close() {
         if (this.db) {

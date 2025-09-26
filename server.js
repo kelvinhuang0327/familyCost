@@ -100,6 +100,26 @@ let dbManager;
 try {
     dbManager = new DatabaseManager();
     console.log('✅ 數據庫管理器初始化成功');
+    
+    // 檢查數據庫是否有數據，如果沒有則自動遷移
+    const recordCount = dbManager.getRecordCount();
+    console.log('📊 數據庫當前記錄數:', recordCount);
+    
+    if (recordCount === 0) {
+        console.log('🔄 數據庫為空，開始自動遷移數據...');
+        try {
+            const migrationResult = dbManager.migrateFromJSON();
+            if (migrationResult.success) {
+                console.log(`✅ 自動遷移成功: ${migrationResult.stats.total} 筆記錄`);
+            } else {
+                console.log('⚠️ 自動遷移失敗:', migrationResult.message);
+            }
+        } catch (migrationError) {
+            console.error('❌ 自動遷移過程中發生錯誤:', migrationError);
+        }
+    } else {
+        console.log('✅ 數據庫已有數據，跳過遷移');
+    }
 } catch (error) {
     console.error('❌ 數據庫管理器初始化失敗:', error);
     console.error('❌ 錯誤堆疊:', error.stack);
