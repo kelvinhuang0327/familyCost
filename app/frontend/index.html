@@ -5084,6 +5084,12 @@
             // 計算現金餘額 = 所有現金收入 - 所有現金支出
             const cashBalance = cashIncome - cashExpense;
             
+            // 調試信息
+            console.log('💰 現金統計調試:');
+            console.log('- 現金收入:', cashIncome);
+            console.log('- 現金支出:', cashExpense);
+            console.log('- 現金餘額:', cashBalance);
+            
             // 計算信用卡支出
             const creditExpense = records
                 .filter(record => record.type === 'expense' && record.subCategory === '信用卡')
@@ -5118,7 +5124,12 @@
 
             document.getElementById('totalExpense').textContent = `$${totalExpense.toLocaleString()}`;
             
-            // 現金支出顯示
+            // 現金支出顯示（純支出，不帶正負號）
+            console.log('🔍 設置現金支出顯示:', cashExpense);
+            console.log('🔍 cashExpense類型:', typeof cashExpense);
+            console.log('🔍 cashExpense值:', cashExpense);
+            
+            // 確保現金支出顯示純支出金額，不是餘額
             document.getElementById('cashExpense').textContent = `$${cashExpense.toLocaleString()}`;
             
             document.getElementById('creditExpense').textContent = `$${creditExpense.toLocaleString()}`;
