@@ -4836,9 +4836,8 @@
             console.log('🔄 從服務器讀取最新數據...');
             await loadDataFromFile();
             
-            // 自動檢查Token狀態
-            console.log('🔑 檢查Token狀態...');
-            await checkTokenStatus();
+            // Token管理功能已移除 - 備份功能已移除
+            console.log('🔑 Token管理功能已移除，跳過檢查...');
             
             // 確保records變量已更新
             console.log('🔄 初始化完成，當前記錄數量:', records.length);
@@ -4862,9 +4861,8 @@
             setTodayDate();
             updateDataStats();
             
-            // 確保Token狀態正確顯示
-            console.log('🔑 最終檢查Token狀態...');
-            await checkTokenStatus();
+            // Token管理功能已移除 - 備份功能已移除
+            console.log('🔑 Token管理功能已移除，跳過最終檢查...');
             updateSyncStatus(); // 更新同步狀態顯示
             
             // 如果沒有記錄，不自動添加示例數據
@@ -5120,10 +5118,10 @@
                 }, 100);
             }
             
-            // 如果切換到設定頁面，更新同步狀態和Token狀態
+            // 如果切換到設定頁面，更新同步狀態
             if (tabName === 'import') {
                 updateSyncStatus();
-                checkTokenStatus();
+                // Token管理功能已移除 - 備份功能已移除
             }
         }
 
@@ -6709,185 +6707,41 @@
             };
         }
 
-        // GitHub Token 管理功能
+        // GitHub Token 管理功能已移除 - 備份功能已移除
         async function checkTokenStatus() {
-            try {
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/token/status');
-                const data = await response.json();
-                
-                const tokenStatus = document.getElementById('tokenStatus');
-                const deleteBtn = document.getElementById('deleteTokenBtn');
-                
-                if (data.hasToken && data.tokenInfo) {
-                    if (data.tokenInfo.valid) {
-                        tokenStatus.innerHTML = `
-                            <p>✅ <strong>Token已儲存且有效</strong></p>
-                            <p>用戶: <strong>${data.tokenInfo.user}</strong></p>
-                            <p>狀態: Token已加密儲存，可以正常使用</p>
-                        `;
-                        tokenStatus.style.color = '#28a745';
-                        deleteBtn.style.display = 'inline-block';
-                    } else {
-                        tokenStatus.innerHTML = `
-                            <p>❌ <strong>Token無效</strong></p>
-                            <p>錯誤: ${data.tokenInfo.error}</p>
-                            <p>請更新您的Token</p>
-                        `;
-                        tokenStatus.style.color = '#dc3545';
-                        deleteBtn.style.display = 'inline-block';
-                    }
-                } else {
-                    tokenStatus.innerHTML = `
-                        <p>⚠️ <strong>未儲存Token</strong></p>
-                        <p>請輸入您的GitHub Personal Access Token</p>
-                    `;
-                    tokenStatus.style.color = '#ffc107';
-                    deleteBtn.style.display = 'none';
-                }
-                
-            } catch (error) {
-                console.error('檢查Token狀態失敗:', error);
-                const tokenStatus = document.getElementById('tokenStatus');
+            console.log('🔑 Token管理功能已移除，跳過檢查...');
+            
+            // 檢查DOM元素是否存在，如果不存在則跳過
+            const tokenStatus = document.getElementById('tokenStatus');
+            const deleteBtn = document.getElementById('deleteTokenBtn');
+            
+            if (tokenStatus) {
                 tokenStatus.innerHTML = `
-                    <p>❌ <strong>檢查失敗</strong></p>
-                    <p>錯誤: ${error.message}</p>
+                    <p>ℹ️ <strong>Token管理功能已移除</strong></p>
+                    <p>系統現在使用SQLite數據庫，不再需要GitHub Token備份</p>
                 `;
-                tokenStatus.style.color = '#dc3545';
+                tokenStatus.style.color = '#6c757d';
+            }
+            
+            if (deleteBtn) {
+                deleteBtn.style.display = 'none';
             }
         }
 
         async function saveGitHubToken() {
-            const token = document.getElementById('githubToken').value.trim();
-            if (!token) {
-                alert('請輸入Token');
-                return;
-            }
-
-            console.log('🔄 開始儲存Token...');
-            
-            try {
-                // 先測試後端連接
-                console.log('🔍 測試後端連接...');
-                const healthResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/health');
-                if (!healthResponse.ok) {
-                    throw new Error(`後端服務不可用: ${healthResponse.status}`);
-                }
-                console.log('✅ 後端連接正常');
-
-                // 儲存Token
-                console.log('💾 儲存Token到後端...');
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/token/save', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ token: token })
-                });
-                
-                console.log('📡 收到回應:', response.status);
-                
-                const data = await response.json();
-                console.log('📊 回應數據:', data);
-                
-                if (!response.ok) {
-                    // 顯示後端返回的具體錯誤信息
-                    alert(`❌ ${data.message || `HTTP錯誤: ${response.status} ${response.statusText}`}`);
-                    return;
-                }
-                
-                if (data.success) {
-                    alert(`✅ ${data.message}`);
-                    document.getElementById('githubToken').value = '';
-                    checkTokenStatus();
-                } else {
-                    alert(`❌ ${data.message}`);
-                }
-                
-            } catch (error) {
-                console.error('❌ 儲存Token失敗:', error);
-                
-                // 詳細的錯誤診斷
-                let errorMessage = `儲存Token失敗: ${error.message}`;
-                
-                if (error.message.includes('Load failed') || error.message.includes('Failed to fetch')) {
-                    const env = ENV_CONFIG.getEnvironment();
-                    errorMessage += '\n\n🔍 診斷建議:\n';
-                    
-                    if (env === 'sit') {
-                        errorMessage += '⚠️ GitHub Pages 環境限制:\n';
-                        errorMessage += '1. GitHub Pages 只支持靜態網站\n';
-                        errorMessage += '2. 不支持 Node.js 後端 API\n';
-                        errorMessage += '3. Token 儲存和數據同步功能不可用\n';
-                        errorMessage += '4. 建議使用本地環境: http://localhost:8000\n';
-                        errorMessage += '5. 或部署到 Vercel 等支持後端的平台';
-                    } else {
-                        errorMessage += '1. 檢查後端服務是否運行 (ENV_CONFIG.getBackendUrl())\n';
-                        errorMessage += '2. 檢查瀏覽器是否阻止了跨域請求\n';
-                        errorMessage += '3. 嘗試刷新頁面後重試\n';
-                        errorMessage += '4. 檢查防火牆設置';
-                    }
-                }
-                
-                alert(errorMessage);
-            }
+            alert('⚠️ Token管理功能已移除\n\n系統現在使用SQLite數據庫，不再需要GitHub Token備份功能。');
+            return;
         }
 
         async function deleteGitHubToken() {
-            if (!confirm('確定要刪除儲存的Token嗎？')) {
-                return;
-            }
-            
-            try {
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/token', {
-                    method: 'DELETE'
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    alert(`✅ ${data.message}`);
-                    checkTokenStatus();
-                } else {
-                    alert(`❌ ${data.message}`);
-                }
-                
-            } catch (error) {
-                console.error('刪除Token失敗:', error);
-                alert('刪除Token失敗: ' + error.message);
-            }
+            alert('⚠️ Token管理功能已移除\n\n系統現在使用SQLite數據庫，不再需要GitHub Token備份功能。');
+            return;
         }
 
-        // 從備份恢復Token
+        // 從備份恢復Token功能已移除
         async function recoverTokenFromBackup() {
-            if (!confirm('確定要從備份檔案恢復Token嗎？\n\n這將嘗試從備份檔案中恢復您之前儲存的Token。')) {
-                return;
-            }
-            
-            try {
-                console.log('🔄 開始從備份恢復Token...');
-                
-                // 觸發後端的Token恢復邏輯（通過檢查狀態）
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/token/status');
-                const data = await response.json();
-                
-                if (data.success) {
-                    if (data.hasToken && data.tokenInfo && data.tokenInfo.valid) {
-                        alert(`✅ Token已從備份恢復！\n\n用戶: ${data.tokenInfo.user}\n狀態: 有效`);
-                        checkTokenStatus();
-                    } else if (data.hasToken && data.tokenInfo && !data.tokenInfo.valid) {
-                        alert(`⚠️ 從備份恢復了Token，但Token已失效\n\n錯誤: ${data.tokenInfo.error}\n\n請重新輸入有效的Token。`);
-                        checkTokenStatus();
-                    } else {
-                        alert('❌ 沒有找到可用的備份Token檔案\n\n請重新輸入您的GitHub Personal Access Token。');
-                    }
-                } else {
-                    alert(`❌ 恢復Token失敗: ${data.message}`);
-                }
-                
-            } catch (error) {
-                console.error('恢復Token失敗:', error);
-                alert('恢復Token失敗: ' + error.message);
-            }
+            alert('⚠️ Token管理功能已移除\n\n系統現在使用SQLite數據庫，不再需要GitHub Token備份功能。');
+            return;
         }
 
         // 快速修復功能
