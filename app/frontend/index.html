@@ -5088,7 +5088,7 @@
             console.log('💰 現金統計調試:');
             console.log('- 現金收入:', cashIncome);
             console.log('- 現金支出:', cashExpense);
-            console.log('- 現金餘額:', cashBalance);
+            console.log('- 現金流 (收入-支出):', cashBalance);
             
             // 計算信用卡支出
             const creditExpense = records
@@ -5130,18 +5130,18 @@
             console.log('- 現金支出總額:', cashExpense);
             console.log('- 現金收入記錄數:', records.filter(r => r.type === 'income' && r.subCategory === '現金').length);
             console.log('- 現金收入總額:', cashIncome);
-            console.log('- 現金餘額:', cashBalance);
+            console.log('- 現金流 (收入-支出):', cashBalance);
             
             // 現金支出卡片顯示純支出金額，不是餘額
             document.getElementById('cashExpense').textContent = `$${cashExpense.toLocaleString()}`;
             
             document.getElementById('creditExpense').textContent = `$${creditExpense.toLocaleString()}`;
             
-            // 當月現金流顯示（帶顏色）
+            // 當月現金流顯示（現金收入 - 現金支出，帶顏色）
             const cashFlowElement = document.getElementById('balance');
-            const cashFlowPrefix = monthlyCashFlow >= 0 ? '+' : '';
-            cashFlowElement.textContent = `${cashFlowPrefix}$${Math.abs(monthlyCashFlow).toLocaleString()}`;
-            cashFlowElement.style.color = monthlyCashFlow >= 0 ? '#4CAF50' : '#F44336';
+            const cashFlowPrefix = cashBalance >= 0 ? '+' : '';
+            cashFlowElement.textContent = `${cashFlowPrefix}$${Math.abs(cashBalance).toLocaleString()}`;
+            cashFlowElement.style.color = cashBalance >= 0 ? '#4CAF50' : '#F44336';
 
             // 更新各成員統計
             updateMemberStats();
