@@ -2965,25 +2965,10 @@
         let currentYear = new Date().getFullYear();
 
         // 跨瀏覽器數據同步
-        let syncInterval = null;
+        // syncInterval變量已移除 - 不再需要自動同步
         // localStorage緩存已移除 - 數據直接從SQLite數據庫讀取
 
-        // 從服務器同步數據
-        async function syncFromServer() {
-            try {
-                console.log('🔄 開始從SQLite數據庫同步數據...');
-                
-                // 直接從SQLite數據庫載入數據
-                await loadDataFromFile();
-                updateAllDisplays();
-                
-                console.log('✅ SQLite數據同步完成');
-                return true;
-            } catch (error) {
-                console.warn('⚠️ SQLite數據同步失敗:', error.message);
-            }
-            return false;
-        }
+        // 服務器同步功能已移除 - 現在使用JSON文件存儲，不需要同步
 
         // 更新所有顯示
         function updateAllDisplays() {
@@ -3001,150 +2986,15 @@
             console.log('✅ updateAllDisplays: 所有顯示更新完成');
         }
 
-        // 啟動自動同步
-        function startAutoSync() {
-            // 每10秒檢查一次服務器更新
-            syncInterval = setInterval(async () => {
-                console.log('🔄 自動同步檢查...');
-                try {
-                    const synced = await syncFromServer();
-                    if (synced) {
-                        console.log('✅ 自動同步完成');
-                        // 更新同步狀態顯示
-                        const syncStatus = document.getElementById('syncStatus');
-                        if (syncStatus) {
-                            syncStatus.textContent = '已同步';
-                            setTimeout(() => {
-                                syncStatus.textContent = '運行中';
-                            }, 2000);
-                        }
-                    }
-                } catch (error) {
-                    console.error('❌ 自動同步錯誤:', error);
-                }
-            }, 10000);
+        // 自動同步功能已移除 - 現在使用JSON文件存儲，不需要同步
 
-            console.log('🔄 自動同步已啟動 (每10秒檢查一次)');
-            
-            // 立即執行一次同步檢查
-            setTimeout(async () => {
-                console.log('🔄 初始同步檢查...');
-                try {
-                    const synced = await syncFromServer();
-                    if (synced) {
-                        console.log('✅ 初始同步完成');
-                    }
-                } catch (error) {
-                    console.error('❌ 初始同步錯誤:', error);
-                }
-            }, 1000);
-        }
+        // 手動同步功能已移除 - 現在使用JSON文件存儲，不需要同步
 
-        // 停止自動同步
-        function stopAutoSync() {
-            if (syncInterval) {
-                clearInterval(syncInterval);
-                syncInterval = null;
-                console.log('⏹️ 自動同步已停止');
-            }
-        }
+        // 清除緩存功能已移除 - 現在使用JSON文件存儲，不需要緩存
 
-        // 手動同步
-        async function manualSync() {
-            const syncStatus = document.getElementById('syncStatus');
-            syncStatus.textContent = '同步中...';
-            
-            try {
-                console.log('🔄 手動同步開始...');
-                const synced = await syncFromServer();
-                if (synced) {
-                    syncStatus.textContent = '已同步';
-                    alert('✅ 數據同步完成！');
-                    console.log('✅ 手動同步成功');
-                } else {
-                    syncStatus.textContent = '已是最新';
-                    alert('📊 數據已是最新版本');
-                    console.log('📊 數據已是最新');
-                }
-            } catch (error) {
-                syncStatus.textContent = '同步失敗';
-                alert('❌ 同步失敗：' + error.message);
-                console.error('❌ 手動同步失敗:', error);
-            }
-        }
+        // 自動同步切換功能已移除 - 現在使用JSON文件存儲，不需要同步
 
-        // 清除緩存並同步
-        async function clearCacheAndSync() {
-            const syncStatus = document.getElementById('syncStatus');
-            syncStatus.textContent = '清除緩存中...';
-            
-            try {
-                console.log('🗑️ 清除緩存功能已移除 - 數據直接從SQLite數據庫讀取');
-                
-                // localStorage緩存已移除
-                
-                console.log('✅ 緩存清除完成');
-                
-                // 強制從服務器重新讀取數據
-                console.log('🔄 從服務器重新讀取數據...');
-                await loadDataFromFile();
-                
-                // 更新所有UI顯示
-                console.log('🔄 更新UI顯示...');
-                updateStats();
-                updateRecentRecords();
-                updateCalendar();
-                updateDataStats();
-                updateMemberStats();
-                updateAllRecords();
-                showExpenseRecords(); // 顯示支出記錄
-                
-                syncStatus.textContent = '已同步';
-                alert('✅ 緩存已清除，數據已重新同步！');
-                console.log('✅ 清除緩存並同步成功，記錄數量:', records.length);
-                
-            } catch (error) {
-                syncStatus.textContent = '同步失敗';
-                alert('❌ 清除緩存失敗：' + error.message);
-                console.error('❌ 清除緩存失敗:', error);
-            }
-        }
-
-        // 切換自動同步
-        function toggleAutoSync() {
-            const btn = document.getElementById('autoSyncBtn');
-            const syncStatus = document.getElementById('syncStatus');
-            
-            if (syncInterval) {
-                // 停止自動同步
-                stopAutoSync();
-                btn.textContent = '▶️ 啟動自動同步';
-                btn.style.backgroundColor = '#28a745';
-                syncStatus.textContent = '已暫停';
-            } else {
-                // 啟動自動同步
-                startAutoSync();
-                btn.textContent = '⏸️ 暫停自動同步';
-                btn.style.backgroundColor = '#ffc107';
-                syncStatus.textContent = '運行中';
-            }
-        }
-
-        // 更新同步狀態顯示
-        function updateSyncStatus() {
-            const syncStatus = document.getElementById('syncStatus');
-            const btn = document.getElementById('autoSyncBtn');
-            
-            if (syncInterval) {
-                syncStatus.textContent = '運行中';
-                btn.textContent = '⏸️ 暫停自動同步';
-                btn.style.backgroundColor = '#ffc107';
-            } else {
-                syncStatus.textContent = '已暫停';
-                btn.textContent = '▶️ 啟動自動同步';
-                btn.style.backgroundColor = '#28a745';
-            }
-        }
+        // 同步狀態顯示功能已移除 - 現在使用JSON文件存儲，不需要同步狀態
 
         // GitHub自動備份功能 - 已移除
 
@@ -4848,8 +4698,7 @@
             // GitHub更新檢查已移除（備份功能已移除）
             console.log('📊 備份功能已移除，使用SQLite數據庫');
             
-            // 啟動跨瀏覽器自動同步
-            startAutoSync();
+            // 自動同步功能已移除 - 現在使用JSON文件存儲，不需要同步
             
             // 更新所有UI顯示
             console.log('🔄 開始更新所有UI顯示...');
