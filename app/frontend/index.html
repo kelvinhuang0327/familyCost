@@ -6977,11 +6977,8 @@
                                 records = [];
                                 // localStorage清除已移除
                                 
-                                // 重新從服務器載入數據以確認清除
-                                console.log('🔄 重新載入數據以確認清除結果...');
-                                console.log('🔗 載入數據API URL:', ENV_CONFIG.getApiBase() + '/api/records');
-                                await loadDataFromFile();
-                                console.log('📊 重新載入後的records數量:', records.length);
+                                // 清除後不需要重新載入數據，因為已經清空了
+                                console.log('✅ 數據已清空，不需要重新載入');
                                 
                                 // 更新所有顯示
                                 updateStats();

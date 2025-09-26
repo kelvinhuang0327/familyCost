@@ -924,16 +924,15 @@ app.post('/api/excel/compare', (req, res, next) => {
         console.log('🔍 [API] 按成員統計:', memberStats);
         console.log('🔍 [API] 處理後資料範例:', processedData.slice(0, 3));
         
-        // 從SQLite數據庫讀取系統現有資料
+        // 從 GitHub 或本地文件讀取系統現有資料
         let systemData = [];
         
         try {
-            console.log('🔍 [API] 從SQLite數據庫讀取系統資料...');
-            const dbRecords = dbManager.getAllRecords();
-            systemData = dbRecords || [];
-            console.log('✅ [API] 從SQLite數據庫讀取了', systemData.length, '筆記錄');
+            console.log('🔍 [API] 從 GitHub 或本地文件讀取系統資料...');
+            systemData = await githubDataManager.getDataFromGitHub();
+            console.log('✅ [API] 從 GitHub 或本地文件讀取了', systemData.length, '筆記錄');
         } catch (error) {
-            console.log('⚠️ [API] 從SQLite數據庫讀取失敗:', error.message);
+            console.log('⚠️ [API] 從 GitHub 或本地文件讀取失敗:', error.message);
             systemData = [];
         }
         
