@@ -5125,11 +5125,14 @@
             document.getElementById('totalExpense').textContent = `$${totalExpense.toLocaleString()}`;
             
             // 現金支出顯示（純支出，不帶正負號）
-            console.log('🔍 設置現金支出顯示:', cashExpense);
-            console.log('🔍 cashExpense類型:', typeof cashExpense);
-            console.log('🔍 cashExpense值:', cashExpense);
+            console.log('🔍 現金統計調試:');
+            console.log('- 現金支出記錄數:', records.filter(r => r.type === 'expense' && r.subCategory === '現金').length);
+            console.log('- 現金支出總額:', cashExpense);
+            console.log('- 現金收入記錄數:', records.filter(r => r.type === 'income' && r.subCategory === '現金').length);
+            console.log('- 現金收入總額:', cashIncome);
+            console.log('- 現金餘額:', cashBalance);
             
-            // 確保現金支出顯示純支出金額，不是餘額
+            // 現金支出卡片顯示純支出金額，不是餘額
             document.getElementById('cashExpense').textContent = `$${cashExpense.toLocaleString()}`;
             
             document.getElementById('creditExpense').textContent = `$${creditExpense.toLocaleString()}`;
