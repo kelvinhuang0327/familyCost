@@ -1,6 +1,6 @@
 {
-  "version": "2025-09-26 15:10:15",
-  "buildTime": "2025-09-26T07:10:15.000Z",
-  "commitHash": "6ecbd8d",
-  "description": "家庭收支管理平台版本信息 - 實現GitHub數據存儲：創建GitHubDataManager類，將數據存儲從本地文件改為GitHub倉庫，解決Render重啟後數據丟失問題，支持自動回退到本地文件存儲"
+  "version": "2025-09-26 15:15:30",
+  "buildTime": "2025-09-26T07:15:30.000Z",
+  "commitHash": "e1a9f9e",
+  "description": "家庭收支管理平台版本信息 - 實現GitHub Token存儲：創建GitHubTokenManager類，將GitHub Token也存儲在GitHub倉庫中，解決Render重啟後Token丟失問題，支持加密存儲和自動回退機制"
 }
