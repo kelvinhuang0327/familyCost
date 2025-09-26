@@ -6863,6 +6863,7 @@
                     if (userInput === 'YES') {
                         try {
                             console.log('🗑️ 開始清除JSON文件中的所有數據...');
+                            console.log('🔗 清除API URL:', ENV_CONFIG.getApiBase() + '/api/records/clear');
                             
                             // 使用JSON文件清除API
                             const clearResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/records/clear', {
@@ -6872,7 +6873,11 @@
                                 }
                             });
                             
+                            console.log('📡 清除API回應狀態:', clearResponse.status);
+                            console.log('📡 清除API回應OK:', clearResponse.ok);
+                            
                             const clearResult = await clearResponse.json();
+                            console.log('📡 清除API回應內容:', clearResult);
                             
                             if (clearResult.success) {
                                 console.log('✅ JSON文件已清空:', clearResult.message);
@@ -6883,7 +6888,9 @@
                                 
                                 // 重新從服務器載入數據以確認清除
                                 console.log('🔄 重新載入數據以確認清除結果...');
+                                console.log('🔗 載入數據API URL:', ENV_CONFIG.getApiBase() + '/api/records');
                                 await loadDataFromFile();
+                                console.log('📊 重新載入後的records數量:', records.length);
                                 
                                 // 更新所有顯示
                                 updateStats();
