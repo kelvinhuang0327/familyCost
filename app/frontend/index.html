@@ -6878,15 +6878,20 @@
                                 console.log('✅ JSON文件已清空:', clearResult.message);
                                 
                                 // 清除前端數據
-                        records = [];
+                                records = [];
                                 // localStorage清除已移除
                                 
+                                // 重新從服務器載入數據以確認清除
+                                console.log('🔄 重新載入數據以確認清除結果...');
+                                await loadDataFromFile();
+                                
                                 // 更新所有顯示
-                        updateStats();
-                        updateRecentRecords();
-                        updateAllRecords();
+                                updateStats();
+                                updateRecentRecords();
+                                updateAllRecords();
                                 updateCalendar();
-                        updateDataStats();
+                                updateDataStats();
+                                updateMemberStats();
                         
                                 alert(`✅ 所有數據已成功清空！\n\n清除了 ${clearResult.changes} 筆記錄`);
                             } else {
