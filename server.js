@@ -186,11 +186,24 @@ function processExcelDataNewFormat(excelData) {
     
     excelData.forEach((row, index) => {
         try {
-            // 跳過標題行（第一行）
+            // 智能檢測標題行（第一行）
             if (index === 0) {
-                console.log('🔍 [processExcelDataNewFormat] 跳過標題行:', row);
-                skippedRows++;
-                return;
+                // 檢查第一行是否為標題行（包含中文欄位名稱）
+                const keys = Object.keys(row);
+                const values = Object.values(row);
+                const hasChineseHeaders = values.some(value => 
+                    typeof value === 'string' && 
+                    (value.includes('成員') || value.includes('金額') || value.includes('類別') || 
+                     value.includes('主類別') || value.includes('付款方式') || value.includes('描述') || value.includes('日期'))
+                );
+                
+                if (hasChineseHeaders) {
+                    console.log('🔍 [processExcelDataNewFormat] 檢測到標題行，跳過:', row);
+                    skippedRows++;
+                    return;
+                } else {
+                    console.log('🔍 [processExcelDataNewFormat] 第一行不是標題行，處理為數據:', row);
+                }
             }
             
             // 處理所有數據行（包括空行）
