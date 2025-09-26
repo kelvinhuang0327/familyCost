@@ -6591,12 +6591,8 @@
         // 更新數據統計
         // 更新同步狀態 - 已移除備份相關功能
         function updateSyncStatus() {
-            // 檢查備份狀態 - 已移除
-            let backupStatus = '已移除備份功能';
-            // 備份狀態檢查 - 已移除
-            document.getElementById('lastBackup').textContent = backupStatus;
-            
-            // 自動檢查數據健康
+            // 同步狀態功能已移除 - 現在使用JSON文件存儲，不需要同步狀態
+            // 只保留數據健康檢查
             checkDataHealth();
         }
 
