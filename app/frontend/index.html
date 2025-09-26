@@ -6872,7 +6872,7 @@
                 return;
             }
 
-            const confirmMessage = `⚠️ 警告：您即將清空所有 ${records.length} 筆記錄！\n\n此操作將：\n- 刪除SQLite數據庫中的所有記錄\n- 清空統計數據\n- 無法復原\n\n確定要繼續嗎？`;
+            const confirmMessage = `⚠️ 警告：您即將清空所有 ${records.length} 筆記錄！\n\n此操作將：\n- 刪除JSON文件中的所有記錄\n- 清空統計數據\n- 無法復原\n\n確定要繼續嗎？`;
             
             if (confirm(confirmMessage)) {
                 const doubleConfirm = confirm('最後確認：您真的要清空所有數據嗎？\n\n請輸入 "YES" 來確認（請手動輸入 YES）');
@@ -6882,9 +6882,9 @@
                     
                     if (userInput === 'YES') {
                         try {
-                            console.log('🗑️ 開始清除SQLite數據庫中的所有數據...');
+                            console.log('🗑️ 開始清除JSON文件中的所有數據...');
                             
-                            // 使用新的SQLite清除API
+                            // 使用JSON文件清除API
                             const clearResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/records/clear', {
                                 method: 'DELETE',
                                 headers: {
@@ -6895,7 +6895,7 @@
                             const clearResult = await clearResponse.json();
                             
                             if (clearResult.success) {
-                                console.log('✅ SQLite數據庫已清空:', clearResult.message);
+                                console.log('✅ JSON文件已清空:', clearResult.message);
                                 
                                 // 清除前端數據
                         records = [];
@@ -6910,8 +6910,8 @@
                         
                                 alert(`✅ 所有數據已成功清空！\n\n清除了 ${clearResult.changes} 筆記錄`);
                             } else {
-                                console.error('❌ SQLite數據庫清除失敗:', clearResult.message);
-                                alert('❌ 數據庫清除失敗：' + clearResult.message);
+                                console.error('❌ JSON文件清除失敗:', clearResult.message);
+                                alert('❌ 文件清除失敗：' + clearResult.message);
                             }
                             
                             console.log('✅ 清除數據完成');
