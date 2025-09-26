@@ -5103,6 +5103,12 @@
                 const memberBalance = memberIncome - memberExpense;
                 
                 console.log(`${member} 統計: 收入=${memberIncome}, 支出=${memberExpense}, 餘額=${memberBalance}`);
+                console.log(`${member} 記錄詳情:`, memberRecords.map(r => ({
+                    date: r.date,
+                    type: r.type,
+                    amount: r.amount,
+                    description: r.description
+                })));
 
                 const memberCard = document.createElement('div');
                 memberCard.className = 'stat-card';
