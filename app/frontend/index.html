@@ -4058,7 +4058,7 @@
                 let errorCount = 0;
                 const errors = [];
                 
-                // 逐筆添加到SQLite數據庫
+                // 逐筆添加到JSON文件
                 for (const record of newRecordsData) {
                     try {
                         console.log('📤 準備添加記錄:', record);
@@ -4094,7 +4094,7 @@
                 }
                 
                 if (successCount > 0) {
-                    console.log(`✅ 成功匯入 ${successCount} 筆記錄到SQLite數據庫`);
+                    console.log(`✅ 成功匯入 ${successCount} 筆記錄到JSON文件`);
                     
                     // 重新載入資料
                     await loadDataFromFile();
@@ -4107,19 +4107,19 @@
                     
                     if (errorCount > 0) {
                         // 顯示詳細的匯入結果
-                        const resultMessage = `📊 匯入結果統計：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
+                        const resultMessage = `📊 匯入結果統計：\n📄 Excel總筆數：${newRecordsData.length} 筆記錄\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
                         alert(resultMessage);
                     } else {
-                        alert(`✅ 匯入完成！\n\n📊 統計結果：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：0 筆記錄`);
+                        alert(`✅ 匯入完成！\n\n📊 統計結果：\n📄 Excel總筆數：${newRecordsData.length} 筆記錄\n✅ 成功匯入：${successCount} 筆記錄\n❌ 匯入失敗：0 筆記錄`);
                     }
                 } else {
                     console.error('❌ 所有記錄匯入失敗');
-                    const failMessage = `❌ 匯入失敗！\n\n📊 統計結果：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：0 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
+                    const failMessage = `❌ 匯入失敗！\n\n📊 統計結果：\n📄 Excel總筆數：${newRecordsData.length} 筆記錄\n✅ 成功匯入：0 筆記錄\n❌ 匯入失敗：${errorCount} 筆記錄\n\n📋 失敗記錄詳情：\n${errors.map((error, index) => `${index + 1}. ${error}`).join('\n')}`;
                     alert(failMessage);
                 }
             } catch (error) {
                 console.error('❌ 匯入過程發生錯誤:', error);
-                alert(`❌ 匯入過程發生錯誤：${error.message}\n\n📊 統計結果：\n📄 Excel總筆數：${allRecordsData.length} 筆記錄\n✅ 成功匯入：0 筆記錄\n❌ 匯入失敗：${allRecordsData.length} 筆記錄`);
+                alert(`❌ 匯入過程發生錯誤：${error.message}\n\n📊 統計結果：\n📄 Excel總筆數：${newRecordsData.length} 筆記錄\n✅ 成功匯入：0 筆記錄\n❌ 匯入失敗：${newRecordsData.length} 筆記錄`);
             }
         }
 
@@ -5380,7 +5380,7 @@
             });
         }
 
-        // 顯示成員詳細記錄
+        // 顯示成員詳細記錄（在總覽頁面內顯示）
         function showMemberRecords(member) {
             const memberRecords = records.filter(record => record.member === member);
             
@@ -5391,11 +5391,133 @@
             
             const totalAmount = memberRecords.reduce((sum, record) => sum + record.amount, 0);
             
-            // 更新標籤頁狀態
-            updateFilterTabs('member');
+            // 在總覽頁面內顯示成員記錄，不切換到列表頁面
+            displayMemberRecordsInDashboard(memberRecords, member, totalAmount);
+        }
+        
+        // 在總覽頁面內顯示成員記錄
+        function displayMemberRecordsInDashboard(memberRecords, member, totalAmount) {
+            // 按日期排序（最新的在前）
+            memberRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
             
-            // 顯示成員記錄
-            displayRecords(memberRecords, `${member} 的記錄 (共 ${memberRecords.length} 筆，$${totalAmount.toLocaleString()})`);
+            let recordsHtml = `
+                <div class="member-records-overlay" style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 1000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                ">
+                    <div style="
+                        background: white;
+                        border-radius: 15px;
+                        padding: 25px;
+                        max-width: 800px;
+                        width: 100%;
+                        max-height: 80vh;
+                        overflow-y: auto;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                    ">
+                        <div style="
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 20px;
+                            padding-bottom: 15px;
+                            border-bottom: 2px solid #f0f0f0;
+                        ">
+                            <h3 style="margin: 0; color: #333; font-size: 24px;">${member} 的記錄</h3>
+                            <button onclick="closeMemberRecords()" style="
+                                background: #ff4757;
+                                color: white;
+                                border: none;
+                                border-radius: 50%;
+                                width: 35px;
+                                height: 35px;
+                                font-size: 18px;
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">×</button>
+                        </div>
+                        
+                        <div style="
+                            background: #f8f9fa;
+                            padding: 15px;
+                            border-radius: 10px;
+                            margin-bottom: 20px;
+                            text-align: center;
+                        ">
+                            <p style="margin: 0; font-size: 18px; color: #666;">
+                                共 <strong style="color: #333;">${memberRecords.length}</strong> 筆記錄， 
+                                總金額：<strong style="color: ${totalAmount >= 0 ? '#27ae60' : '#e74c3c'}">$${totalAmount.toLocaleString()}</strong>
+                            </p>
+                        </div>
+                        
+                        <div class="records-list" style="max-height: 400px; overflow-y: auto;">
+            `;
+            
+            memberRecords.forEach(record => {
+                const amount = record.type === 'income' ? record.amount : -record.amount;
+                const amountClass = record.type === 'income' ? 'income' : 'expense';
+                const prefix = record.type === 'income' ? '+' : '-';
+                
+                recordsHtml += `
+                    <div class="record-item" style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 12px 15px;
+                        margin: 8px 0;
+                        background: white;
+                        border-radius: 8px;
+                        border-left: 4px solid ${record.type === 'income' ? '#27ae60' : '#e74c3c'};
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                        transition: transform 0.2s ease;
+                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <div style="flex: 1;">
+                            <div style="font-weight: bold; color: #333; margin-bottom: 4px;">
+                                ${record.date} - ${record.member}
+                            </div>
+                            <div style="color: #666; font-size: 14px;">
+                                ${record.mainCategory}${record.subCategory ? ' - ' + record.subCategory : ''}
+                                ${record.description ? ' - ' + record.description : ''}
+                            </div>
+                        </div>
+                        <div style="
+                            font-size: 18px;
+                            font-weight: bold;
+                            color: ${record.type === 'income' ? '#27ae60' : '#e74c3c'};
+                        ">
+                            ${prefix}$${Math.abs(record.amount).toLocaleString()}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            recordsHtml += `
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 添加到頁面
+            document.body.insertAdjacentHTML('beforeend', recordsHtml);
+        }
+        
+        // 關閉成員記錄顯示
+        function closeMemberRecords() {
+            const overlay = document.querySelector('.member-records-overlay');
+            if (overlay) {
+                overlay.remove();
+            }
         }
 
         // 顯示總支出記錄
