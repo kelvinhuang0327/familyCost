@@ -1318,6 +1318,8 @@ app.put('/api/records/:id', (req, res) => {
 // 清空所有記錄 (必須在 /api/records/:id 之前)
 app.delete('/api/records/clear', async (req, res) => {
     try {
+        console.log('🗑️ [API] 收到清除所有記錄的請求');
+        
         // 從JSON文件讀取現有數據以獲取記錄數量
         const dataPath = path.join(__dirname, 'data', 'data.json');
         let recordCount = 0;
@@ -1329,15 +1331,27 @@ app.delete('/api/records/clear', async (req, res) => {
             if (parsedData && Array.isArray(parsedData.records)) {
                 recordCount = parsedData.records.length;
             }
+            console.log(`📊 [API] 當前記錄數量: ${recordCount}`);
         } catch (error) {
-            console.log('⚠️ JSON文件不存在或讀取失敗:', error.message);
+            console.log('⚠️ [API] JSON文件不存在或讀取失敗:', error.message);
         }
         
         // 創建空的數據結構
         const emptyData = { records: [] };
         
         // 寫入空的JSON文件
+        console.log('💾 [API] 開始寫入空的JSON文件...');
         await fs.writeFile(dataPath, JSON.stringify(emptyData, null, 2), 'utf8');
+        console.log('✅ [API] 空的JSON文件寫入完成');
+        
+        // 驗證文件是否真的被清空
+        try {
+            const verifyContent = await fs.readFile(dataPath, 'utf8');
+            const verifyData = JSON.parse(verifyContent);
+            console.log(`🔍 [API] 驗證文件內容: ${verifyData.records.length} 筆記錄`);
+        } catch (error) {
+            console.error('❌ [API] 驗證文件失敗:', error);
+        }
         
         console.log('✅ 所有記錄已從JSON文件清空');
         
