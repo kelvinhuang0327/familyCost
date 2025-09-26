@@ -2766,25 +2766,18 @@
                 <!-- 數據匯入功能 -->
                 <div class="import-section">
                     <h3>📥 數據匯入</h3>
-                    <p>支援 Google Sheets 和 Excel 檔案匯入</p>
+                    <p>支援 Excel 檔案匯入</p>
                     
-                    <!-- 匯入格式選擇 -->
-                    <div class="import-format-selector">
-                        <label>
-                            <input type="radio" name="importFormat" value="googlesheets" checked>
-                            Google Sheets 格式 (舊格式)
-                        </label>
-                        <label>
-                            <input type="radio" name="importFormat" value="excel">
-                            Excel 檔案格式 (新格式：成員、金額、主類別、子類別、描述、日期)
-                        </label>
+                    <!-- Excel匯入格式說明 -->
+                    <div class="import-format-info">
+                        <p><strong>Excel 檔案格式</strong>：成員、金額、類別、主類別、付款方式、描述、日期</p>
                     </div>
                     
                     <div class="excel-import-section">
                         <div class="upload-area" id="uploadArea">
                             <div class="upload-content">
                                 <div class="upload-icon">📁</div>
-                                <p id="uploadDescription">點擊或拖拽 Google Sheets 檔案到此處</p>
+                                <p id="uploadDescription">點擊或拖拽 Excel 檔案到此處</p>
                                 <p class="upload-hint">支援 .xlsx 和 .xls 格式，最大 10MB</p>
                                 <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;">
                                 <button class="btn" onclick="document.getElementById('excelFileInput').click()">選擇檔案</button>
@@ -3462,23 +3455,12 @@
             const uploadArea = document.getElementById('uploadArea');
             const uploadDescription = document.getElementById('uploadDescription');
 
-            // 格式選擇事件
-            const formatRadios = document.querySelectorAll('input[name="importFormat"]');
-            formatRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === 'googlesheets') {
-                        uploadDescription.textContent = '點擊或拖拽 Google Sheets 檔案到此處 (舊格式)';
-                    } else if (this.value === 'excel') {
-                        uploadDescription.textContent = '點擊或拖拽 Excel 檔案到此處 (新格式：成員、金額、主類別、子類別、描述、日期)';
-                    }
-                });
-            });
+            // 格式選擇事件已移除 - 只支援Excel格式
 
             // 檔案選擇事件
             fileInput.addEventListener('change', function(e) {
                 if (e.target.files.length > 0) {
-                    const selectedFormat = document.querySelector('input[name="importFormat"]:checked').value;
-                    handleFileUpload(e.target.files[0], selectedFormat);
+                    handleFileUpload(e.target.files[0], 'excel');
                 }
             });
 
@@ -3499,8 +3481,7 @@
                 
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
-                    const selectedFormat = document.querySelector('input[name="importFormat"]:checked').value;
-                    handleFileUpload(files[0], selectedFormat);
+                    handleFileUpload(files[0], 'excel');
                 }
             });
 
@@ -3511,7 +3492,7 @@
         }
 
         // 處理檔案上傳
-        async function handleFileUpload(file, format = 'googlesheets') {
+        async function handleFileUpload(file, format = 'excel') {
             console.log('📁 開始處理檔案上傳:', file.name);
             console.log('📁 檔案大小:', file.size, 'bytes');
             console.log('📁 檔案類型:', file.type);
@@ -3520,8 +3501,7 @@
             
             // 驗證檔案類型
             if (!file.name.match(/\.(xlsx|xls)$/i)) {
-                const formatName = format === 'googlesheets' ? 'Google Sheets' : 'Excel';
-                alert(`❌ 請選擇 ${formatName} 檔案 (.xlsx 或 .xls)`);
+                alert(`❌ 請選擇 Excel 檔案 (.xlsx 或 .xls)`);
                 return;
             }
 
@@ -6276,7 +6256,7 @@
                     processImportData(jsonData);
                 } catch (error) {
                     console.error('Excel 讀取錯誤:', error);
-                    alert('讀取 Google Sheets 檔案時發生錯誤：' + error.message);
+                    alert('讀取 Excel 檔案時發生錯誤：' + error.message);
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -6575,7 +6555,7 @@
             const fileName = `family_records_backup_${formatDateToYYYYMMDD(new Date())}.xlsx`;
             XLSX.writeFile(workbook, fileName);
             
-            alert(`成功下載 Google Sheets 備份檔案！\n備份了 ${records.length} 筆記錄。\n檔案名: ${fileName}\n\n此檔案可以直接重新匯入系統。`);
+            alert(`成功下載 Excel 備份檔案！\n備份了 ${records.length} 筆記錄。\n檔案名: ${fileName}\n\n此檔案可以直接重新匯入系統。`);
         }
 
 
