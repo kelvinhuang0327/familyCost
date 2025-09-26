@@ -4792,26 +4792,41 @@
             initializeSwipeIndicators();
         });
 
-        // 頁面可見性變化時同步數據
+        // 頁面可見性變化時同步數據（減少頻率）
+        let lastSyncTime = 0;
+        const SYNC_COOLDOWN = 5000; // 5秒冷卻時間
+        
         document.addEventListener('visibilitychange', function() {
             if (!document.hidden) {
-                console.log('👁️ 頁面重新可見，立即同步數據');
-                syncFromServer().then(synced => {
-                    if (synced) {
-                        console.log('✅ 頁面可見性同步完成');
-                    }
-                });
+                const now = Date.now();
+                if (now - lastSyncTime > SYNC_COOLDOWN) {
+                    console.log('👁️ 頁面重新可見，同步數據...');
+                    lastSyncTime = now;
+                    syncFromServer().then(synced => {
+                        if (synced) {
+                            console.log('✅ 頁面可見性同步完成');
+                        }
+                    });
+                } else {
+                    console.log('⏰ 同步冷卻中，跳過本次同步');
+                }
             }
         });
 
-        // 頁面獲得焦點時同步數據
+        // 頁面獲得焦點時同步數據（使用相同的冷卻機制）
         window.addEventListener('focus', function() {
-            console.log('🎯 頁面獲得焦點，檢查數據更新');
-            syncFromServer().then(synced => {
-                if (synced) {
-                    console.log('✅ 焦點同步完成');
-                }
-            });
+            const now = Date.now();
+            if (now - lastSyncTime > SYNC_COOLDOWN) {
+                console.log('🎯 頁面獲得焦點，檢查數據更新');
+                lastSyncTime = now;
+                syncFromServer().then(synced => {
+                    if (synced) {
+                        console.log('✅ 焦點同步完成');
+                    }
+                });
+            } else {
+                console.log('⏰ 焦點同步冷卻中，跳過本次同步');
+            }
         });
 
         async function initializeApp() {
@@ -4863,8 +4878,18 @@
             console.log('應用程式初始化完成');
         }
 
+        // 數據載入狀態管理
+        let isLoadingData = false;
+        
         // 從SQLite數據庫載入資料
         async function loadDataFromFile() {
+            // 防止重複載入
+            if (isLoadingData) {
+                console.log('⏰ 數據正在載入中，跳過重複請求');
+                return;
+            }
+            
+            isLoadingData = true;
             try {
                 console.log('🔄 開始從SQLite數據庫載入資料...');
                 console.log('🌍 當前環境:', ENV_CONFIG.getEnvironment());
@@ -4897,6 +4922,9 @@
                 console.error('❌ 從SQLite數據庫載入失敗:', error);
                 records = [];
                 console.log('📝 SQLite載入失敗，records設為空數組');
+            } finally {
+                isLoadingData = false; // 重置載入狀態
+                console.log('✅ 數據載入狀態已重置');
             }
         }
 
