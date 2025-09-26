@@ -389,12 +389,18 @@ class DatabaseManager {
             }
             
             const jsonData = fs.readFileSync(jsonPath, 'utf8');
-            const records = JSON.parse(jsonData);
+            const parsedData = JSON.parse(jsonData);
             
-            if (!Array.isArray(records)) {
+            // 處理不同的JSON格式
+            let records;
+            if (Array.isArray(parsedData)) {
+                records = parsedData;
+            } else if (parsedData && Array.isArray(parsedData.records)) {
+                records = parsedData.records;
+            } else {
                 return {
                     success: false,
-                    message: 'JSON文件格式錯誤',
+                    message: 'JSON文件格式錯誤，無法找到records數組',
                     stats: { total: 0 }
                 };
             }
