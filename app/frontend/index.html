@@ -2728,8 +2728,22 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="type">類型</label>
+                            <select id="type" required onchange="handleTypeChange()">
+                                <option value="">請選擇</option>
+                                <option value="income">收入</option>
+                                <option value="expense">支出</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
                             <label for="amount">金額</label>
                             <input type="number" id="amount" step="0.01" required placeholder="輸入金額（正數）">
+                        </div>
+                        <div class="form-group">
+                            <label for="date">日期</label>
+                            <input type="date" id="date" required>
                         </div>
                     </div>
                     <div class="form-row">
@@ -2752,10 +2766,6 @@
                     <div class="form-group">
                         <label for="description">描述</label>
                         <textarea id="description" rows="3" placeholder="請輸入詳細描述..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="date">日期</label>
-                        <input type="date" id="date" required>
                     </div>
                     <button type="submit" class="btn">新增記錄</button>
                 </form>
@@ -4884,6 +4894,15 @@
             });
         }
 
+        // 處理類型變化
+        function handleTypeChange() {
+            const typeSelect = document.getElementById('type');
+            const amountInput = document.getElementById('amount');
+            const mainCategorySelect = document.getElementById('mainCategory');
+            
+            updateMainCategories(typeSelect, mainCategorySelect);
+        }
+
         // 處理主類別變化
         function handleMainCategoryChange() {
             const mainCategorySelect = document.getElementById('mainCategory');
@@ -5786,6 +5805,7 @@
             
             // 數據驗證
             const member = document.getElementById('member').value;
+            const type = document.getElementById('type').value;
             const amount = parseFloat(document.getElementById('amount').value);
             let mainCategory = document.getElementById('mainCategory').value;
             const customMainCategory = document.getElementById('customMainCategory').value;
@@ -5794,6 +5814,11 @@
             
             if (!member) {
                 alert('請選擇成員！');
+                return;
+            }
+            
+            if (!type) {
+                alert('請選擇類型（收入/支出）！');
                 return;
             }
             
@@ -5821,9 +5846,6 @@
                 return;
             }
             
-            // 根據金額正負確定類型
-            const type = amount > 0 ? 'income' : 'expense';
-            
             if (!date) {
                 alert('請選擇日期！');
                 return;
@@ -5843,7 +5865,7 @@
                 id: Date.now().toString(),
                 member: member,
                 type: type,
-                amount: Math.abs(amount), // 存儲絕對值
+                amount: amount, // 存儲正數金額
                 mainCategory: mainCategory,
                 subCategory: subCategory,
                 description: document.getElementById('description').value,
