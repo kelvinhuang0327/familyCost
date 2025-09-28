@@ -1444,6 +1444,72 @@ app.get('/api/records/integrity', (req, res) => {
     }
 });
 
+// Token 管理 API
+app.post('/api/github/token', async (req, res) => {
+    try {
+        const { token } = req.body;
+        
+        if (!token) {
+            return res.status(400).json({
+                success: false,
+                message: 'Token 不能為空'
+            });
+        }
+        
+        // 驗證 Token 格式
+        if (!token.startsWith('ghp_') || token.length < 40) {
+            return res.status(400).json({
+                success: false,
+                message: 'Token 格式不正確，GitHub Personal Access Token 應以 ghp_ 開頭'
+            });
+        }
+        
+        // 儲存 Token 到環境變數（臨時）
+        process.env.GITHUB_TOKEN = token;
+        
+        // 也儲存到 Token Manager
+        try {
+            await tokenManager.saveToken(token);
+            console.log('✅ Token 已儲存到 Token Manager');
+        } catch (error) {
+            console.log('⚠️ Token Manager 儲存失敗:', error.message);
+        }
+        
+        console.log('✅ Token 已設置');
+        
+        res.json({
+            success: true,
+            message: 'GitHub Token 設置成功'
+        });
+        
+    } catch (error) {
+        console.error('❌ Token 設置失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: `Token 設置失敗: ${error.message}`
+        });
+    }
+});
+
+// 檢查 Token 狀態
+app.get('/api/github/token/status', async (req, res) => {
+    try {
+        const token = await githubDataManager.getValidToken();
+        
+        res.json({
+            success: true,
+            hasToken: !!token,
+            tokenPreview: token ? token.substring(0, 10) + '...' : null
+        });
+        
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
 // 手動同步到 GitHub 的 API
 app.post('/api/github/sync', async (req, res) => {
     try {
