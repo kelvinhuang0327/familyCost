@@ -103,7 +103,9 @@ class GitHubDataManager {
 
     // 保存數據到 GitHub
     async saveDataToGitHub(records) {
-        if (!this.token) {
+        const token = await this.getValidToken();
+        if (!token) {
+            console.log('⚠️ 未找到有效的 GitHub Token，回退到本地存儲');
             return await this.saveDataToLocal(records);
         }
 
