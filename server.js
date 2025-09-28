@@ -1515,8 +1515,18 @@ app.post('/api/github/sync', async (req, res) => {
     try {
         console.log('🔄 [API] 收到手動同步到 GitHub 的請求');
         
-        // 獲取現有數據
-        const existingRecords = await githubDataManager.getDataFromGitHub();
+        // 獲取現有數據（優先從本地文件讀取，確保同步最新資料）
+        let existingRecords;
+        try {
+            const dataPath = path.join(__dirname, 'data', 'data.json');
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            const parsedData = JSON.parse(dataContent);
+            existingRecords = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
+            console.log('✅ 從本地文件讀取資料進行同步:', existingRecords.length, '筆');
+        } catch (error) {
+            console.log('⚠️ 本地文件讀取失敗，回退到 GitHub:', error.message);
+            existingRecords = await githubDataManager.getDataFromGitHub();
+        }
         
         console.log(`📊 [API] 準備同步 ${existingRecords.length} 筆記錄到 GitHub`);
         
