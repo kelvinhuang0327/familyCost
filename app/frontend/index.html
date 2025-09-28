@@ -6079,6 +6079,19 @@
                 if (addResult.success) {
                     console.log('✅ SQLite數據庫記錄已添加:', addResult.message);
                     
+                    // 檢查同步狀態
+                    if (addResult.syncStatus) {
+                        if (addResult.syncStatus.github) {
+                            console.log('✅ GitHub 同步成功:', addResult.syncStatus.commit);
+                            showNotification('記錄添加成功並已同步到 GitHub', 'success');
+                        } else {
+                            console.warn('⚠️ GitHub 同步失敗:', addResult.syncStatus.error);
+                            showNotification(`記錄添加成功，但 GitHub 同步失敗：${addResult.syncStatus.error}`, 'warning');
+                        }
+                    } else {
+                        showNotification('記錄添加成功', 'success');
+                    }
+                    
                     // 添加到前端數組
                     records.push(record);
                     // localStorage緩存已移除
@@ -6302,6 +6315,19 @@
                     
                     if (deleteResult.success) {
                         console.log('✅ SQLite數據庫記錄已刪除:', deleteResult.message);
+                        
+                        // 檢查同步狀態
+                        if (deleteResult.syncStatus) {
+                            if (deleteResult.syncStatus.github) {
+                                console.log('✅ GitHub 同步成功:', deleteResult.syncStatus.commit);
+                                showNotification('記錄刪除成功並已同步到 GitHub', 'success');
+                            } else {
+                                console.warn('⚠️ GitHub 同步失敗:', deleteResult.syncStatus.error);
+                                showNotification(`記錄刪除成功，但 GitHub 同步失敗：${deleteResult.syncStatus.error}`, 'warning');
+                            }
+                        } else {
+                            showNotification('記錄刪除成功', 'success');
+                        }
                         
                         // 從前端數組中移除記錄
                 records = records.filter(record => record.id !== id);
