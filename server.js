@@ -1242,8 +1242,18 @@ app.post('/api/records', async (req, res) => {
             record.id = generateUniqueId();
         }
         
-        // 獲取現有數據
-        const existingRecords = await githubDataManager.getDataFromGitHub();
+        // 獲取現有數據（優先從本地文件讀取，避免覆蓋新資料）
+        let existingRecords;
+        try {
+            const dataPath = path.join(__dirname, 'data', 'data.json');
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            const parsedData = JSON.parse(dataContent);
+            existingRecords = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
+            console.log('✅ 從本地文件讀取現有資料:', existingRecords.length, '筆');
+        } catch (error) {
+            console.log('⚠️ 本地文件讀取失敗，回退到 GitHub:', error.message);
+            existingRecords = await githubDataManager.getDataFromGitHub();
+        }
         
         // 添加新記錄
         existingRecords.push(record);
@@ -1334,8 +1344,18 @@ app.delete('/api/records/:id', async (req, res) => {
     try {
         const id = req.params.id;
         
-        // 獲取現有數據
-        const existingRecords = await githubDataManager.getDataFromGitHub();
+        // 獲取現有數據（優先從本地文件讀取，避免覆蓋新資料）
+        let existingRecords;
+        try {
+            const dataPath = path.join(__dirname, 'data', 'data.json');
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            const parsedData = JSON.parse(dataContent);
+            existingRecords = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
+            console.log('✅ 從本地文件讀取現有資料:', existingRecords.length, '筆');
+        } catch (error) {
+            console.log('⚠️ 本地文件讀取失敗，回退到 GitHub:', error.message);
+            existingRecords = await githubDataManager.getDataFromGitHub();
+        }
         
         // 查找並刪除記錄
         const originalLength = existingRecords.length;
