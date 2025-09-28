@@ -192,8 +192,8 @@
             .stat-card {
                 padding: 15px !important;
                 margin-bottom: 5px !important;
-                min-width: 200px !important;
-                width: 200px !important;
+                min-width: 280px !important;
+                width: 280px !important;
                 flex-shrink: 0 !important;
                 scroll-snap-align: center !important;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
@@ -207,30 +207,20 @@
             
             .stat-card:first-child {
                 margin-left: 20px !important;
-                transform: scale(0.9) !important;
-                z-index: 0 !important;
+                transform: scale(0.95) !important;
+                z-index: 1 !important;
             }
             
             .stat-card:last-child {
                 margin-right: 20px !important;
-                transform: scale(0.9) !important;
-                z-index: 0 !important;
+                transform: scale(0.95) !important;
+                z-index: 1 !important;
             }
             
             .stat-card:nth-child(2) {
                 transform: scale(1) !important;
                 z-index: 2 !important;
                 box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2) !important;
-            }
-            
-            .stat-card:nth-child(3) {
-                transform: scale(0.95) !important;
-                z-index: 1 !important;
-            }
-            
-            .stat-card:nth-child(4) {
-                transform: scale(0.9) !important;
-                z-index: 0 !important;
             }
             
             .stat-card h3 {
@@ -2696,12 +2686,8 @@
                             <p>信用卡支出</p>
                         </div>
                         <div class="stat-card">
-                            <h3 id="cashExpense">$0</h3>
-                            <p>現金支出</p>
-                        </div>
-                        <div class="stat-card">
                             <h3 id="balance">$0</h3>
-                            <p>現金流</p>
+                            <p>現金餘額</p>
                         </div>
                     </div>
                 </div>
@@ -5232,7 +5218,7 @@
             console.log('💰 現金統計調試:');
             console.log('- 現金收入:', cashIncome);
             console.log('- 現金支出:', cashExpense);
-            console.log('- 現金流 (收入-支出):', cashBalance);
+            console.log('- 現金餘額 (收入-支出):', cashBalance);
             
             // 計算信用卡支出
             const creditExpense = records
@@ -5267,25 +5253,13 @@
             const monthlyCashFlow = monthlyHouseholdIncome - monthlyCashExpense;
 
             document.getElementById('totalExpense').textContent = `$${totalExpense.toLocaleString()}`;
-            
-            // 現金支出顯示（純支出，不帶正負號）
-            console.log('🔍 現金統計調試:');
-            console.log('- 現金支出記錄數:', records.filter(r => r.type === 'expense' && r.subCategory === '現金').length);
-            console.log('- 現金支出總額:', cashExpense);
-            console.log('- 現金收入記錄數:', records.filter(r => r.type === 'income' && r.subCategory === '現金').length);
-            console.log('- 現金收入總額:', cashIncome);
-            console.log('- 現金流 (收入-支出):', cashBalance);
-            
-            // 現金支出卡片顯示純支出金額，不是餘額
-            document.getElementById('cashExpense').textContent = `$${cashExpense.toLocaleString()}`;
-            
             document.getElementById('creditExpense').textContent = `$${creditExpense.toLocaleString()}`;
             
-            // 現金流顯示（所有現金收入 - 所有現金支出，帶顏色）
-            const cashFlowElement = document.getElementById('balance');
-            const cashFlowPrefix = cashBalance >= 0 ? '+' : '';
-            cashFlowElement.textContent = `${cashFlowPrefix}$${Math.abs(cashBalance).toLocaleString()}`;
-            cashFlowElement.style.color = cashBalance >= 0 ? '#4CAF50' : '#F44336';
+            // 現金餘額顯示（所有現金收入 - 所有現金支出，帶顏色）
+            const cashBalanceElement = document.getElementById('balance');
+            const cashBalancePrefix = cashBalance >= 0 ? '+' : '';
+            cashBalanceElement.textContent = `${cashBalancePrefix}$${Math.abs(cashBalance).toLocaleString()}`;
+            cashBalanceElement.style.color = cashBalance >= 0 ? '#4CAF50' : '#F44336';
 
             // 更新各成員統計
             updateMemberStats();
