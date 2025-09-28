@@ -1424,6 +1424,39 @@ app.get('/api/records/integrity', (req, res) => {
     }
 });
 
+// 手動同步到 GitHub 的 API
+app.post('/api/github/sync', async (req, res) => {
+    try {
+        console.log('🔄 [API] 收到手動同步到 GitHub 的請求');
+        
+        // 獲取現有數據
+        const existingRecords = await githubDataManager.getDataFromGitHub();
+        
+        console.log(`📊 [API] 準備同步 ${existingRecords.length} 筆記錄到 GitHub`);
+        
+        // 保存到 GitHub
+        const result = await githubDataManager.saveDataToGitHub(existingRecords);
+        
+        console.log('✅ [API] 成功同步到 GitHub');
+        
+        res.json({
+            success: true,
+            message: `成功同步 ${existingRecords.length} 筆記錄到 GitHub`,
+            data: {
+                recordCount: existingRecords.length,
+                result: result
+            }
+        });
+        
+    } catch (error) {
+        console.error('❌ [API] 同步到 GitHub 失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: `同步失敗: ${error.message}`
+        });
+    }
+});
+
 // 數據遷移端點
 app.post('/api/migrate', async (req, res) => {
     try {

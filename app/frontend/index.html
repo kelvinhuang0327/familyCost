@@ -2243,16 +2243,96 @@
             border-radius: 5px;
         }
 
-        .import-section, .export-section {
+        .import-section, .export-section, .github-sync-section {
             margin-bottom: 30px;
             padding: 20px;
             background: #f8f9fa;
             border-radius: 10px;
         }
 
-        .import-section h3, .export-section h3 {
+        .import-section h3, .export-section h3, .github-sync-section h3 {
             margin-bottom: 15px;
             color: #333;
+        }
+        
+        .github-sync-section {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .github-sync-section h3 {
+            color: white;
+        }
+        
+        .github-sync-section p {
+            opacity: 0.9;
+        }
+        
+        .sync-info {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .info-icon {
+            font-size: 1.5em;
+            color: white;
+        }
+        
+        .sync-info h4 {
+            margin: 0 0 8px 0;
+            color: white;
+            font-size: 1.1em;
+        }
+        
+        .sync-info p {
+            margin: 0 0 8px 0;
+            color: white;
+            font-size: 0.9em;
+        }
+        
+        .sync-info ul {
+            margin: 0;
+            padding-left: 20px;
+            color: white;
+            font-size: 0.9em;
+        }
+        
+        .sync-info li {
+            margin-bottom: 4px;
+        }
+        
+        .sync-actions {
+            text-align: center;
+        }
+        
+        .sync-status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        
+        .sync-status.success {
+            background: rgba(40, 167, 69, 0.2);
+            color: white;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        
+        .sync-status.error {
+            background: rgba(220, 53, 69, 0.2);
+            color: white;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        
+        .sync-status.loading {
+            background: rgba(255, 193, 7, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 193, 7, 0.3);
         }
 
         .import-options {
@@ -2890,6 +2970,32 @@
                 </div>
                 
                 <!-- Excel 匯入功能已整合到數據匯入區塊 -->
+                
+                <!-- GitHub 同步功能 -->
+                <div class="github-sync-section">
+                    <h3>☁️ GitHub 同步</h3>
+                    <p>將資料同步到 GitHub 儲存庫</p>
+                    
+                    <div class="sync-info">
+                        <div class="info-icon">ℹ️</div>
+                        <div class="info-content">
+                            <h4>同步說明</h4>
+                            <p>手動同步將會：</p>
+                            <ul>
+                                <li>將所有本地記錄上傳到 GitHub</li>
+                                <li>確保資料在雲端備份</li>
+                                <li>可在其他裝置同步資料</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="sync-actions">
+                        <button class="btn btn-primary" onclick="syncToGitHub()" id="syncBtn">
+                            💾 儲存到 GitHub
+                        </button>
+                        <div id="syncStatus" class="sync-status" style="display: none;"></div>
+                    </div>
+                </div>
                 
                 <!-- 資料清除功能 -->
                 <div class="clear-section">
@@ -6948,6 +7054,60 @@
             document.getElementById('deleteTypeFilter').value = '';
             document.getElementById('deleteDateFrom').value = '';
             document.getElementById('deleteDateTo').value = '';
+        }
+
+        // GitHub 同步功能
+        async function syncToGitHub() {
+            const syncBtn = document.getElementById('syncBtn');
+            const syncStatus = document.getElementById('syncStatus');
+            
+            try {
+                // 顯示載入狀態
+                syncBtn.disabled = true;
+                syncBtn.innerHTML = '🔄 同步中...';
+                syncStatus.style.display = 'block';
+                syncStatus.className = 'sync-status loading';
+                syncStatus.innerHTML = '正在同步資料到 GitHub...';
+                
+                console.log('🔄 開始同步資料到 GitHub...');
+                
+                // 呼叫後端 API
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/github/sync', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 成功
+                    syncStatus.className = 'sync-status success';
+                    syncStatus.innerHTML = `✅ ${result.message}`;
+                    console.log('✅ 同步成功:', result);
+                } else {
+                    // 失敗
+                    syncStatus.className = 'sync-status error';
+                    syncStatus.innerHTML = `❌ 同步失敗: ${result.message}`;
+                    console.error('❌ 同步失敗:', result);
+                }
+                
+            } catch (error) {
+                // 錯誤處理
+                syncStatus.className = 'sync-status error';
+                syncStatus.innerHTML = `❌ 同步失敗: ${error.message}`;
+                console.error('❌ 同步錯誤:', error);
+            } finally {
+                // 恢復按鈕狀態
+                syncBtn.disabled = false;
+                syncBtn.innerHTML = '💾 儲存到 GitHub';
+                
+                // 3秒後隱藏狀態訊息
+                setTimeout(() => {
+                    syncStatus.style.display = 'none';
+                }, 3000);
+            }
         }
 
         // 清空所有數據
