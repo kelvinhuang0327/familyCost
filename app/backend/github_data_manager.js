@@ -1,6 +1,7 @@
 const https = require('https');
 const fs = require('fs').promises;
 const path = require('path');
+const ConfigManager = require('./config_manager');
 
 class GitHubDataManager {
     constructor(tokenManager = null) {
@@ -10,6 +11,7 @@ class GitHubDataManager {
         this.dataPath = 'data/data.json';
         this.tokenManager = tokenManager;
         this.token = process.env.GITHUB_TOKEN || '';
+        this.configManager = new ConfigManager();
         
         if (!this.token && !this.tokenManager) {
             console.warn('⚠️ GITHUB_TOKEN 環境變數和 TokenManager 都未設置，將使用本地文件存儲');
@@ -28,6 +30,17 @@ class GitHubDataManager {
         if (process.env.GITHUB_TOKEN) {
             console.log('✅ 使用 process.env.GITHUB_TOKEN');
             return process.env.GITHUB_TOKEN;
+        }
+        
+        // 嘗試從配置管理器獲取
+        try {
+            const configToken = await this.configManager.getGitHubToken();
+            if (configToken) {
+                console.log('✅ 從配置檔獲取到 Token');
+                return configToken;
+            }
+        } catch (error) {
+            console.log('⚠️ 從配置檔獲取 Token 失敗:', error.message);
         }
         
         // 嘗試從 TokenManager 獲取

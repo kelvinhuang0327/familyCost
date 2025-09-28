@@ -1444,6 +1444,58 @@ app.get('/api/records/integrity', (req, res) => {
     }
 });
 
+// 配置管理 API
+app.get('/api/config/github', async (req, res) => {
+    try {
+        const configManager = require('./app/backend/config_manager');
+        const configMgr = new configManager();
+        const config = await configMgr.getConfig();
+        const tokenStatus = await configMgr.checkTokenStatus();
+        
+        res.json({
+            success: true,
+            config: {
+                ...config,
+                github_token: tokenStatus.hasToken ? tokenStatus.tokenPreview : null // 只返回預覽，不返回完整 Token
+            },
+            tokenStatus: tokenStatus
+        });
+    } catch (error) {
+        console.error('❌ 獲取配置失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: `獲取配置失敗: ${error.message}`
+        });
+    }
+});
+
+app.post('/api/config/github', async (req, res) => {
+    try {
+        const { github_token, owner, repo, branch } = req.body;
+        const configManager = require('./app/backend/config_manager');
+        const configMgr = new configManager();
+        
+        const updates = {};
+        if (github_token !== undefined) updates.github_token = github_token;
+        if (owner !== undefined) updates.owner = owner;
+        if (repo !== undefined) updates.repo = repo;
+        if (branch !== undefined) updates.branch = branch;
+        
+        await configMgr.updateConfig(updates);
+        
+        res.json({
+            success: true,
+            message: '配置更新成功'
+        });
+    } catch (error) {
+        console.error('❌ 更新配置失敗:', error);
+        res.status(500).json({
+            success: false,
+            message: `更新配置失敗: ${error.message}`
+        });
+    }
+});
+
 // Token 管理 API
 app.post('/api/github/token', async (req, res) => {
     try {
