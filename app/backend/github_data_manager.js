@@ -20,7 +20,14 @@ class GitHubDataManager {
     async getValidToken() {
         // 優先使用環境變數
         if (this.token) {
+            console.log('✅ 使用環境變數中的 Token');
             return this.token;
+        }
+        
+        // 檢查環境變數
+        if (process.env.GITHUB_TOKEN) {
+            console.log('✅ 使用 process.env.GITHUB_TOKEN');
+            return process.env.GITHUB_TOKEN;
         }
         
         // 嘗試從 TokenManager 獲取
@@ -28,6 +35,7 @@ class GitHubDataManager {
             try {
                 const token = await this.tokenManager.loadToken();
                 if (token) {
+                    console.log('✅ 從 TokenManager 獲取到 Token');
                     return token;
                 }
             } catch (error) {
@@ -35,6 +43,7 @@ class GitHubDataManager {
             }
         }
         
+        console.log('❌ 未找到有效的 GitHub Token');
         return null;
     }
 
