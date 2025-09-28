@@ -35,8 +35,8 @@
             .container {
                 border-radius: 8px;
                 margin: 0;
-                padding-top: 120px !important;
-                padding-bottom: 60px !important;
+                padding-top: 105px !important;
+                padding-bottom: 50px !important;
                 background: white;
                 height: 100vh;
                 overflow-y: auto !important;
@@ -63,7 +63,7 @@
             }
             
             .header {
-                padding: 15px 15px !important;
+                padding: 10px 15px !important;
                 background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
                 color: white !important;
                 border-radius: 0 !important;
@@ -86,14 +86,14 @@
             }
             
             .header h1 {
-                font-size: 1.6em !important;
-                margin-bottom: 5px !important;
+                font-size: 1.4em !important;
+                margin-bottom: 3px !important;
                 font-weight: bold !important;
                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
             }
             
             .header p {
-                font-size: 1em !important;
+                font-size: 0.9em !important;
                 opacity: 0.9 !important;
                 text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
             }
@@ -109,7 +109,7 @@
                 gap: 2px;
                 padding: 5px;
                 position: fixed !important;
-                top: 85px !important;
+                top: 75px !important;
                 left: 0 !important;
                 right: 0 !important;
                 background: white !important;
@@ -158,11 +158,14 @@
             .stats,
             .stats-grid {
                 display: flex !important;
-                justify-content: center !important;
+                justify-content: flex-start !important;
                 gap: 12px !important;
                 padding: 10px 15px 5px 15px !important;
-                flex-wrap: wrap !important;
+                flex-wrap: nowrap !important;
                 align-items: center !important;
+                overflow-x: auto !important;
+                scroll-snap-type: x mandatory !important;
+                -webkit-overflow-scrolling: touch !important;
             }
             
             .stats::-webkit-scrollbar,
@@ -808,9 +811,9 @@
             .footer {
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
                 color: white !important;
-                padding: 10px !important;
+                padding: 8px !important;
                 border-radius: 0 !important;
-                margin-top: 15px !important;
+                margin-top: 10px !important;
                 text-align: center !important;
                 position: fixed !important;
                 bottom: 0 !important;
@@ -853,8 +856,8 @@
             
             .container {
                 border-radius: 12px;
-                padding-top: 120px !important;
-                padding-bottom: 70px !important;
+                padding-top: 105px !important;
+                padding-bottom: 60px !important;
                 background: white;
                 height: 100vh;
                 overflow-y: auto !important;
@@ -881,7 +884,7 @@
             }
             
             .header {
-                padding: 18px 20px;
+                padding: 12px 20px;
                 position: fixed !important;
                 top: 0 !important;
                 left: 0 !important;
@@ -891,17 +894,17 @@
             }
             
             .header h1 {
-                font-size: 2em;
+                font-size: 1.8em;
             }
             
             .header p {
-                font-size: 1.05em;
+                font-size: 1em;
             }
             
             .nav-tabs {
                 gap: 8px;
                 position: fixed !important;
-                top: 100px !important;
+                top: 90px !important;
                 left: 0 !important;
                 right: 0 !important;
                 background: white !important;
@@ -1086,9 +1089,9 @@
             .footer {
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
                 color: white !important;
-                padding: 15px !important;
+                padding: 12px !important;
                 border-radius: 0 !important;
-                margin-top: 20px !important;
+                margin-top: 15px !important;
                 text-align: center !important;
                 position: fixed !important;
                 bottom: 0 !important;
@@ -1159,7 +1162,7 @@
             }
             
             .header {
-                padding: 20px 30px;
+                padding: 15px 30px;
                 position: fixed !important;
                 top: 0 !important;
                 left: 0 !important;
@@ -1169,11 +1172,11 @@
             }
             
             .header h1 {
-                font-size: 2.2em;
+                font-size: 2em;
             }
             
             .header p {
-                font-size: 1.1em;
+                font-size: 1em;
             }
             
             .nav-tabs {
@@ -2632,8 +2635,8 @@
         <div class="header">
             <div class="header-content">
                 <div class="header-main">
-                    <h1>💰 家庭收支平台</h1>
-                    <p>輕鬆管理您的家庭財務</p>
+                    <h1>💰 收支平台</h1>
+                    <p>輕鬆管理您的財務</p>
                 </div>
                 <div class="version-info">
                     <span class="version-label">版本</span>
@@ -3427,20 +3430,21 @@
             }
         }
 
+        // 檢查是否需要顯示滑動指示器（全局函數）
+        function checkScrollable(element, indicator) {
+            if (element && indicator) {
+                const isScrollable = element.scrollWidth > element.clientWidth;
+                indicator.style.display = isScrollable ? 'block' : 'none';
+                console.log('🔍 滑動檢查:', element.className, '可滑動:', isScrollable, 'scrollWidth:', element.scrollWidth, 'clientWidth:', element.clientWidth);
+            }
+        }
+
         // 初始化滑動指示器
         function initializeSwipeIndicators() {
             const statsGrid = document.querySelector('.stats');
             const memberStatsGrid = document.querySelector('.member-stats-grid');
             const statsIndicator = document.getElementById('statsSwipeIndicator');
             const memberIndicator = document.getElementById('memberSwipeIndicator');
-            
-            // 檢查是否需要顯示滑動指示器
-            function checkScrollable(element, indicator) {
-                if (element && indicator) {
-                    const isScrollable = element.scrollWidth > element.clientWidth;
-                    indicator.style.display = isScrollable ? 'block' : 'none';
-                }
-            }
             
             // 添加滑動時的動態效果
             function addSwipeEffects(element) {
@@ -5261,6 +5265,12 @@
 
             // 更新各成員統計
             updateMemberStats();
+            
+            // 檢查並顯示滑動指示器
+            setTimeout(() => {
+                checkScrollable(document.querySelector('.stats'), document.getElementById('statsSwipeIndicator'));
+                checkScrollable(document.querySelector('.member-stats-grid'), document.getElementById('memberSwipeIndicator'));
+            }, 100);
         }
 
         function updateMemberStats() {
