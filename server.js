@@ -1467,6 +1467,15 @@ app.post('/api/github/token', async (req, res) => {
         // 儲存 Token 到環境變數（臨時）
         process.env.GITHUB_TOKEN = token;
         
+        // 儲存到本地文件（持久化）
+        try {
+            const tokenPath = path.join(__dirname, 'data', '.github_token');
+            await fs.writeFile(tokenPath, token, 'utf8');
+            console.log('✅ Token 已儲存到本地文件');
+        } catch (error) {
+            console.log('⚠️ 本地文件儲存失敗:', error.message);
+        }
+        
         // 也儲存到 Token Manager
         try {
             await tokenManager.saveToken(token);
@@ -1529,6 +1538,16 @@ app.post('/api/github/sync', async (req, res) => {
         }
         
         console.log(`📊 [API] 準備同步 ${existingRecords.length} 筆記錄到 GitHub`);
+        
+        // 檢查 Token 狀態
+        const token = await githubDataManager.getValidToken();
+        if (!token) {
+            return res.status(400).json({
+                success: false,
+                message: 'GitHub Token 未設置，無法同步到 GitHub。請先設置 Token。'
+            });
+        }
+        console.log('✅ GitHub Token 已設置，開始同步...');
         
         // 保存到 GitHub
         const result = await githubDataManager.saveDataToGitHub(existingRecords);

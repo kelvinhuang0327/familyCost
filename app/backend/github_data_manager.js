@@ -23,6 +23,20 @@ class GitHubDataManager {
             return this.token;
         }
         
+        // 嘗試從本地文件讀取
+        try {
+            const fs = require('fs').promises;
+            const path = require('path');
+            const tokenPath = path.join(__dirname, '../../data/.github_token');
+            const token = await fs.readFile(tokenPath, 'utf8');
+            if (token && token.trim()) {
+                console.log('✅ 從本地文件讀取到 Token');
+                return token.trim();
+            }
+        } catch (error) {
+            console.log('⚠️ 從本地文件讀取 Token 失敗:', error.message);
+        }
+        
         // 嘗試從 TokenManager 獲取
         if (this.tokenManager) {
             try {
