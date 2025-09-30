@@ -5178,24 +5178,36 @@
             console.log('- 總收入:', totalIncome);
             console.log('- 總支出:', totalExpense);
             
-            // 計算現金支出
+            // 計算現金支出（所有成員的現金支出）
             const cashExpense = records
                 .filter(record => record.type === 'expense' && record.subCategory === '現金')
                 .reduce((sum, record) => sum + record.amount, 0);
             
-            // 計算現金收入（所有成員）
+            // 計算現金收入（所有成員的現金收入）
             const cashIncome = records
                 .filter(record => record.type === 'income' && record.subCategory === '現金')
                 .reduce((sum, record) => sum + record.amount, 0);
             
-            // 計算現金餘額 = 所有現金收入 - 所有現金支出
+            // 計算現金餘額 = 所有成員的現金收入 - 所有成員的現金支出
             const cashBalance = cashIncome - cashExpense;
             
             // 調試信息
             console.log('💰 現金統計調試:');
-            console.log('- 現金收入:', cashIncome);
-            console.log('- 現金支出:', cashExpense);
-            console.log('- 現金餘額 (收入-支出):', cashBalance);
+            console.log('- 所有成員現金收入:', cashIncome);
+            console.log('- 所有成員現金支出:', cashExpense);
+            console.log('- 現金餘額 (所有成員現金收入-所有成員現金支出):', cashBalance);
+            
+            // 詳細調試：檢查現金收入記錄
+            const cashIncomeRecords = records.filter(record => record.type === 'income' && record.subCategory === '現金');
+            console.log('📊 現金收入記錄詳情:', cashIncomeRecords);
+            
+            // 詳細調試：檢查現金支出記錄
+            const cashExpenseRecords = records.filter(record => record.type === 'expense' && record.subCategory === '現金');
+            console.log('📊 現金支出記錄詳情:', cashExpenseRecords);
+            
+            // 檢查所有記錄的 subCategory 類型
+            const allSubCategories = [...new Set(records.map(r => r.subCategory))];
+            console.log('📊 所有 subCategory 類型:', allSubCategories);
             
             // 計算信用卡支出
             const creditExpense = records
