@@ -1595,16 +1595,31 @@ app.post('/api/config/github', async (req, res) => {
         const configMgr = new configManager();
         
         const updates = {};
-        if (github_token !== undefined) updates.github_token = github_token;
+        if (github_token !== undefined) {
+            updates.github_token = github_token;
+            // 同時設置環境變數，確保 Render 部署後依然有效
+            process.env.GITHUB_TOKEN = github_token;
+            console.log('✅ GitHub Token 已設置到環境變數');
+        }
         if (owner !== undefined) updates.owner = owner;
         if (repo !== undefined) updates.repo = repo;
         if (branch !== undefined) updates.branch = branch;
         
         await configMgr.updateConfig(updates);
         
+        // 同時保存到 TokenManager（多重備份）
+        if (github_token) {
+            try {
+                await tokenManager.saveToken(github_token);
+                console.log('✅ Token 已備份到 TokenManager');
+            } catch (tokenError) {
+                console.log('⚠️ TokenManager 備份失敗，但配置已保存');
+            }
+        }
+        
         res.json({
             success: true,
-            message: '配置更新成功'
+            message: '配置更新成功（Token 已設置到環境變數和配置檔）'
         });
     } catch (error) {
         console.error('❌ 更新配置失敗:', error);
