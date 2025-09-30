@@ -1231,13 +1231,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218273192_65pliz0e7_31",
-      "date": "2025-09-23",
-      "member": "Kelvin",
-      "amount": 145,
-      "mainCategory": "餐飲",
+      "id": "1759218273193_qyv55eux9_34",
+      "date": "2025-09-22",
+      "member": "Ryan",
+      "amount": 181,
+      "mainCategory": "娛樂",
       "subCategory": "信用卡",
-      "description": "餐飲-午餐",
+      "description": "學習-筆和簿子",
       "type": "expense"
     }
   ]
