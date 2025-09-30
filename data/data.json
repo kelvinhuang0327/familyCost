@@ -1241,14 +1241,14 @@
       "type": "expense"
     },
     {
-      "id": "1759218622855_wu7kugg74_31",
-      "date": "2025-09-23",
-      "member": "Kelvin",
-      "amount": 145,
-      "mainCategory": "餐飲",
+      "id": "1759218622953_wp0fnnfus_55",
+      "date": "2025-09-18",
+      "member": "Ryan",
+      "amount": 850,
+      "mainCategory": "醫療",
       "subCategory": "信用卡",
-      "description": "餐飲-午餐",
-      "type": "expense"
+      "description": "牙醫退費",
+      "type": "income"
     }
   ]
 }
