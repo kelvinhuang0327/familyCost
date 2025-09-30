@@ -1241,13 +1241,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218622762_gcxd17bsa_13",
+      "id": "1759218622850_2k0qpcz0c_16",
       "date": "2025-09-28",
-      "member": "Phuong",
-      "amount": 730,
+      "member": "Kelvin",
+      "amount": 221,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "餐飲-黑糖茶",
+      "description": "早餐",
       "type": "expense"
     }
   ]
