@@ -1181,13 +1181,23 @@
       "type": "expense"
     },
     {
-      "id": "1759218169173_hvdxgno7a_14",
-      "date": "2025-09-28",
+      "id": "1759218169179_ryhv7v89f_27",
+      "date": "2025-09-24",
+      "member": "Phuong",
+      "amount": 350,
+      "mainCategory": "醫療",
+      "subCategory": "信用卡",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759218169179_tyh005qol_28",
+      "date": "2025-09-24",
       "member": "Kelvin",
-      "amount": 124,
+      "amount": 130,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "餐飲-梅子",
+      "description": "餐飲-午餐",
       "type": "expense"
     }
   ]
