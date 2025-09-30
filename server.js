@@ -20,15 +20,8 @@ function generateUniqueId() {
     return `${timestamp}_${random}_${counter}`;
 }
 
-// 添加錯誤處理
-try {
-    const { getConfig, getEnvironment } = require('./app/config/config');
-    
-    console.log('✅ 所有模組載入成功');
-} catch (error) {
-    console.error('❌ 模組載入失敗:', error);
-    process.exit(1);
-}
+// 載入配置模組
+const { getConfig, getEnvironment } = require('./app/config/config');
 
 // 已移除的模組：
 // const GitHubTokenManager = require('./app/backend/github_token_manager'); // 已移除
