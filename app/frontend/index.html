@@ -7270,7 +7270,7 @@
                 console.log('🔄 開始同步資料到 GitHub...');
                 
                 // 呼叫後端 API
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/github/sync', {
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/sync', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
