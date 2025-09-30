@@ -1239,6 +1239,156 @@
       "subCategory": "信用卡",
       "description": "牙醫退費",
       "type": "income"
+    },
+    {
+      "id": "1759219552619_7yy4fktvm_1",
+      "date": "2025-09-30",
+      "member": "家用",
+      "amount": 688,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "水費",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552621_yg69pmk0f_5",
+      "date": "2025-09-30",
+      "member": "家用",
+      "amount": 7050,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "娛樂-信用卡按摩椅",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552622_q8r8cc4rp_7",
+      "date": "2025-09-29",
+      "member": "Phuong",
+      "amount": 650,
+      "mainCategory": "醫療",
+      "subCategory": "信用卡",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552623_a3hpbflx1_10",
+      "date": "2025-09-28",
+      "member": "家用",
+      "amount": 235,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-晚餐小火鍋",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552712_2xzdqlthi_11",
+      "date": "2025-09-28",
+      "member": "家用",
+      "amount": 402,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-水果",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552713_munaanftj_13",
+      "date": "2025-09-28",
+      "member": "Phuong",
+      "amount": 730,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-黑糖茶",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552713_6a4j3du26_16",
+      "date": "2025-09-28",
+      "member": "Kelvin",
+      "amount": 221,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "早餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552714_hqrc0ywzq_19",
+      "date": "2025-09-26",
+      "member": "家用",
+      "amount": 4550,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "兩個月管理費",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552714_x3rgokfza_21",
+      "date": "2025-09-27",
+      "member": "Kelvin",
+      "amount": 350,
+      "mainCategory": "醫療",
+      "subCategory": "信用卡",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552714_32d8e71cq_22",
+      "date": "2025-09-26",
+      "member": "Ryan",
+      "amount": 350,
+      "mainCategory": "醫療",
+      "subCategory": "信用卡",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552715_uk336vlon_25",
+      "date": "2025-09-24",
+      "member": "Kelvin",
+      "amount": 606,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "娛樂-icloud",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552716_uq70m0ws9_28",
+      "date": "2025-09-24",
+      "member": "Kelvin",
+      "amount": 130,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552717_62y2f2wbq_29",
+      "date": "2025-09-24",
+      "member": "Kelvin",
+      "amount": 100,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "娛樂-大樂透",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552717_afp03ye4p_30",
+      "date": "2025-09-23",
+      "member": "Kelvin",
+      "amount": 180,
+      "mainCategory": "交通",
+      "subCategory": "信用卡",
+      "description": "交通-12次停車費",
+      "type": "expense"
+    },
+    {
+      "id": "1759219552718_abpfkct74_31",
+      "date": "2025-09-23",
+      "member": "Kelvin",
+      "amount": 145,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
     }
   ]
 }
