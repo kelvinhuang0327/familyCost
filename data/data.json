@@ -1239,6 +1239,16 @@
       "subCategory": "信用卡",
       "description": "學習-筆和簿子",
       "type": "expense"
+    },
+    {
+      "id": "1759218622758_zp0fdrbu8_1",
+      "date": "2025-09-30",
+      "member": "家用",
+      "amount": 688,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "水費",
+      "type": "expense"
     }
   ]
 }
