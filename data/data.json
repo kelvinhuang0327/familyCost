@@ -1241,13 +1241,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218622855_vrqguzqyf_30",
+      "id": "1759218622855_wu7kugg74_31",
       "date": "2025-09-23",
       "member": "Kelvin",
-      "amount": 180,
-      "mainCategory": "交通",
+      "amount": 145,
+      "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "交通-12次停車費",
+      "description": "餐飲-午餐",
       "type": "expense"
     }
   ]
