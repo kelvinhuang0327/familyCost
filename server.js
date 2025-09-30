@@ -115,32 +115,34 @@ async function initializeToken() {
     }
 }
 
-// 啟動時從 GitHub 同步資料到本地
-async function syncDataOnStartup() {
+// 啟動時檢查本地數據文件
+async function checkLocalDataOnStartup() {
     try {
-        console.log('🔄 啟動時從 GitHub 同步資料...');
+        console.log('🔍 啟動時檢查本地數據文件...');
         
-        // 從 GitHub 獲取資料
-        const records = await githubDataManager.getDataFromGitHub();
-        console.log('📊 從 GitHub 獲取到', records.length, '筆記錄');
+        const dataPath = path.join(__dirname, 'data', 'data.json');
         
-        // 保存到本地文件（確保本地文件是最新的）
-        if (records.length > 0) {
-            const dataPath = path.join(__dirname, 'data', 'data.json');
-            const data = { records: records };
-            await fs.writeFile(dataPath, JSON.stringify(data, null, 2), 'utf8');
-            console.log('✅ 已將 GitHub 資料同步到本地文件');
+        // 檢查本地文件是否存在
+        if (fs.existsSync(dataPath)) {
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            const parsedData = JSON.parse(dataContent);
+            const records = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
+            console.log('✅ 本地文件存在，包含', records.length, '筆記錄');
         } else {
-            console.log('ℹ️ GitHub 上沒有資料，跳過同步');
+            console.log('📝 本地文件不存在，將創建空文件');
+            // 創建空的數據文件
+            const emptyData = { records: [] };
+            await fs.writeFile(dataPath, JSON.stringify(emptyData, null, 2), 'utf8');
+            console.log('✅ 已創建空的本地數據文件');
         }
     } catch (error) {
-        console.log('⚠️ 從 GitHub 同步資料失敗:', error.message);
+        console.log('⚠️ 檢查本地數據文件失敗:', error.message);
     }
 }
 
 // 執行初始化
 initializeToken().then(() => {
-    return syncDataOnStartup();
+    return checkLocalDataOnStartup();
 }).then(() => {
     console.log('✅ 啟動初始化完成');
 }).catch(error => {
@@ -972,15 +974,18 @@ app.post('/api/excel/compare', (req, res, next) => {
         console.log('🔍 [API] 按成員統計:', memberStats);
         console.log('🔍 [API] 處理後資料範例:', processedData.slice(0, 3));
         
-        // 從 GitHub 或本地文件讀取系統現有資料
+        // 從本地文件讀取系統現有資料
         let systemData = [];
         
         try {
-            console.log('🔍 [API] 從 GitHub 或本地文件讀取系統資料...');
-            systemData = await githubDataManager.getDataFromGitHub();
-            console.log('✅ [API] 從 GitHub 或本地文件讀取了', systemData.length, '筆記錄');
+            console.log('🔍 [API] 從本地文件讀取系統資料...');
+            const dataPath = path.join(__dirname, 'data', 'data.json');
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            const parsedData = JSON.parse(dataContent);
+            systemData = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
+            console.log('✅ [API] 從本地文件讀取了', systemData.length, '筆記錄');
         } catch (error) {
-            console.log('⚠️ [API] 從 GitHub 或本地文件讀取失敗:', error.message);
+            console.log('⚠️ [API] 從本地文件讀取失敗:', error.message);
             systemData = [];
         }
         
@@ -1242,8 +1247,11 @@ app.get('/api/records', async (req, res) => {
     try {
         console.log('🔍 [API] 開始獲取記錄...');
         
-        // 從 GitHub 或本地文件獲取數據
-        const records = await githubDataManager.getDataFromGitHub();
+        // 從本地文件獲取數據
+        const dataPath = path.join(__dirname, 'data', 'data.json');
+        const dataContent = await fs.readFile(dataPath, 'utf8');
+        const parsedData = JSON.parse(dataContent);
+        const records = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
         
         console.log('✅ [API] 成功獲取記錄:', records.length, '筆');
         
@@ -1299,8 +1307,8 @@ app.post('/api/records', async (req, res) => {
             existingRecords = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
             console.log('✅ 從本地文件讀取現有資料:', existingRecords.length, '筆');
         } catch (error) {
-            console.log('⚠️ 本地文件讀取失敗，回退到 GitHub:', error.message);
-            existingRecords = await githubDataManager.getDataFromGitHub();
+            console.log('⚠️ 本地文件讀取失敗:', error.message);
+            existingRecords = [];
         }
         
         // 添加新記錄
@@ -1342,8 +1350,8 @@ app.put('/api/records/:id', async (req, res) => {
             existingRecords = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
             console.log('✅ 從本地文件讀取現有資料:', existingRecords.length, '筆');
         } catch (error) {
-            console.log('⚠️ 本地文件讀取失敗，回退到 GitHub:', error.message);
-            existingRecords = await githubDataManager.getDataFromGitHub();
+            console.log('⚠️ 本地文件讀取失敗:', error.message);
+            existingRecords = [];
         }
         
         // 查找並更新記錄
@@ -1392,7 +1400,7 @@ app.delete('/api/records/clear', async (req, res) => {
             const parsedData = JSON.parse(dataContent);
             existingRecords = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
         } catch (error) {
-            existingRecords = await githubDataManager.getDataFromGitHub();
+            existingRecords = [];
         }
         
         const recordCount = existingRecords.length;
@@ -1432,8 +1440,8 @@ app.delete('/api/records/:id', async (req, res) => {
             existingRecords = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
             console.log('✅ 從本地文件讀取現有資料:', existingRecords.length, '筆');
         } catch (error) {
-            console.log('⚠️ 本地文件讀取失敗，回退到 GitHub:', error.message);
-            existingRecords = await githubDataManager.getDataFromGitHub();
+            console.log('⚠️ 本地文件讀取失敗:', error.message);
+            existingRecords = [];
         }
         
         // 查找並刪除記錄
@@ -1490,8 +1498,8 @@ app.delete('/api/records', async (req, res) => {
             existingRecords = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
             console.log('✅ 從本地文件讀取現有資料:', existingRecords.length, '筆');
         } catch (error) {
-            console.log('⚠️ 本地文件讀取失敗，回退到 GitHub:', error.message);
-            existingRecords = await githubDataManager.getDataFromGitHub();
+            console.log('⚠️ 本地文件讀取失敗:', error.message);
+            existingRecords = [];
         }
         
         // 批量刪除記錄
@@ -1584,8 +1592,8 @@ app.post('/api/github/sync', async (req, res) => {
             existingRecords = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
             console.log('✅ 從本地文件讀取資料進行同步:', existingRecords.length, '筆');
         } catch (error) {
-            console.log('⚠️ 本地文件讀取失敗，回退到 GitHub:', error.message);
-            existingRecords = await githubDataManager.getDataFromGitHub();
+            console.log('⚠️ 本地文件讀取失敗:', error.message);
+            existingRecords = [];
         }
         
         console.log(`📊 [API] 準備同步 ${existingRecords.length} 筆記錄到 GitHub`);

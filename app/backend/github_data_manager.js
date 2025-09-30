@@ -49,6 +49,7 @@ class GitHubDataManager {
     }
 
     // 從 GitHub 獲取數據
+    // 注意：此方法僅用於手動同步功能，系統已改為只從本地文件讀取數據
     async getDataFromGitHub() {
         const token = await this.getValidToken();
         if (!token) {
