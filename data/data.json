@@ -1221,13 +1221,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218169177_99r5q5pzu_24",
-      "date": "2025-09-25",
+      "id": "1759218169178_ysnerttob_25",
+      "date": "2025-09-24",
       "member": "Kelvin",
-      "amount": 140,
-      "mainCategory": "餐飲",
+      "amount": 606,
+      "mainCategory": "娛樂",
       "subCategory": "信用卡",
-      "description": "餐飲-午餐",
+      "description": "娛樂-icloud",
       "type": "expense"
     }
   ]
