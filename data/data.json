@@ -1051,13 +1051,23 @@
       "date": "2025-09-22"
     },
     {
-      "id": "1759218169076_11qz2fwe8_1",
-      "date": "2025-09-30",
-      "member": "家用",
-      "amount": 688,
-      "mainCategory": "日常",
+      "id": "1759218169173_hvdxgno7a_14",
+      "date": "2025-09-28",
+      "member": "Kelvin",
+      "amount": 124,
+      "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "水費",
+      "description": "餐飲-梅子",
+      "type": "expense"
+    },
+    {
+      "id": "1759218169173_sdcv1u9y5_15",
+      "date": "2025-09-28",
+      "member": "Kelvin",
+      "amount": 115,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
       "type": "expense"
     }
   ]
