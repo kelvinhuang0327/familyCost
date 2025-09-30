@@ -1091,13 +1091,23 @@
       "type": "expense"
     },
     {
-      "id": "1759218169078_g5ub96nuz_5",
-      "date": "2025-09-30",
+      "id": "1759218169174_uxk2461sv_18",
+      "date": "2025-09-27",
       "member": "家用",
-      "amount": 7050,
-      "mainCategory": "娛樂",
+      "amount": 276,
+      "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "娛樂-信用卡按摩椅",
+      "description": "麥當勞",
+      "type": "expense"
+    },
+    {
+      "id": "1759218169174_nw3a1aqa3_19",
+      "date": "2025-09-26",
+      "member": "家用",
+      "amount": 4550,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "兩個月管理費",
       "type": "expense"
     }
   ]
