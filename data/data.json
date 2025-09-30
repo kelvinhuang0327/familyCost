@@ -1221,13 +1221,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218273091_8qzzwr6ai_4",
+      "id": "1759218273092_esnibea2t_5",
       "date": "2025-09-30",
-      "member": "Kelvin",
-      "amount": 120,
-      "mainCategory": "餐飲",
+      "member": "家用",
+      "amount": 7050,
+      "mainCategory": "娛樂",
       "subCategory": "信用卡",
-      "description": "餐飲-午餐",
+      "description": "娛樂-信用卡按摩椅",
       "type": "expense"
     }
   ]
