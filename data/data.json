@@ -1101,13 +1101,23 @@
       "type": "expense"
     },
     {
-      "id": "1759218169174_nw3a1aqa3_19",
-      "date": "2025-09-26",
-      "member": "家用",
-      "amount": 4550,
-      "mainCategory": "日常",
+      "id": "1759218169079_2stzceyjv_6",
+      "date": "2025-09-30",
+      "member": "Kelvin",
+      "amount": 45,
+      "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "兩個月管理費",
+      "description": "餐飲-牛奶",
+      "type": "expense"
+    },
+    {
+      "id": "1759218169080_ote2uwzue_7",
+      "date": "2025-09-29",
+      "member": "Phuong",
+      "amount": 650,
+      "mainCategory": "醫療",
+      "subCategory": "信用卡",
+      "description": "醫療-看感冒",
       "type": "expense"
     }
   ]
