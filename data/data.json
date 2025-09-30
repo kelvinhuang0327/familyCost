@@ -1221,13 +1221,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218273090_iqqrswc6o_1",
+      "id": "1759218273091_8qzzwr6ai_4",
       "date": "2025-09-30",
-      "member": "家用",
-      "amount": 688,
-      "mainCategory": "日常",
+      "member": "Kelvin",
+      "amount": 120,
+      "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "水費",
+      "description": "餐飲-午餐",
       "type": "expense"
     }
   ]
