@@ -1201,13 +1201,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218169179_c20ph23ox_29",
-      "date": "2025-09-24",
+      "id": "1759218169180_upxzgl2rm_30",
+      "date": "2025-09-23",
       "member": "Kelvin",
-      "amount": 100,
-      "mainCategory": "娛樂",
+      "amount": 180,
+      "mainCategory": "交通",
       "subCategory": "信用卡",
-      "description": "娛樂-大樂透",
+      "description": "交通-12次停車費",
       "type": "expense"
     }
   ]
