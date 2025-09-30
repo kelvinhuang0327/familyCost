@@ -1121,9 +1121,19 @@
       "type": "expense"
     },
     {
-      "id": "1759218169175_wxvdoc9o5_21",
-      "date": "2025-09-27",
-      "member": "Kelvin",
+      "id": "1759218169080_9kqohyf97_8",
+      "date": "2025-09-29",
+      "member": "Ryan",
+      "amount": 430,
+      "mainCategory": "醫療",
+      "subCategory": "信用卡",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759218169176_2fs7wvpsd_22",
+      "date": "2025-09-26",
+      "member": "Ryan",
       "amount": 350,
       "mainCategory": "醫療",
       "subCategory": "信用卡",
