@@ -1221,13 +1221,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218169179_tyh005qol_28",
+      "id": "1759218169179_c20ph23ox_29",
       "date": "2025-09-24",
       "member": "Kelvin",
-      "amount": 130,
-      "mainCategory": "餐飲",
+      "amount": 100,
+      "mainCategory": "娛樂",
       "subCategory": "信用卡",
-      "description": "餐飲-午餐",
+      "description": "娛樂-大樂透",
       "type": "expense"
     }
   ]
