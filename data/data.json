@@ -1241,13 +1241,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218622851_47trzpw7y_19",
-      "date": "2025-09-26",
-      "member": "家用",
-      "amount": 4550,
-      "mainCategory": "日常",
+      "id": "1759218622852_gevq4oiwz_21",
+      "date": "2025-09-27",
+      "member": "Kelvin",
+      "amount": 350,
+      "mainCategory": "醫療",
       "subCategory": "信用卡",
-      "description": "兩個月管理費",
+      "description": "醫療-看感冒",
       "type": "expense"
     }
   ]
