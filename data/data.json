@@ -1051,13 +1051,13 @@
       "date": "2025-09-22"
     },
     {
-      "id": "1759218169077_q72qxbnrn_2",
+      "id": "1759218169077_3s7w8vtnj_3",
       "date": "2025-09-30",
-      "member": "家用",
-      "amount": 1112,
-      "mainCategory": "日常",
+      "member": "Kelvin",
+      "amount": 30,
+      "mainCategory": "交通",
       "subCategory": "信用卡",
-      "description": "瓦斯費",
+      "description": "交通-12次停車費",
       "type": "expense"
     }
   ]
