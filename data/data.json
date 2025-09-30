@@ -1061,13 +1061,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218169173_sdcv1u9y5_15",
+      "id": "1759218169173_913a6r9bh_16",
       "date": "2025-09-28",
       "member": "Kelvin",
-      "amount": 115,
+      "amount": 221,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "餐飲-午餐",
+      "description": "早餐",
       "type": "expense"
     }
   ]
