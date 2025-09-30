@@ -1241,13 +1241,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218622852_hfloa1zfn_22",
-      "date": "2025-09-26",
-      "member": "Ryan",
-      "amount": 350,
-      "mainCategory": "醫療",
+      "id": "1759218622853_552qod76v_25",
+      "date": "2025-09-24",
+      "member": "Kelvin",
+      "amount": 606,
+      "mainCategory": "娛樂",
       "subCategory": "信用卡",
-      "description": "醫療-看感冒",
+      "description": "娛樂-icloud",
       "type": "expense"
     }
   ]
