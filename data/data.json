@@ -1241,13 +1241,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218622758_zp0fdrbu8_1",
+      "id": "1759218622759_c58eqwjq7_5",
       "date": "2025-09-30",
       "member": "家用",
-      "amount": 688,
-      "mainCategory": "日常",
+      "amount": 7050,
+      "mainCategory": "娛樂",
       "subCategory": "信用卡",
-      "description": "水費",
+      "description": "娛樂-信用卡按摩椅",
       "type": "expense"
     }
   ]
