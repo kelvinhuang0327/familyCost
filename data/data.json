@@ -1101,16 +1101,6 @@
       "type": "expense"
     },
     {
-      "id": "1759218169175_10j2hkgqf_20",
-      "date": "2025-09-27",
-      "member": "Ryan",
-      "amount": 284,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "餐飲-果泥",
-      "type": "expense"
-    },
-    {
       "id": "1759218169080_9kqohyf97_8",
       "date": "2025-09-29",
       "member": "Ryan",
@@ -1198,16 +1188,6 @@
       "mainCategory": "娛樂",
       "subCategory": "信用卡",
       "description": "娛樂-包包飾品",
-      "type": "expense"
-    },
-    {
-      "id": "1759218169175_10j2hkgqf_20",
-      "date": "2025-09-27",
-      "member": "Ryan",
-      "amount": 284,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "餐飲-果泥",
       "type": "expense"
     },
     {
