@@ -99,6 +99,58 @@ const tokenManager = new GitHubTokenManager();
 // 初始化 GitHub 數據管理器
 const githubDataManager = new GitHubDataManager(tokenManager);
 
+// 啟動時從配置文件讀取 Token
+async function initializeToken() {
+    try {
+        console.log('🔍 啟動時檢查 GitHub Token...');
+        const ConfigManager = require('./app/backend/config_manager');
+        const configMgr = new ConfigManager();
+        const token = await configMgr.getGitHubToken();
+        
+        if (token) {
+            process.env.GITHUB_TOKEN = token;
+            console.log('✅ 從配置文件讀取 Token 並設置到環境變數');
+            console.log('🔍 Token 前綴:', token.substring(0, 10) + '...');
+        } else {
+            console.log('⚠️ 配置文件中沒有 Token');
+        }
+    } catch (error) {
+        console.log('⚠️ 讀取配置文件失敗:', error.message);
+    }
+}
+
+// 啟動時從 GitHub 同步資料到本地
+async function syncDataOnStartup() {
+    try {
+        console.log('🔄 啟動時從 GitHub 同步資料...');
+        
+        // 從 GitHub 獲取資料
+        const records = await githubDataManager.getDataFromGitHub();
+        console.log('📊 從 GitHub 獲取到', records.length, '筆記錄');
+        
+        // 保存到本地文件（確保本地文件是最新的）
+        if (records.length > 0) {
+            const dataPath = path.join(__dirname, 'data', 'data.json');
+            const data = { records: records };
+            await fs.writeFile(dataPath, JSON.stringify(data, null, 2), 'utf8');
+            console.log('✅ 已將 GitHub 資料同步到本地文件');
+        } else {
+            console.log('ℹ️ GitHub 上沒有資料，跳過同步');
+        }
+    } catch (error) {
+        console.log('⚠️ 從 GitHub 同步資料失敗:', error.message);
+    }
+}
+
+// 執行初始化
+initializeToken().then(() => {
+    return syncDataOnStartup();
+}).then(() => {
+    console.log('✅ 啟動初始化完成');
+}).catch(error => {
+    console.error('❌ 啟動初始化失敗:', error);
+});
+
 console.log('🔄 開始初始化數據庫管理器...');
 let dbManager;
 try {
