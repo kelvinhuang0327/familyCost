@@ -6245,7 +6245,8 @@
             const recordIndex = records.findIndex(r => r.id === id);
             
             if (recordIndex !== -1) {
-                records[recordIndex] = {
+                // 準備更新數據
+                const updatedRecord = {
                     id: id,
                     member: member,
                     type: type,
@@ -6256,18 +6257,38 @@
                     date: date
                 };
                 
-                // saveRecords() 已移除 - 數據直接保存到SQLite數據庫
-                
-                // 自動備份到GitHub - 已移除
-                
-                updateStats();
-                updateRecentRecords();
-                updateAllRecords();
-                updateCalendar(); // 確保日曆更新
-                updateSyncStatus(); // 更新同步狀態
-                closeModal();
-                
-                alert('記錄已更新！');
+                try {
+                    // 調用後端 API 更新記錄
+                    const response = await fetch(ENV_CONFIG.getApiBase() + `/api/records/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(updatedRecord)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        console.log('✅ 記錄已更新:', result.message);
+                        showNotification('記錄更新成功，已保存到本地文件', 'success');
+                        
+                        // 更新前端數組
+                        records[recordIndex] = updatedRecord;
+                        
+                        updateStats();
+                        updateRecentRecords();
+                        updateAllRecords();
+                        updateCalendar();
+                        closeModal();
+                    } else {
+                        console.error('❌ 更新記錄失敗:', result.message);
+                        alert('❌ 更新記錄失敗: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('❌ 更新記錄時發生錯誤:', error);
+                    alert('❌ 更新記錄時發生錯誤：' + error.message);
+                }
             }
         });
 
