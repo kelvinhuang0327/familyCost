@@ -1241,13 +1241,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218622761_1k8yiancb_11",
+      "id": "1759218622762_gcxd17bsa_13",
       "date": "2025-09-28",
-      "member": "家用",
-      "amount": 402,
+      "member": "Phuong",
+      "amount": 730,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "餐飲-水果",
+      "description": "餐飲-黑糖茶",
       "type": "expense"
     }
   ]
