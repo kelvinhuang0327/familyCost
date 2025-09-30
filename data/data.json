@@ -1221,13 +1221,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218273092_esnibea2t_5",
-      "date": "2025-09-30",
+      "id": "1759218273094_z7u15d0gu_10",
+      "date": "2025-09-28",
       "member": "家用",
-      "amount": 7050,
-      "mainCategory": "娛樂",
+      "amount": 235,
+      "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "娛樂-信用卡按摩椅",
+      "description": "餐飲-晚餐小火鍋",
       "type": "expense"
     }
   ]
