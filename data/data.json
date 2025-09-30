@@ -1221,13 +1221,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218169179_ryhv7v89f_27",
+      "id": "1759218169179_tyh005qol_28",
       "date": "2025-09-24",
-      "member": "Phuong",
-      "amount": 350,
-      "mainCategory": "醫療",
+      "member": "Kelvin",
+      "amount": 130,
+      "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "醫療-看感冒",
+      "description": "餐飲-午餐",
       "type": "expense"
     }
   ]
