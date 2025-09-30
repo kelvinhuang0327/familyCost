@@ -3100,7 +3100,7 @@
 
         // 跨瀏覽器數據同步
         // syncInterval變量已移除 - 不再需要自動同步
-        // localStorage緩存已移除 - 數據直接從SQLite數據庫讀取
+        // localStorage緩存已移除 - 數據直接從JSON文件讀取
 
         // 服務器同步功能已移除 - 現在使用JSON文件存儲，不需要同步
 
@@ -3132,20 +3132,20 @@
 
         // GitHub自動備份功能 - 已移除
 
-        // 從SQLite數據庫還原數據（GitHub還原功能已移除）
+        // 從JSON文件還原數據（GitHub還原功能已移除）
         async function restoreFromDatabase() {
             try {
-                console.log('🔄 從SQLite數據庫還原數據...');
+                console.log('🔄 從JSON文件還原數據...');
                 
-                // 直接從SQLite數據庫載入數據
+                // 直接從JSON文件載入數據
                 await loadDataFromFile();
                 updateAllDisplays();
                 
-                console.log('✅ 成功從SQLite數據庫還原數據');
+                console.log('✅ 成功從JSON文件還原數據');
                 return true;
                 
             } catch (error) {
-                console.warn('⚠️ SQLite數據庫還原失敗:', error.message);
+                console.warn('⚠️ JSON文件還原失敗:', error.message);
                 return false;
             }
         }
@@ -3207,7 +3207,7 @@
             if (isSafari) {
                 console.log('🍎 檢測到Safari，執行兼容性修復...');
                 
-                // Safari緩存清除已移除 - 數據直接從SQLite數據庫讀取
+                // Safari緩存清除已移除 - 數據直接從JSON文件讀取
                 
                 // 添加Safari專用提示
                 const safariNotice = document.createElement('div');
@@ -3253,8 +3253,8 @@
             console.log('🔄 Safari強制刷新數據...');
             
             try {
-                // 直接從SQLite數據庫讀取數據
-                console.log('📡 從SQLite數據庫強制刷新數據...');
+                // 直接從JSON文件讀取數據
+                console.log('📡 從JSON文件強制刷新數據...');
                 const response = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
                     cache: 'no-store',
                     headers: {
@@ -3957,7 +3957,7 @@
                 let errorCount = 0;
                 const errors = [];
                 
-                // 逐筆添加到SQLite數據庫
+                // 逐筆添加到JSON文件
                 for (const record of allRecordsData) {
                     try {
                         // 為每筆記錄生成新的唯一ID，避免重複
@@ -3992,7 +3992,7 @@
                 }
                 
                 if (successCount > 0) {
-                    console.log(`✅ 成功匯入 ${successCount} 筆記錄到SQLite數據庫`);
+                    console.log(`✅ 成功匯入 ${successCount} 筆記錄到JSON文件`);
                     
                     // 重新載入資料
                     await loadDataFromFile();
@@ -4116,13 +4116,13 @@
             });
 
             try {
-                console.log('📥 開始向SQLite數據庫匯入選中的記錄...');
+                console.log('📥 開始向JSON文件匯入選中的記錄...');
                 
                 let successCount = 0;
                 let errorCount = 0;
                 const errors = [];
                 
-                // 逐筆添加到SQLite數據庫
+                // 逐筆添加到JSON文件
                 for (const record of selectedRecords) {
                     try {
                         const addResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
@@ -4151,7 +4151,7 @@
                 }
                 
                 if (successCount > 0) {
-                    console.log(`✅ 成功匯入 ${successCount} 筆記錄到SQLite數據庫`);
+                    console.log(`✅ 成功匯入 ${successCount} 筆記錄到JSON文件`);
                     
                     // 重新載入資料
                     await loadDataFromFile();
@@ -4657,13 +4657,13 @@
             });
 
             try {
-                console.log('📥 開始向SQLite數據庫匯入選中的記錄...');
+                console.log('📥 開始向JSON文件匯入選中的記錄...');
                 
                 let successCount = 0;
                 let errorCount = 0;
                 const errors = [];
                 
-                // 逐筆添加到SQLite數據庫
+                // 逐筆添加到JSON文件
                 for (const record of selectedRecords) {
                     try {
                         const addResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
@@ -4692,7 +4692,7 @@
                 }
                 
                 if (successCount > 0) {
-                    console.log(`✅ 成功匯入 ${successCount} 筆記錄到SQLite數據庫`);
+                    console.log(`✅ 成功匯入 ${successCount} 筆記錄到JSON文件`);
                     
                     // 重新載入資料
                     await loadDataFromFile();
@@ -4818,7 +4818,7 @@
             console.log('🔄 記錄內容:', records);
             
             // GitHub更新檢查已移除（備份功能已移除）
-            console.log('📊 備份功能已移除，使用SQLite數據庫');
+            console.log('📊 備份功能已移除，使用JSON文件存儲');
             
             // 自動同步功能已移除 - 現在使用JSON文件存儲，不需要同步
             
@@ -4844,7 +4844,7 @@
         // 數據載入狀態管理
         let isLoadingData = false;
         
-        // 從SQLite數據庫載入資料
+        // 從JSON文件載入資料
         async function loadDataFromFile() {
             // 防止重複載入
             if (isLoadingData) {
@@ -4854,12 +4854,12 @@
             
             isLoadingData = true;
             try {
-                console.log('🔄 開始從SQLite數據庫載入資料...');
+                console.log('🔄 開始從JSON文件載入資料...');
                 console.log('🌍 當前環境:', ENV_CONFIG.getEnvironment());
                 console.log('🔗 API基礎URL:', ENV_CONFIG.getApiBase());
                 console.log('🔗 完整API URL:', ENV_CONFIG.getApiBase() + '/api/records');
                 
-                // 使用新的SQLite API端點，添加無緩存標頭確保獲取最新數據
+                // 使用JSON文件API端點，添加無緩存標頭確保獲取最新數據
                 const response = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
                     cache: 'no-store',
                     headers: {
@@ -4877,27 +4877,27 @@
                     
                     if (result.success && Array.isArray(result.records)) {
                         records = result.records;
-                        console.log('✅ 從SQLite數據庫載入了', records.length, '筆記錄');
+                        console.log('✅ 從JSON文件載入了', records.length, '筆記錄');
                         console.log('🔄 全局records變量已更新為:', records.length, '筆記錄');
                         console.log('📊 前3筆記錄:', records.slice(0, 3));
                         return;
                     } else {
-                        console.warn('⚠️ SQLite API返回無效數據:', result);
+                        console.warn('⚠️ JSON文件API返回無效數據:', result);
                     }
                 } else {
-                    console.warn('⚠️ SQLite API請求失敗，狀態碼:', response.status);
+                    console.warn('⚠️ JSON文件API請求失敗，狀態碼:', response.status);
                     const errorText = await response.text();
                     console.warn('⚠️ 錯誤內容:', errorText);
                 }
                 
-                // SQLite API失敗，設為空數組
+                // JSON文件API失敗，設為空數組
                 records = [];
-                console.log('📝 SQLite API失敗，records設為空數組');
+                console.log('📝 JSON文件API失敗，records設為空數組');
                 
             } catch (error) {
-                console.error('❌ 從SQLite數據庫載入失敗:', error);
+                console.error('❌ 從JSON文件載入失敗:', error);
                 records = [];
-                console.log('📝 SQLite載入失敗，records設為空數組');
+                console.log('📝 JSON文件載入失敗，records設為空數組');
             } finally {
                 isLoadingData = false; // 重置載入狀態
                 console.log('✅ 數據載入狀態已重置');
@@ -4951,7 +4951,7 @@
             ];
             
             records = records.concat(sampleRecords);
-            // saveRecords() 已移除 - 數據直接保存到SQLite數據庫
+            // saveRecords() 已移除 - 數據直接保存到JSON文件
             updateStats();
             updateRecentRecords();
             updateAllRecords();
@@ -6060,9 +6060,9 @@
             };
             
             try {
-                console.log('➕ 開始向SQLite數據庫添加記錄...');
+                console.log('➕ 開始向JSON文件添加記錄...');
                 
-                // 使用新的SQLite添加API
+                // 使用JSON文件添加API
                 const addResponse = await fetch(ENV_CONFIG.getApiBase() + '/api/records', {
                     method: 'POST',
                     headers: {
@@ -6094,7 +6094,7 @@
                     
                     alert('✅ 記錄已成功新增！');
                 } else {
-                    console.error('❌ SQLite數據庫添加失敗:', addResult.message);
+                    console.error('❌ JSON文件添加失敗:', addResult.message);
                     alert('❌ 記錄添加失敗：' + addResult.message);
                 }
             } catch (error) {
@@ -6307,9 +6307,9 @@
         async function deleteRecord(id) {
             if (confirm('確定要刪除這筆記錄嗎？')) {
                 try {
-                    console.log('🗑️ 開始從SQLite數據庫刪除記錄:', id);
+                    console.log('🗑️ 開始從JSON文件刪除記錄:', id);
                     
-                    // 使用新的SQLite刪除API
+                    // 使用JSON文件刪除API
                     const deleteResponse = await fetch(ENV_CONFIG.getApiBase() + `/api/records/${id}`, {
                         method: 'DELETE',
                         headers: {
@@ -6336,7 +6336,7 @@
                         
                         alert('✅ 記錄已成功刪除！');
                     } else {
-                        console.error('❌ SQLite數據庫刪除失敗:', deleteResult.message);
+                        console.error('❌ JSON文件刪除失敗:', deleteResult.message);
                         alert('❌ 記錄刪除失敗：' + deleteResult.message);
                     }
                 } catch (error) {
@@ -6346,7 +6346,7 @@
             }
         }
 
-        // saveRecords函數已移除 - 數據直接保存到SQLite數據庫
+        // saveRecords函數已移除 - 數據直接保存到JSON文件
 
         // 寫入 data.json 檔案（通過下載方式）
         function saveToDataJson() {
@@ -6432,7 +6432,7 @@
                         };
                         
                         records.push(record);
-                        // saveRecords() 已移除 - 數據直接保存到SQLite數據庫
+                        // saveRecords() 已移除 - 數據直接保存到JSON文件
                         updateStats();
                         updateRecentRecords();
                         updateAllRecords();
@@ -6708,7 +6708,7 @@
 
             if (confirm(`確定要匯入 ${newRecords.length} 筆記錄嗎？`)) {
                 records = records.concat(newRecords);
-                // saveRecords() 已移除 - 數據直接保存到SQLite數據庫
+                // saveRecords() 已移除 - 數據直接保存到JSON文件
                 
                 // 自動備份到GitHub - 已移除
                 
@@ -6862,7 +6862,7 @@
                 healthIssues.push(`❌ 發現 ${invalidAmounts.length} 筆無效金額`);
             }
             
-            // localStorage檢查已移除 - 數據直接從SQLite數據庫讀取
+            // localStorage檢查已移除 - 數據直接從JSON文件讀取
             
             // 更新健康狀態顯示
             let healthStatus = '✅ 健康';
@@ -6914,7 +6914,7 @@
             if (tokenStatus) {
                 tokenStatus.innerHTML = `
                     <p>ℹ️ <strong>Token管理功能已移除</strong></p>
-                    <p>系統現在使用SQLite數據庫，不再需要GitHub Token備份</p>
+                    <p>系統現在使用JSON文件存儲，不再需要GitHub Token備份</p>
                 `;
                 tokenStatus.style.color = '#6c757d';
             }
@@ -6925,18 +6925,18 @@
         }
 
         async function saveGitHubToken() {
-            alert('⚠️ Token管理功能已移除\n\n系統現在使用SQLite數據庫，不再需要GitHub Token備份功能。');
+            alert('⚠️ Token管理功能已移除\n\n系統現在使用JSON文件存儲，不再需要GitHub Token備份功能。');
             return;
         }
 
         async function deleteGitHubToken() {
-            alert('⚠️ Token管理功能已移除\n\n系統現在使用SQLite數據庫，不再需要GitHub Token備份功能。');
+            alert('⚠️ Token管理功能已移除\n\n系統現在使用JSON文件存儲，不再需要GitHub Token備份功能。');
             return;
         }
 
         // 從備份恢復Token功能已移除
         async function recoverTokenFromBackup() {
-            alert('⚠️ Token管理功能已移除\n\n系統現在使用SQLite數據庫，不再需要GitHub Token備份功能。');
+            alert('⚠️ Token管理功能已移除\n\n系統現在使用JSON文件存儲，不再需要GitHub Token備份功能。');
             return;
         }
 
@@ -7062,7 +7062,7 @@
                 // 從 records 中移除要刪除的記錄
                 records = records.filter(record => !deleteData.includes(record));
                 
-                // saveRecords() 已移除 - 數據直接保存到SQLite數據庫
+                // saveRecords() 已移除 - 數據直接保存到JSON文件
                 updateStats();
                 updateRecentRecords();
                 updateAllRecords();
@@ -7312,7 +7312,7 @@
                         
                         if (confirm(confirmMessage)) {
                             records = backupData.records;
-                            // saveRecords() 已移除 - 數據直接保存到SQLite數據庫
+                            // saveRecords() 已移除 - 數據直接保存到JSON文件
                             updateStats();
                             updateRecentRecords();
                             updateAllRecords();
