@@ -1051,13 +1051,13 @@
       "date": "2025-09-22"
     },
     {
-      "id": "1759218169080_9kqohyf97_8",
+      "id": "1759218169081_jvmdqm49w_9",
       "date": "2025-09-29",
-      "member": "Ryan",
-      "amount": 430,
-      "mainCategory": "醫療",
+      "member": "家用",
+      "amount": 343,
+      "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "醫療-看感冒",
+      "description": "餐飲-全聯",
       "type": "expense"
     }
   ]
