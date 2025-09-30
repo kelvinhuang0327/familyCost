@@ -99,23 +99,19 @@ const tokenManager = new GitHubTokenManager();
 // 初始化 GitHub 數據管理器
 const githubDataManager = new GitHubDataManager(tokenManager);
 
-// 啟動時從配置文件讀取 Token
+// 啟動時檢查 Token 狀態
 async function initializeToken() {
     try {
         console.log('🔍 啟動時檢查 GitHub Token...');
-        const ConfigManager = require('./app/backend/config_manager');
-        const configMgr = new ConfigManager();
-        const token = await configMgr.getGitHubToken();
         
-        if (token) {
-            process.env.GITHUB_TOKEN = token;
-            console.log('✅ 從配置文件讀取 Token 並設置到環境變數');
-            console.log('🔍 Token 前綴:', token.substring(0, 10) + '...');
+        if (process.env.GITHUB_TOKEN) {
+            console.log('✅ 環境變數中已設置 Token');
+            console.log('🔍 Token 前綴:', process.env.GITHUB_TOKEN.substring(0, 10) + '...');
         } else {
-            console.log('⚠️ 配置文件中沒有 Token');
+            console.log('⚠️ 環境變數中沒有 Token，請在 Render Dashboard 中設置 GITHUB_TOKEN');
         }
     } catch (error) {
-        console.log('⚠️ 讀取配置文件失敗:', error.message);
+        console.log('⚠️ 檢查 Token 失敗:', error.message);
     }
 }
 
