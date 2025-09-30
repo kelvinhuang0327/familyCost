@@ -13,3 +13,9 @@ services:
         value: 10000
       - key: GITHUB_TOKEN
         sync: false
+      - key: GITHUB_OWNER
+        value: kelvinhuang0327
+      - key: GITHUB_REPO
+        value: familyCost
+      - key: GITHUB_BRANCH
+        value: main
