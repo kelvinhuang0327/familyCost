@@ -1306,34 +1306,16 @@ app.post('/api/records', async (req, res) => {
         // 添加新記錄
         existingRecords.push(record);
         
-        // 保存到 GitHub 或本地文件
-        const result = await githubDataManager.saveDataToGitHub(existingRecords);
+        // 僅保存到本地文件（不自動同步到 GitHub）
+        await githubDataManager.saveDataToLocal(existingRecords);
         
         console.log('✅ 記錄已添加:', record.id);
-        console.log('💾 同步結果:', result.success ? '成功同步到 GitHub' : '僅保存到本地文件');
-        
-        // 根據同步結果決定回應訊息
-        let message = '記錄添加成功';
-        let syncStatus = null;
-        
-        if (!result.success) {
-            message += '，但 GitHub 同步失敗';
-            syncStatus = {
-                github: false,
-                error: result.error || 'GitHub Token 未設置或無效'
-            };
-        } else {
-            syncStatus = {
-                github: true,
-                commit: result.commit
-            };
-        }
+        console.log('💾 已保存到本地文件，等待手動同步到 GitHub');
         
         res.json({
             success: true,
-            message: message,
-            record: record,
-            syncStatus: syncStatus
+            message: '記錄添加成功，已保存到本地文件',
+            record: record
         });
     } catch (error) {
         console.error('❌ 添加記錄失敗:', error);
@@ -1376,34 +1358,16 @@ app.put('/api/records/:id', async (req, res) => {
         // 更新記錄
         existingRecords[recordIndex] = { ...existingRecords[recordIndex], ...updates };
         
-        // 保存到 GitHub 或本地文件
-        const result = await githubDataManager.saveDataToGitHub(existingRecords);
+        // 僅保存到本地文件（不自動同步到 GitHub）
+        await githubDataManager.saveDataToLocal(existingRecords);
         
         console.log('✅ 記錄更新成功:', id);
-        console.log('💾 同步結果:', result.success ? '成功同步到 GitHub' : '僅保存到本地文件');
-        
-        // 根據同步結果決定回應訊息
-        let message = '記錄更新成功';
-        let syncStatus = null;
-        
-        if (!result.success) {
-            message += '，但 GitHub 同步失敗';
-            syncStatus = {
-                github: false,
-                error: result.error || 'GitHub Token 未設置或無效'
-            };
-        } else {
-            syncStatus = {
-                github: true,
-                commit: result.commit
-            };
-        }
+        console.log('💾 已保存到本地文件，等待手動同步到 GitHub');
         
         res.json({
             success: true,
-            message: message,
-            record: existingRecords[recordIndex],
-            syncStatus: syncStatus
+            message: '記錄更新成功，已保存到本地文件',
+            record: existingRecords[recordIndex]
         });
     } catch (error) {
         console.error('❌ 更新記錄失敗:', error);
@@ -1421,19 +1385,27 @@ app.delete('/api/records/clear', async (req, res) => {
         console.log('🗑️ [API] 收到清除所有記錄的請求');
         
         // 獲取現有數據以獲取記錄數量
-        const existingRecords = await githubDataManager.getDataFromGitHub();
-        const recordCount = existingRecords.length;
+        let existingRecords;
+        try {
+            const dataPath = path.join(__dirname, 'data', 'data.json');
+            const dataContent = await fs.readFile(dataPath, 'utf8');
+            const parsedData = JSON.parse(dataContent);
+            existingRecords = Array.isArray(parsedData) ? parsedData : (parsedData.records || []);
+        } catch (error) {
+            existingRecords = await githubDataManager.getDataFromGitHub();
+        }
         
+        const recordCount = existingRecords.length;
         console.log(`📊 [API] 當前記錄數量: ${recordCount}`);
         
-        // 保存空數組到 GitHub 或本地文件
-        const result = await githubDataManager.saveDataToGitHub([]);
+        // 僅保存空數組到本地文件（不自動同步到 GitHub）
+        await githubDataManager.saveDataToLocal([]);
         
-        console.log('✅ 所有記錄已清空');
+        console.log('✅ 所有記錄已清空，已保存到本地文件');
         
         res.json({
             success: true,
-            message: `成功清空所有記錄，刪除了 ${recordCount} 筆記錄`,
+            message: `成功清空所有記錄，刪除了 ${recordCount} 筆記錄，已保存到本地文件`,
             changes: recordCount
         });
     } catch (error) {
@@ -1476,34 +1448,16 @@ app.delete('/api/records/:id', async (req, res) => {
             });
         }
         
-        // 保存到 GitHub 或本地文件
-        const result = await githubDataManager.saveDataToGitHub(filteredRecords);
+        // 僅保存到本地文件（不自動同步到 GitHub）
+        await githubDataManager.saveDataToLocal(filteredRecords);
         
         console.log('✅ 記錄已刪除:', id);
-        console.log('💾 同步結果:', result.success ? '成功同步到 GitHub' : '僅保存到本地文件');
-        
-        // 根據同步結果決定回應訊息
-        let message = '記錄刪除成功';
-        let syncStatus = null;
-        
-        if (!result.success) {
-            message += '，但 GitHub 同步失敗';
-            syncStatus = {
-                github: false,
-                error: result.error || 'GitHub Token 未設置或無效'
-            };
-        } else {
-            syncStatus = {
-                github: true,
-                commit: result.commit
-            };
-        }
+        console.log('💾 已保存到本地文件，等待手動同步到 GitHub');
         
         res.json({
             success: true,
-            message: message,
-            changes: originalLength - newLength,
-            syncStatus: syncStatus
+            message: '記錄刪除成功，已保存到本地文件',
+            changes: originalLength - newLength
         });
     } catch (error) {
         console.error('❌ 刪除記錄失敗:', error);
@@ -1553,34 +1507,16 @@ app.delete('/api/records', async (req, res) => {
             });
         }
         
-        // 保存到 GitHub 或本地文件
-        const result = await githubDataManager.saveDataToGitHub(filteredRecords);
+        // 僅保存到本地文件（不自動同步到 GitHub）
+        await githubDataManager.saveDataToLocal(filteredRecords);
         
         console.log('✅ 批量刪除完成:', deletedCount, '筆記錄');
-        console.log('💾 同步結果:', result.success ? '成功同步到 GitHub' : '僅保存到本地文件');
-        
-        // 根據同步結果決定回應訊息
-        let message = `成功刪除 ${deletedCount} 筆記錄`;
-        let syncStatus = null;
-        
-        if (!result.success) {
-            message += '，但 GitHub 同步失敗';
-            syncStatus = {
-                github: false,
-                error: result.error || 'GitHub Token 未設置或無效'
-            };
-        } else {
-            syncStatus = {
-                github: true,
-                commit: result.commit
-            };
-        }
+        console.log('💾 已保存到本地文件，等待手動同步到 GitHub');
         
         res.json({
             success: true,
-            message: message,
-            count: deletedCount,
-            syncStatus: syncStatus
+            message: `成功刪除 ${deletedCount} 筆記錄，已保存到本地文件`,
+            count: deletedCount
         });
     } catch (error) {
         console.error('❌ 批量刪除失敗:', error);
