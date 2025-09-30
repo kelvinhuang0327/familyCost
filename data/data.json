@@ -1051,13 +1051,13 @@
       "date": "2025-09-22"
     },
     {
-      "id": "1759218169172_7b0a9tzp4_13",
-      "date": "2025-09-28",
-      "member": "Phuong",
-      "amount": 730,
-      "mainCategory": "餐飲",
+      "id": "1759218169076_11qz2fwe8_1",
+      "date": "2025-09-30",
+      "member": "家用",
+      "amount": 688,
+      "mainCategory": "日常",
       "subCategory": "信用卡",
-      "description": "餐飲-黑糖茶",
+      "description": "水費",
       "type": "expense"
     }
   ]
