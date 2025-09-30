@@ -1131,13 +1131,23 @@
       "type": "expense"
     },
     {
-      "id": "1759218169176_2fs7wvpsd_22",
-      "date": "2025-09-26",
-      "member": "Ryan",
-      "amount": 350,
-      "mainCategory": "醫療",
+      "id": "1759218169081_jvmdqm49w_9",
+      "date": "2025-09-29",
+      "member": "家用",
+      "amount": 343,
+      "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "醫療-看感冒",
+      "description": "餐飲-全聯",
+      "type": "expense"
+    },
+    {
+      "id": "1759218169170_hlmyqwr1n_10",
+      "date": "2025-09-28",
+      "member": "家用",
+      "amount": 235,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-晚餐小火鍋",
       "type": "expense"
     }
   ]
