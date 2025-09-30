@@ -1615,180 +1615,28 @@ app.get('/api/records/integrity', (req, res) => {
     }
 });
 
-// 配置管理 API
-app.get('/api/config/github', async (req, res) => {
-    try {
-        const configManager = require('./app/backend/config_manager');
-        const configMgr = new configManager();
-        const config = await configMgr.getConfig();
-        const tokenStatus = await configMgr.checkTokenStatus();
-        
-        res.json({
-            success: true,
-            config: {
-                ...config,
-                github_token: tokenStatus.hasToken ? tokenStatus.tokenPreview : null // 只返回預覽，不返回完整 Token
-            },
-            tokenStatus: tokenStatus
-        });
-    } catch (error) {
-        console.error('❌ 獲取配置失敗:', error);
-        res.status(500).json({
-            success: false,
-            message: `獲取配置失敗: ${error.message}`
-        });
-    }
-});
-
-app.post('/api/config/github', async (req, res) => {
-    try {
-        const { github_token, owner, repo, branch } = req.body;
-        const configManager = require('./app/backend/config_manager');
-        const configMgr = new configManager();
-        
-        const updates = {};
-        if (github_token !== undefined) {
-            updates.github_token = github_token;
-            // 同時設置到運行時環境變數
-            process.env.GITHUB_TOKEN = github_token;
-            console.log('✅ GitHub Token 已設置到運行時環境變數');
-        }
-        if (owner !== undefined) updates.owner = owner;
-        if (repo !== undefined) updates.repo = repo;
-        if (branch !== undefined) updates.branch = branch;
-        
-        // 保存配置到文件
-        await configMgr.updateConfig(updates);
-        console.log('✅ 配置已保存到文件:', path.join(__dirname, 'app/config/github_config.json'));
-        
-        // 同步配置文件到 GitHub（這樣 Render 部署時會獲得最新配置）
-        try {
-            console.log('🔄 開始同步配置文件到 GitHub...');
-            
-            // 檢查是否有變更
-            const { stdout: status } = await execAsync('git status --porcelain app/config/github_config.json');
-            
-            if (status.trim()) {
-                // 添加配置文件
-                await execAsync('git add app/config/github_config.json');
-                console.log('📁 已添加配置文件到暫存區');
-                
-                // 提交變更
-                const commitMessage = `更新 GitHub 配置 - ${new Date().toLocaleString('zh-TW')}`;
-                await execAsync(`git commit -m "${commitMessage}"`);
-                console.log('💾 已提交配置變更');
-                
-                // 推送到 GitHub
-                await execAsync('git push origin main');
-                console.log('🚀 配置已同步到 GitHub');
-                
-                res.json({
-                    success: true,
-                    message: '配置更新成功並已同步到 GitHub（Render 下次部署時會自動獲得此配置）',
-                    synced: true
-                });
-            } else {
-                console.log('📝 配置無變更，無需同步');
-                res.json({
-                    success: true,
-                    message: '配置已保存（無變更）',
-                    synced: false
-                });
-            }
-        } catch (gitError) {
-            console.error('⚠️ Git 同步失敗:', gitError.message);
-            // Git 同步失敗不影響配置保存
-            res.json({
-                success: true,
-                message: '配置已保存到本地，但 GitHub 同步失敗（手動推送或下次重試）',
-                synced: false,
-                error: gitError.message
-            });
-        }
-        
-    } catch (error) {
-        console.error('❌ 更新配置失敗:', error);
-        res.status(500).json({
-            success: false,
-            message: `更新配置失敗: ${error.message}`
-        });
-    }
-});
-
-// Token 管理 API
-app.post('/api/github/token', async (req, res) => {
-    try {
-        const { token } = req.body;
-        
-        if (!token) {
-            return res.status(400).json({
-                success: false,
-                message: 'Token 不能為空'
-            });
-        }
-        
-        // 驗證 Token 格式
-        if (!token.startsWith('ghp_') || token.length < 40) {
-            return res.status(400).json({
-                success: false,
-                message: 'Token 格式不正確，GitHub Personal Access Token 應以 ghp_ 開頭'
-            });
-        }
-        
-        // 儲存 Token 到環境變數（臨時）
-        process.env.GITHUB_TOKEN = token;
-        
-        // 儲存到本地文件（持久化）
-        try {
-            const tokenPath = path.join(__dirname, 'data', '.github_token');
-            await fs.writeFile(tokenPath, token, 'utf8');
-            console.log('✅ Token 已儲存到本地文件');
-        } catch (error) {
-            console.log('⚠️ 本地文件儲存失敗:', error.message);
-        }
-        
-        // 也儲存到 Token Manager
-        try {
-            await tokenManager.saveToken(token);
-            console.log('✅ Token 已儲存到 Token Manager');
-        } catch (error) {
-            console.log('⚠️ Token Manager 儲存失敗:', error.message);
-        }
-        
-        console.log('✅ Token 已設置');
-        
-        res.json({
-            success: true,
-            message: 'GitHub Token 設置成功'
-        });
-        
-    } catch (error) {
-        console.error('❌ Token 設置失敗:', error);
-        res.status(500).json({
-            success: false,
-            message: `Token 設置失敗: ${error.message}`
-        });
-    }
-});
-
-// 檢查 Token 狀態
+// 簡化的 Token 狀態檢查 API
 app.get('/api/github/token/status', async (req, res) => {
     try {
-        const token = await githubDataManager.getValidToken();
+        const hasToken = !!process.env.GITHUB_TOKEN;
+        const tokenPreview = hasToken ? process.env.GITHUB_TOKEN.substring(0, 10) + '...' : null;
         
         res.json({
             success: true,
-            hasToken: !!token,
-            tokenPreview: token ? token.substring(0, 10) + '...' : null
+            hasToken: hasToken,
+            tokenPreview: tokenPreview,
+            tokenSource: hasToken ? 'environment' : null,
+            message: hasToken ? 'Token 已設置（環境變數）' : 'Token 未設置'
         });
-        
     } catch (error) {
+        console.error('❌ 檢查 Token 狀態失敗:', error);
         res.status(500).json({
             success: false,
-            message: error.message
+            message: `檢查 Token 狀態失敗: ${error.message}`
         });
     }
 });
+
 
 // 手動同步到 GitHub 的 API
 app.post('/api/github/sync', async (req, res) => {

@@ -2984,39 +2984,14 @@
                         </button>
                         <div id="syncStatus" class="sync-status" style="display: none;"></div>
                         
-                        <!-- GitHub 配置管理 -->
-                        <div class="github-config-management" style="margin-top: 20px;">
-                            <h4>⚙️ GitHub 配置管理</h4>
-                            <div id="configStatus" class="config-status"></div>
+                        <!-- GitHub Token 狀態檢查 -->
+                        <div class="github-token-status" style="margin-top: 20px;">
+                            <h4>🔍 GitHub Token 狀態</h4>
+                            <div id="tokenStatus" class="token-status"></div>
                             
-                            <!-- 配置編輯區域 -->
-                            <div class="config-edit" style="display: none;">
-                                <div style="margin: 15px 0;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">GitHub Token:</label>
-                                    <input type="password" id="configGitHubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
-                                </div>
-                                <div style="margin: 15px 0;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">倉庫擁有者:</label>
-                                    <input type="text" id="configOwner" placeholder="kelvinhuang0327" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
-                                </div>
-                                <div style="margin: 15px 0;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">倉庫名稱:</label>
-                                    <input type="text" id="configRepo" placeholder="familyCost" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
-                                </div>
-                                <div style="margin: 15px 0;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">分支:</label>
-                                    <input type="text" id="configBranch" placeholder="main" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
-                                </div>
-                                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                                    <button class="btn btn-success" onclick="saveGitHubConfig()">💾 儲存配置</button>
-                                    <button class="btn btn-secondary" onclick="hideConfigEdit()">取消</button>
-                                </div>
-                            </div>
-                            
-                            <!-- 配置操作按鈕 -->
-                            <div class="config-actions">
-                                <button class="btn btn-info" onclick="showConfigEdit()" id="editConfigBtn">🔧 編輯配置</button>
-                                <button class="btn btn-warning" onclick="checkConfigStatus()" id="checkConfigBtn">🔍 檢查狀態</button>
+                            <!-- Token 狀態操作按鈕 -->
+                            <div class="token-actions">
+                                <button class="btn btn-warning" onclick="checkTokenStatus()" id="checkTokenBtn">🔍 檢查 Token 狀態</button>
                             </div>
                         </div>
                     </div>
@@ -7102,165 +7077,58 @@
             document.getElementById('deleteDateTo').value = '';
         }
 
-        // GitHub 配置管理功能
-        async function checkConfigStatus() {
-            const configStatus = document.getElementById('configStatus');
-            const checkBtn = document.getElementById('checkConfigBtn');
+        // GitHub Token 狀態檢查功能
+        async function checkTokenStatus() {
+            const tokenStatus = document.getElementById('tokenStatus');
+            const checkBtn = document.getElementById('checkTokenBtn');
             
             try {
                 checkBtn.disabled = true;
                 checkBtn.innerHTML = '🔍 檢查中...';
                 
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/config/github');
+                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/github/token/status');
                 const result = await response.json();
                 
                 if (result.success) {
-                    const config = result.config;
-                    const tokenStatus = result.tokenStatus;
-                    
-                    if (tokenStatus.hasToken) {
-                        const tokenSourceText = tokenStatus.tokenSource === 'environment' ? '環境變數' : '配置文件';
-                        configStatus.innerHTML = `
+                    if (result.hasToken) {
+                        tokenStatus.innerHTML = `
                             <div style="background: rgba(40, 167, 69, 0.2); color: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
-                                <h5 style="margin: 0 0 10px 0;">✅ 配置狀態正常</h5>
-                                <p style="margin: 5px 0;"><strong>Token:</strong> ${tokenStatus.tokenPreview}</p>
-                                <p style="margin: 5px 0;"><strong>來源:</strong> ${tokenSourceText}</p>
-                                <p style="margin: 5px 0;"><strong>倉庫:</strong> ${config.owner}/${config.repo}</p>
-                                <p style="margin: 5px 0;"><strong>分支:</strong> ${config.branch}</p>
-                                <p style="margin: 5px 0; font-size: 0.9em; opacity: 0.8;">最後更新: ${new Date(config.last_updated).toLocaleString('zh-TW')}</p>
+                                <h5 style="margin: 0 0 10px 0;">✅ Token 狀態正常</h5>
+                                <p style="margin: 5px 0;"><strong>Token:</strong> ${result.tokenPreview}</p>
+                                <p style="margin: 5px 0;"><strong>來源:</strong> ${result.tokenSource}</p>
+                                <p style="margin: 5px 0; font-size: 0.9em; opacity: 0.8;">${result.message}</p>
                             </div>
                         `;
                     } else {
-                        const envStatus = tokenStatus.envTokenExists ? '✅ 環境變數中有 Token' : '❌ 環境變數中無 Token';
-                        const configFileStatus = tokenStatus.configTokenExists ? '✅ 配置文件中有 Token' : '❌ 配置文件中無 Token';
-                        
-                        configStatus.innerHTML = `
+                        tokenStatus.innerHTML = `
                             <div style="background: rgba(255, 193, 7, 0.2); color: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
-                                <h5 style="margin: 0 0 10px 0;">⚠️ 配置不完整</h5>
-                                <p style="margin: 5px 0;">尚未找到有效的 GitHub Token</p>
-                                <p style="margin: 5px 0; font-size: 0.9em;"><strong>診斷信息:</strong></p>
-                                <p style="margin: 5px 0; font-size: 0.9em;">${envStatus}</p>
-                                <p style="margin: 5px 0; font-size: 0.9em;">${configFileStatus}</p>
-                                <p style="margin: 5px 0; font-size: 0.9em;">請點擊「編輯配置」設置 Token 或在 Render Dashboard 中設置環境變數</p>
+                                <h5 style="margin: 0 0 10px 0;">⚠️ Token 未設置</h5>
+                                <p style="margin: 5px 0;">${result.message}</p>
+                                <p style="margin: 5px 0; font-size: 0.9em;">請在 Render Dashboard 中設置 GITHUB_TOKEN 環境變數</p>
                             </div>
                         `;
                     }
                 } else {
-                    configStatus.innerHTML = `
+                    tokenStatus.innerHTML = `
                         <div style="background: rgba(220, 53, 69, 0.2); color: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
-                            <h5 style="margin: 0 0 10px 0;">❌ 配置檢查失敗</h5>
+                            <h5 style="margin: 0 0 10px 0;">❌ Token 檢查失敗</h5>
                             <p style="margin: 5px 0;">${result.message}</p>
                         </div>
                     `;
                 }
             } catch (error) {
-                configStatus.innerHTML = `
+                tokenStatus.innerHTML = `
                     <div style="background: rgba(220, 53, 69, 0.2); color: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
-                        <h5 style="margin: 0 0 10px 0;">❌ 配置檢查錯誤</h5>
+                        <h5 style="margin: 0 0 10px 0;">❌ Token 檢查錯誤</h5>
                         <p style="margin: 5px 0;">${error.message}</p>
                     </div>
                 `;
             } finally {
                 checkBtn.disabled = false;
-                checkBtn.innerHTML = '🔍 檢查狀態';
+                checkBtn.innerHTML = '🔍 檢查 Token 狀態';
             }
         }
         
-        // 顯示配置編輯區域
-        async function showConfigEdit() {
-            // 先載入當前配置
-            try {
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/config/github');
-                const result = await response.json();
-                
-                if (result.success) {
-                    const config = result.config;
-                    document.getElementById('configGitHubToken').value = '';
-                    document.getElementById('configOwner').value = config.owner || '';
-                    document.getElementById('configRepo').value = config.repo || '';
-                    document.getElementById('configBranch').value = config.branch || '';
-                }
-            } catch (error) {
-                console.error('載入配置失敗:', error);
-            }
-            
-            document.querySelector('.config-edit').style.display = 'block';
-            document.querySelector('.config-actions').style.display = 'none';
-        }
-        
-        // 隱藏配置編輯區域
-        function hideConfigEdit() {
-            document.querySelector('.config-edit').style.display = 'none';
-            document.querySelector('.config-actions').style.display = 'flex';
-            
-            // 清空輸入框
-            document.getElementById('configGitHubToken').value = '';
-            document.getElementById('configOwner').value = '';
-            document.getElementById('configRepo').value = '';
-            document.getElementById('configBranch').value = '';
-        }
-        
-        // 保存 GitHub 配置
-        async function saveGitHubConfig() {
-            const token = document.getElementById('configGitHubToken').value.trim();
-            const owner = document.getElementById('configOwner').value.trim();
-            const repo = document.getElementById('configRepo').value.trim();
-            const branch = document.getElementById('configBranch').value.trim();
-            const configStatus = document.getElementById('configStatus');
-            
-            if (!token) {
-                alert('請輸入 GitHub Token！');
-                return;
-            }
-            
-            if (!owner || !repo || !branch) {
-                alert('請填寫完整的倉庫資訊！');
-                return;
-            }
-            
-            try {
-                const response = await fetch(ENV_CONFIG.getApiBase() + '/api/config/github', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        github_token: token,
-                        owner: owner,
-                        repo: repo,
-                        branch: branch
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    configStatus.innerHTML = `
-                        <div style="background: rgba(40, 167, 69, 0.2); color: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
-                            <h5 style="margin: 0 0 10px 0;">✅ 配置保存成功</h5>
-                            <p style="margin: 5px 0;">${result.message}</p>
-                        </div>
-                    `;
-                    hideConfigEdit();
-                    // 自動檢查狀態
-                    setTimeout(checkConfigStatus, 1000);
-                } else {
-                    configStatus.innerHTML = `
-                        <div style="background: rgba(220, 53, 69, 0.2); color: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
-                            <h5 style="margin: 0 0 10px 0;">❌ 配置保存失敗</h5>
-                            <p style="margin: 5px 0;">${result.message}</p>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                configStatus.innerHTML = `
-                    <div style="background: rgba(220, 53, 69, 0.2); color: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
-                        <h5 style="margin: 0 0 10px 0;">❌ 配置保存錯誤</h5>
-                        <p style="margin: 5px 0;">${error.message}</p>
-                    </div>
-                `;
-            }
-        }
 
         // GitHub 同步功能
         async function syncToGitHub() {
