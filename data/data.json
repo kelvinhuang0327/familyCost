@@ -1221,13 +1221,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218273094_z7u15d0gu_10",
-      "date": "2025-09-28",
+      "id": "1759218273096_57zynwevr_19",
+      "date": "2025-09-26",
       "member": "家用",
-      "amount": 235,
-      "mainCategory": "餐飲",
+      "amount": 4550,
+      "mainCategory": "日常",
       "subCategory": "信用卡",
-      "description": "餐飲-晚餐小火鍋",
+      "description": "兩個月管理費",
       "type": "expense"
     }
   ]
