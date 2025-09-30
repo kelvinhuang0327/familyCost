@@ -116,11 +116,21 @@ class ConfigManager {
 
     // 檢查 Token 狀態
     async checkTokenStatus() {
-        const token = await this.getGitHubToken();
+        // 優先檢查環境變數
+        const envToken = process.env.GITHUB_TOKEN;
+        const configToken = await this.getGitHubToken();
+        
+        // 使用環境變數或配置文件中的 token
+        const token = envToken || configToken;
+        const tokenSource = envToken ? 'environment' : (configToken ? 'config' : null);
+        
         return {
             hasToken: !!token,
             tokenPreview: token ? token.substring(0, 10) + '...' : null,
-            lastUpdated: this.config ? this.config.last_updated : null
+            tokenSource: tokenSource,
+            lastUpdated: this.config ? this.config.last_updated : null,
+            envTokenExists: !!envToken,
+            configTokenExists: !!configToken
         };
     }
 }

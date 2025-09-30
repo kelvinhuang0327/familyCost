@@ -7119,21 +7119,29 @@
                     const tokenStatus = result.tokenStatus;
                     
                     if (tokenStatus.hasToken) {
+                        const tokenSourceText = tokenStatus.tokenSource === 'environment' ? '環境變數' : '配置文件';
                         configStatus.innerHTML = `
                             <div style="background: rgba(40, 167, 69, 0.2); color: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
                                 <h5 style="margin: 0 0 10px 0;">✅ 配置狀態正常</h5>
                                 <p style="margin: 5px 0;"><strong>Token:</strong> ${tokenStatus.tokenPreview}</p>
+                                <p style="margin: 5px 0;"><strong>來源:</strong> ${tokenSourceText}</p>
                                 <p style="margin: 5px 0;"><strong>倉庫:</strong> ${config.owner}/${config.repo}</p>
                                 <p style="margin: 5px 0;"><strong>分支:</strong> ${config.branch}</p>
                                 <p style="margin: 5px 0; font-size: 0.9em; opacity: 0.8;">最後更新: ${new Date(config.last_updated).toLocaleString('zh-TW')}</p>
                             </div>
                         `;
                     } else {
+                        const envStatus = tokenStatus.envTokenExists ? '✅ 環境變數中有 Token' : '❌ 環境變數中無 Token';
+                        const configFileStatus = tokenStatus.configTokenExists ? '✅ 配置文件中有 Token' : '❌ 配置文件中無 Token';
+                        
                         configStatus.innerHTML = `
                             <div style="background: rgba(255, 193, 7, 0.2); color: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
                                 <h5 style="margin: 0 0 10px 0;">⚠️ 配置不完整</h5>
-                                <p style="margin: 5px 0;">尚未設置 GitHub Token</p>
-                                <p style="margin: 5px 0; font-size: 0.9em;">請點擊「編輯配置」設置 Token</p>
+                                <p style="margin: 5px 0;">尚未找到有效的 GitHub Token</p>
+                                <p style="margin: 5px 0; font-size: 0.9em;"><strong>診斷信息:</strong></p>
+                                <p style="margin: 5px 0; font-size: 0.9em;">${envStatus}</p>
+                                <p style="margin: 5px 0; font-size: 0.9em;">${configFileStatus}</p>
+                                <p style="margin: 5px 0; font-size: 0.9em;">請點擊「編輯配置」設置 Token 或在 Render Dashboard 中設置環境變數</p>
                             </div>
                         `;
                     }
