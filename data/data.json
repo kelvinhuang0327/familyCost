@@ -1241,13 +1241,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218622759_c58eqwjq7_5",
-      "date": "2025-09-30",
-      "member": "家用",
-      "amount": 7050,
-      "mainCategory": "娛樂",
+      "id": "1759218622760_de8rj69sc_7",
+      "date": "2025-09-29",
+      "member": "Phuong",
+      "amount": 650,
+      "mainCategory": "醫療",
       "subCategory": "信用卡",
-      "description": "娛樂-信用卡按摩椅",
+      "description": "醫療-看感冒",
       "type": "expense"
     }
   ]
