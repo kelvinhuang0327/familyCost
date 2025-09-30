@@ -1201,13 +1201,23 @@
       "type": "expense"
     },
     {
-      "id": "1759218169174_nw3a1aqa3_19",
-      "date": "2025-09-26",
-      "member": "家用",
-      "amount": 4550,
-      "mainCategory": "日常",
+      "id": "1759218169180_axx6akz8g_33",
+      "date": "2025-09-22",
+      "member": "Phuong",
+      "amount": 129,
+      "mainCategory": "娛樂",
       "subCategory": "信用卡",
-      "description": "兩個月管理費",
+      "description": "娛樂-包包飾品",
+      "type": "expense"
+    },
+    {
+      "id": "1759218169175_10j2hkgqf_20",
+      "date": "2025-09-27",
+      "member": "Ryan",
+      "amount": 284,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-果泥",
       "type": "expense"
     }
   ]
