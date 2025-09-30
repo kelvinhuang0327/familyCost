@@ -1049,6 +1049,16 @@
       "subCategory": "現金",
       "description": "午餐",
       "date": "2025-09-22"
+    },
+    {
+      "id": "1759218169076_11qz2fwe8_1",
+      "date": "2025-09-30",
+      "member": "家用",
+      "amount": 688,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "水費",
+      "type": "expense"
     }
   ]
 }
