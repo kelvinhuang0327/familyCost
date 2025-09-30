@@ -1597,30 +1597,63 @@ app.post('/api/config/github', async (req, res) => {
         const updates = {};
         if (github_token !== undefined) {
             updates.github_token = github_token;
-            // 同時設置環境變數，確保 Render 部署後依然有效
+            // 同時設置到運行時環境變數
             process.env.GITHUB_TOKEN = github_token;
-            console.log('✅ GitHub Token 已設置到環境變數');
+            console.log('✅ GitHub Token 已設置到運行時環境變數');
         }
         if (owner !== undefined) updates.owner = owner;
         if (repo !== undefined) updates.repo = repo;
         if (branch !== undefined) updates.branch = branch;
         
+        // 保存配置到文件
         await configMgr.updateConfig(updates);
+        console.log('✅ 配置已保存到文件:', path.join(__dirname, 'app/config/github_config.json'));
         
-        // 同時保存到 TokenManager（多重備份）
-        if (github_token) {
-            try {
-                await tokenManager.saveToken(github_token);
-                console.log('✅ Token 已備份到 TokenManager');
-            } catch (tokenError) {
-                console.log('⚠️ TokenManager 備份失敗，但配置已保存');
+        // 同步配置文件到 GitHub（這樣 Render 部署時會獲得最新配置）
+        try {
+            console.log('🔄 開始同步配置文件到 GitHub...');
+            
+            // 檢查是否有變更
+            const { stdout: status } = await execAsync('git status --porcelain app/config/github_config.json');
+            
+            if (status.trim()) {
+                // 添加配置文件
+                await execAsync('git add app/config/github_config.json');
+                console.log('📁 已添加配置文件到暫存區');
+                
+                // 提交變更
+                const commitMessage = `更新 GitHub 配置 - ${new Date().toLocaleString('zh-TW')}`;
+                await execAsync(`git commit -m "${commitMessage}"`);
+                console.log('💾 已提交配置變更');
+                
+                // 推送到 GitHub
+                await execAsync('git push origin main');
+                console.log('🚀 配置已同步到 GitHub');
+                
+                res.json({
+                    success: true,
+                    message: '配置更新成功並已同步到 GitHub（Render 下次部署時會自動獲得此配置）',
+                    synced: true
+                });
+            } else {
+                console.log('📝 配置無變更，無需同步');
+                res.json({
+                    success: true,
+                    message: '配置已保存（無變更）',
+                    synced: false
+                });
             }
+        } catch (gitError) {
+            console.error('⚠️ Git 同步失敗:', gitError.message);
+            // Git 同步失敗不影響配置保存
+            res.json({
+                success: true,
+                message: '配置已保存到本地，但 GitHub 同步失敗（手動推送或下次重試）',
+                synced: false,
+                error: gitError.message
+            });
         }
         
-        res.json({
-            success: true,
-            message: '配置更新成功（Token 已設置到環境變數和配置檔）'
-        });
     } catch (error) {
         console.error('❌ 更新配置失敗:', error);
         res.status(500).json({
