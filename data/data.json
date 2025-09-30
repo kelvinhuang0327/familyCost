@@ -1051,13 +1051,13 @@
       "date": "2025-09-22"
     },
     {
-      "id": "1759218169076_11qz2fwe8_1",
+      "id": "1759218169077_q72qxbnrn_2",
       "date": "2025-09-30",
       "member": "家用",
-      "amount": 688,
+      "amount": 1112,
       "mainCategory": "日常",
       "subCategory": "信用卡",
-      "description": "水費",
+      "description": "瓦斯費",
       "type": "expense"
     }
   ]
