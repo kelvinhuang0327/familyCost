@@ -1191,13 +1191,23 @@
       "type": "expense"
     },
     {
-      "id": "1759218169179_tyh005qol_28",
-      "date": "2025-09-24",
+      "id": "1759218169173_sdcv1u9y5_15",
+      "date": "2025-09-28",
       "member": "Kelvin",
-      "amount": 130,
+      "amount": 115,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
       "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759218169179_c20ph23ox_29",
+      "date": "2025-09-24",
+      "member": "Kelvin",
+      "amount": 100,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "娛樂-大樂透",
       "type": "expense"
     }
   ]
