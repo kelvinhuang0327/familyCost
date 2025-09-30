@@ -1221,13 +1221,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218169180_axx6akz8g_33",
+      "id": "1759218169180_dcdv9yatl_34",
       "date": "2025-09-22",
-      "member": "Phuong",
-      "amount": 129,
+      "member": "Ryan",
+      "amount": 181,
       "mainCategory": "娛樂",
       "subCategory": "信用卡",
-      "description": "娛樂-包包飾品",
+      "description": "學習-筆和簿子",
       "type": "expense"
     }
   ]
