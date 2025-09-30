@@ -22,7 +22,6 @@ function generateUniqueId() {
 
 // 添加錯誤處理
 try {
-    const GitHubTokenManager = require('./app/backend/github_token_manager');
     const { getConfig, getEnvironment } = require('./app/config/config');
     
     console.log('✅ 所有模組載入成功');
@@ -31,10 +30,10 @@ try {
     process.exit(1);
 }
 
-const GitHubTokenManager = require('./app/backend/github_token_manager');
+// 已移除的模組：
+// const GitHubTokenManager = require('./app/backend/github_token_manager'); // 已移除
 // const BackupManager = require('./app/backend/backup_manager'); // 已移除
-const DatabaseManager = require('./app/backend/database');
-const { getConfig, getEnvironment } = require('./app/config/config');
+// const DatabaseManager = require('./app/backend/database'); // 已移除
 
 const app = express();
 
@@ -92,12 +91,8 @@ const config = getConfig();
 const environment = getEnvironment();
 const PORT = process.env.PORT || config.port;
 
-// 初始化Token管理器和數據庫管理器
-const tokenManager = new GitHubTokenManager();
-// const backupManager = new BackupManager(); // 已移除
-
-// 初始化 GitHub 數據管理器
-const githubDataManager = new GitHubDataManager(tokenManager);
+// 初始化 GitHub 數據管理器（不再需要 TokenManager）
+const githubDataManager = new GitHubDataManager();
 
 // 啟動時檢查 Token 狀態
 async function initializeToken() {
@@ -149,37 +144,9 @@ initializeToken().then(() => {
     console.error('❌ 啟動初始化失敗:', error);
 });
 
-console.log('🔄 開始初始化數據庫管理器...');
-let dbManager;
-try {
-    dbManager = new DatabaseManager();
-    console.log('✅ 數據庫管理器初始化成功');
-    
-    // 檢查數據庫是否有數據，如果沒有則自動遷移
-    const recordCount = dbManager.getRecordCount();
-    console.log('📊 數據庫當前記錄數:', recordCount);
-    
-    if (recordCount === 0) {
-        console.log('🔄 數據庫為空，開始自動遷移數據...');
-        try {
-            const migrationResult = dbManager.migrateFromJSON();
-            if (migrationResult.success) {
-                console.log(`✅ 自動遷移成功: ${migrationResult.stats.total} 筆記錄`);
-            } else {
-                console.log('⚠️ 自動遷移失敗:', migrationResult.message);
-            }
-        } catch (migrationError) {
-            console.error('❌ 自動遷移過程中發生錯誤:', migrationError);
-        }
-    } else {
-        console.log('✅ 數據庫已有數據，跳過遷移');
-    }
-} catch (error) {
-    console.error('❌ 數據庫管理器初始化失敗:', error);
-    console.error('❌ 錯誤堆疊:', error.stack);
-    // 不拋出錯誤，讓服務器繼續啟動
-    dbManager = null;
-}
+// 數據庫管理器已移除，系統現在只使用 JSON 文件存儲
+console.log('✅ 系統使用 JSON 文件存儲模式');
+let dbManager = null; // 保持變數以兼容現有代碼
 
 // 檢測成員標題行
 function detectMemberTitle(row) {
@@ -786,7 +753,7 @@ app.get('/api/health', (req, res) => {
         service: 'family-cost-backup-service',
         version: '2025-09-25 18:10:00',
         environment: environment,
-        dbStatus: dbManager ? '已初始化' : '未初始化',
+        dbStatus: 'JSON 文件存儲模式',
         testMessage: '這是測試消息 - 確認部署更新',
         config: {
             name: config.name,
@@ -1270,23 +1237,8 @@ app.get('/api/records', async (req, res) => {
     }
 });
 
-// 獲取統計數據
-app.get('/api/records/stats', (req, res) => {
-    try {
-        const stats = dbManager.getStatistics();
-        res.json({
-            success: true,
-            stats: stats
-        });
-    } catch (error) {
-        console.error('❌ 獲取統計數據失敗:', error);
-        res.status(500).json({
-            success: false,
-            message: '獲取統計數據失敗',
-            error: error.message
-        });
-    }
-});
+// 獲取統計數據（已移除，統計功能在前端實現）
+// app.get('/api/records/stats', ...) - 已移除
 
 // 添加記錄
 app.post('/api/records', async (req, res) => {
@@ -1537,23 +1489,8 @@ app.delete('/api/records', async (req, res) => {
 });
 
 
-// 檢查數據完整性
-app.get('/api/records/integrity', (req, res) => {
-    try {
-        const integrityCheck = dbManager.checkDataIntegrity();
-        res.json({
-            success: true,
-            integrity: integrityCheck
-        });
-    } catch (error) {
-        console.error('❌ 數據完整性檢查失敗:', error);
-        res.status(500).json({
-            success: false,
-            message: '數據完整性檢查失敗',
-            error: error.message
-        });
-    }
-});
+// 檢查數據完整性（已移除，數據完整性由 JSON 文件保證）
+// app.get('/api/records/integrity', ...) - 已移除
 
 // 簡化的 Token 狀態檢查 API
 app.get('/api/github/token/status', async (req, res) => {
