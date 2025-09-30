@@ -1201,13 +1201,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218169180_upxzgl2rm_30",
-      "date": "2025-09-23",
-      "member": "Kelvin",
-      "amount": 180,
-      "mainCategory": "交通",
+      "id": "1759218169174_nw3a1aqa3_19",
+      "date": "2025-09-26",
+      "member": "家用",
+      "amount": 4550,
+      "mainCategory": "日常",
       "subCategory": "信用卡",
-      "description": "交通-12次停車費",
+      "description": "兩個月管理費",
       "type": "expense"
     }
   ]
