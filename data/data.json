@@ -1241,13 +1241,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218622761_4i274dj63_10",
+      "id": "1759218622761_1k8yiancb_11",
       "date": "2025-09-28",
       "member": "家用",
-      "amount": 235,
+      "amount": 402,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "餐飲-晚餐小火鍋",
+      "description": "餐飲-水果",
       "type": "expense"
     }
   ]
