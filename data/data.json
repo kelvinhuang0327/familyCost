@@ -1221,14 +1221,14 @@
       "type": "expense"
     },
     {
-      "id": "1759218169274_joxiq5k6b_55",
-      "date": "2025-09-18",
-      "member": "Ryan",
-      "amount": 850,
-      "mainCategory": "醫療",
+      "id": "1759218273090_iqqrswc6o_1",
+      "date": "2025-09-30",
+      "member": "家用",
+      "amount": 688,
+      "mainCategory": "日常",
       "subCategory": "信用卡",
-      "description": "牙醫退費",
-      "type": "income"
+      "description": "水費",
+      "type": "expense"
     }
   ]
 }
