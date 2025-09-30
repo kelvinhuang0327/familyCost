@@ -1369,6 +1369,16 @@
       "subCategory": "信用卡",
       "description": "餐飲-午餐",
       "type": "expense"
+    },
+    {
+      "id": "1759220576017_bj4f6u7m9_20",
+      "date": "2025-09-27",
+      "member": "Ryan",
+      "amount": 284,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-果泥",
+      "type": "expense"
     }
   ]
 }
