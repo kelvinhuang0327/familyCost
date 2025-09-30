@@ -1051,13 +1051,13 @@
       "date": "2025-09-22"
     },
     {
-      "id": "1759218169079_2stzceyjv_6",
-      "date": "2025-09-30",
-      "member": "Kelvin",
-      "amount": 45,
-      "mainCategory": "餐飲",
+      "id": "1759218169080_ote2uwzue_7",
+      "date": "2025-09-29",
+      "member": "Phuong",
+      "amount": 650,
+      "mainCategory": "醫療",
       "subCategory": "信用卡",
-      "description": "餐飲-牛奶",
+      "description": "醫療-看感冒",
       "type": "expense"
     }
   ]
