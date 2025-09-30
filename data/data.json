@@ -1161,13 +1161,23 @@
       "type": "expense"
     },
     {
-      "id": "1759218169178_ysnerttob_25",
-      "date": "2025-09-24",
-      "member": "Kelvin",
-      "amount": 606,
-      "mainCategory": "娛樂",
+      "id": "1759218169171_amc3yfq03_12",
+      "date": "2025-09-28",
+      "member": "家用",
+      "amount": 185,
+      "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "娛樂-icloud",
+      "description": "餐飲-晚餐小火鍋",
+      "type": "expense"
+    },
+    {
+      "id": "1759218169172_7b0a9tzp4_13",
+      "date": "2025-09-28",
+      "member": "Phuong",
+      "amount": 730,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-黑糖茶",
       "type": "expense"
     }
   ]
