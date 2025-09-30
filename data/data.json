@@ -1221,13 +1221,13 @@
       "type": "expense"
     },
     {
-      "id": "1759218169180_9ubrac9ex_31",
-      "date": "2025-09-23",
-      "member": "Kelvin",
-      "amount": 145,
-      "mainCategory": "餐飲",
+      "id": "1759218169180_axx6akz8g_33",
+      "date": "2025-09-22",
+      "member": "Phuong",
+      "amount": 129,
+      "mainCategory": "娛樂",
       "subCategory": "信用卡",
-      "description": "餐飲-午餐",
+      "description": "娛樂-包包飾品",
       "type": "expense"
     }
   ]
