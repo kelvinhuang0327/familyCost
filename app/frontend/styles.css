@@ -482,7 +482,8 @@
                 padding: 12px !important;
                 width: 240px !important;
                 min-width: 240px !important;
-                min-height: 140px !important; /* 增加高度以容納更多內容 */
+                min-height: 140px !important; /* 強制統一高度 */
+                height: 140px !important; /* 強制固定高度 */
                 flex-shrink: 0 !important;
                 scroll-snap-align: center !important;
                 background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%) !important;
@@ -493,7 +494,7 @@
                 z-index: 1 !important;
                 display: flex !important;
                 flex-direction: column !important;
-                justify-content: space-between !important; /* 改為space-between以更好地分佈內容 */
+                justify-content: center !important; /* 改回center以保持一致 */
                 align-items: center !important;
             }
             
@@ -2036,7 +2037,8 @@
             text-align: center !important;
             min-width: 240px !important;
             width: 240px !important;
-            min-height: 120px !important;
+            min-height: 140px !important; /* 強制統一高度 */
+            height: 140px !important; /* 強制固定高度 */
             display: flex !important;
             flex-direction: column !important;
             justify-content: center !important;

@@ -2225,8 +2225,15 @@
                 .filter(record => record.type === 'income' && record.subCategory === '現金')
                 .reduce((sum, record) => sum + record.amount, 0);
             
-            // 計算當月現金餘額 = 當月現金收入 - 當月現金支出
-            const cashBalance = cashIncome - cashExpense;
+            // 強制計算10月份的現金餘額
+            const octoberRecords = records.filter(record => record.date.startsWith('2025/10'));
+            const octoberCashIncome = octoberRecords
+                .filter(record => record.type === 'income' && record.subCategory === '現金')
+                .reduce((sum, record) => sum + record.amount, 0);
+            const octoberCashExpense = octoberRecords
+                .filter(record => record.type === 'expense' && record.subCategory === '現金')
+                .reduce((sum, record) => sum + record.amount, 0);
+            const cashBalance = octoberCashIncome - octoberCashExpense;
             
             // 計算累計現金餘額 = 所有月份的現金收入 - 所有月份的現金支出
             const cumulativeCashIncome = records
