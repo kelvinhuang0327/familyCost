@@ -1,1060 +1,1604 @@
 {
   "records": [
     {
-      "id": "17585242128014xobdvcjc",
+      "id": "1759820437469_19n7v9ku4_1",
+      "date": "2025/10/1",
       "member": "Kelvin",
-      "type": "expense",
-      "amount": 350,
+      "amount": 580,
       "mainCategory": "醫療",
-      "subCategory": "現金",
-      "description": "看感冒",
-      "date": "2025-09-21"
-    },
-    {
-      "id": "1758524212801luhber68p",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 130,
-      "mainCategory": "餐飲",
-      "subCategory": "現金",
-      "description": "午餐",
-      "date": "2025-09-01"
-    },
-    {
-      "id": "1758524212801k6b5b6i91",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 100,
-      "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "午餐",
-      "date": "2025-09-02"
+      "description": "醫療-長庚皮膚",
+      "type": "expense"
     },
     {
-      "id": "1758524212801eyapccx9u",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 110,
-      "mainCategory": "餐飲",
-      "subCategory": "現金",
-      "description": "午餐",
-      "date": "2025-09-03"
-    },
-    {
-      "id": "1758524212801xgpdrb09a",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 130,
-      "mainCategory": "餐飲",
-      "subCategory": "現金",
-      "description": "午餐",
-      "date": "2025-09-04"
-    },
-    {
-      "id": "1758524212801v3kms677x",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 120,
-      "mainCategory": "交通",
-      "subCategory": "信用卡",
-      "description": "8次停車費",
-      "date": "2025-09-04"
-    },
-    {
-      "id": "1758524212801l5hiezwyg",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 145,
-      "mainCategory": "餐飲",
-      "subCategory": "現金",
-      "description": "午餐",
-      "date": "2025-09-05"
-    },
-    {
-      "id": "1758524212801c10byrue4",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 110,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "晚餐",
-      "date": "2025-09-05"
-    },
-    {
-      "id": "175852421280121dn7y7ne",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 966,
-      "mainCategory": "其他",
-      "subCategory": "現金",
-      "description": "e7play代付",
-      "date": "2025-09-06"
-    },
-    {
-      "id": "1758524212801vux91acaw",
-      "member": "Kelvin",
-      "type": "income",
-      "amount": 966,
-      "mainCategory": "其他",
-      "subCategory": "現金",
-      "description": "收到代付",
-      "date": "2025-09-06"
-    },
-    {
-      "id": "1758524212801w9iyue9j5",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 100,
-      "mainCategory": "娛樂",
-      "subCategory": "現金",
-      "description": "大樂透",
-      "date": "2025-09-06"
-    },
-    {
-      "id": "17585242128011tceivvii",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 150,
-      "mainCategory": "餐飲",
-      "subCategory": "現金",
-      "description": "午餐",
-      "date": "2025-09-09"
-    },
-    {
-      "id": "1758524212801ca467ad4s",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 140,
-      "mainCategory": "餐飲",
-      "subCategory": "現金",
-      "description": "午餐",
-      "date": "2025-09-10"
-    },
-    {
-      "id": "1758524212801h1ehnkqmc",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 150,
-      "mainCategory": "餐飲",
-      "subCategory": "現金",
-      "description": "午餐",
-      "date": "2025-09-11"
-    },
-    {
-      "id": "17585242128013u31a785y",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 283,
-      "mainCategory": "日常",
-      "subCategory": "信用卡",
-      "description": "隨身碟",
-      "date": "2025-09-12"
-    },
-    {
-      "id": "1758524212801hwowdxfz6",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 350,
-      "mainCategory": "醫療",
-      "subCategory": "現金",
-      "description": "看感冒",
-      "date": "2025-09-13"
-    },
-    {
-      "id": "1758524212801pstb8m446",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 185,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "晚餐",
-      "date": "2025-09-14"
-    },
-    {
-      "id": "1758524212801n0co3xyeu",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 1979,
-      "mainCategory": "日常",
-      "subCategory": "現金",
-      "description": "手機欠費",
-      "date": "2025-09-15"
-    },
-    {
-      "id": "17585242128016etd18q56",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 242,
-      "mainCategory": "日常",
-      "subCategory": "現金",
-      "description": "手機8月",
-      "date": "2025-09-15"
-    },
-    {
-      "id": "17585242128016g2j5grkk",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 150,
-      "mainCategory": "餐飲",
-      "subCategory": "現金",
-      "description": "午餐",
-      "date": "2025-09-15"
-    },
-    {
-      "id": "1758524212801fgaq1ihqs",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 145,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "午餐",
-      "date": "2025-09-16"
-    },
-    {
-      "id": "1758524212801qjaaysc5k",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 160,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "午餐",
-      "date": "2025-09-17"
-    },
-    {
-      "id": "1758524212801efre3chcd",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 92,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "牛奶",
-      "date": "2025-09-17"
-    },
-    {
-      "id": "1758524212801a74ocwxxj",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 160,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "午餐",
-      "date": "2025-09-18"
-    },
-    {
-      "id": "1758524212801jwcj8fpqx",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 76,
-      "mainCategory": "交通",
-      "subCategory": "現金",
-      "description": "汽油",
-      "date": "2025-09-19"
-    },
-    {
-      "id": "17585242128011vxyvdna8",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 120,
-      "mainCategory": "餐飲",
-      "subCategory": "現金",
-      "description": "午餐",
-      "date": "2025-09-19"
-    },
-    {
-      "id": "1758524212801e41wm3ud5",
-      "member": "Phuong",
-      "type": "expense",
-      "amount": 350,
-      "mainCategory": "醫療",
-      "subCategory": "現金",
-      "description": "看感冒",
-      "date": "2025-09-21"
-    },
-    {
-      "id": "1758524212801qk32pctch",
-      "member": "Phuong",
-      "type": "expense",
-      "amount": 2580,
-      "mainCategory": "娛樂",
-      "subCategory": "信用卡",
-      "description": "信用卡",
-      "date": "2025-09-21"
-    },
-    {
-      "id": "1758524212801vazecjcb8",
-      "member": "Phuong",
-      "type": "expense",
-      "amount": 65,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "早餐麥味登",
-      "date": "2025-09-03"
-    },
-    {
-      "id": "17585242128011bpk80tlu",
-      "member": "Phuong",
-      "type": "expense",
-      "amount": 1598,
-      "mainCategory": "日常",
-      "subCategory": "現金",
-      "description": "手機網路",
-      "date": "2025-09-03"
-    },
-    {
-      "id": "1758524212801w1xpzdkjn",
-      "member": "Phuong",
-      "type": "expense",
-      "amount": 480,
-      "mainCategory": "娛樂",
-      "subCategory": "現金",
-      "description": "夜市衣服",
-      "date": "2025-09-07"
-    },
-    {
-      "id": "175852421280112joqacai",
-      "member": "Phuong",
-      "type": "expense",
-      "amount": 64,
-      "mainCategory": "娛樂",
-      "subCategory": "信用卡",
-      "description": "瑜珈帶子",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "1758524212801m0uptwh99",
-      "member": "Phuong",
-      "type": "expense",
-      "amount": 290,
-      "mainCategory": "日常",
-      "subCategory": "現金",
-      "description": "手機殼",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "17585242128014kc2k5thk",
-      "member": "Phuong",
-      "type": "expense",
-      "amount": 150,
-      "mainCategory": "日常",
-      "subCategory": "現金",
-      "description": "剪頭髮",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "1758524212801851e1oni4",
-      "member": "Phuong",
-      "type": "expense",
-      "amount": 260,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "蝦皮餅乾",
-      "date": "2025-09-11"
-    },
-    {
-      "id": "17585242128019oj0iy96m",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 350,
-      "mainCategory": "醫療",
-      "subCategory": "現金",
-      "description": "看感冒",
-      "date": "2025-09-21"
-    },
-    {
-      "id": "1758524212801e7wbvhq4k",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 576,
-      "mainCategory": "日常",
-      "subCategory": "信用卡",
-      "description": "尿布",
-      "date": "2025-09-21"
-    },
-    {
-      "id": "1758524212801g4mweb554",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 300,
-      "mainCategory": "禮物",
-      "subCategory": "現金",
-      "description": "汽車",
-      "date": "2025-09-07"
-    },
-    {
-      "id": "17585242128014biibr6hv",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 120,
-      "mainCategory": "日常",
-      "subCategory": "現金",
-      "description": "剪頭髮",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "1758524212801f7u86y393",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 24,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "飲料",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "1758524212801bavkyysq6",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 17906,
-      "mainCategory": "學費",
-      "subCategory": "現金",
-      "description": "吉的堡",
-      "date": "2025-09-09"
-    },
-    {
-      "id": "1758524212802kqieqeu43",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 888,
-      "mainCategory": "日常",
-      "subCategory": "信用卡",
-      "description": "擠帶血",
-      "date": "2025-09-11"
-    },
-    {
-      "id": "1758524212802w01eskzjr",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 280,
-      "mainCategory": "醫療",
-      "subCategory": "現金",
-      "description": "上課掛號費",
-      "date": "2025-09-11"
-    },
-    {
-      "id": "1758524212802uwfp0gzbq",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 1000,
-      "mainCategory": "醫療",
-      "subCategory": "現金",
-      "description": "看牙醫",
-      "date": "2025-09-13"
-    },
-    {
-      "id": "1758524212802zpv2c4lms",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 350,
-      "mainCategory": "醫療",
-      "subCategory": "現金",
-      "description": "看感冒",
-      "date": "2025-09-13"
-    },
-    {
-      "id": "1758524212802rav4gjgte",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 208,
-      "mainCategory": "娛樂",
-      "subCategory": "信用卡",
-      "description": "呵比禮物",
-      "date": "2025-09-15"
-    },
-    {
-      "id": "17585242128025wrc7osec",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 71,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "果泥",
-      "date": "2025-09-15"
-    },
-    {
-      "id": "17585242128021j86ay803",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 97,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "711麵包",
-      "date": "2025-09-16"
-    },
-    {
-      "id": "17585242128024njm3u4dr",
-      "member": "Ryan",
-      "type": "income",
-      "amount": 850,
-      "mainCategory": "健康",
-      "subCategory": "現金",
-      "description": "牙醫退費",
-      "date": "2025-09-18"
-    },
-    {
-      "id": "1758524212802ewhm1wvle",
-      "member": "Ryan",
-      "type": "expense",
-      "amount": 93,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "711麵包",
-      "date": "2025-09-19"
-    },
-    {
-      "id": "1758524212802581tyqrey",
+      "id": "1759820437469_9cgufamon_2",
+      "date": "2025/10/1",
       "member": "家用",
-      "type": "expense",
-      "amount": 260,
-      "mainCategory": "餐飲",
+      "amount": 1618,
+      "mainCategory": "醫療",
       "subCategory": "信用卡",
-      "description": "餐飲-早餐麥味登",
-      "date": "2025-09-20"
+      "description": "醫療-長庚皮膚",
+      "type": "expense"
     },
     {
-      "id": "1758524212802diln43dcg",
+      "id": "1759820437469_zd0kc9kaa_3",
+      "date": "2025/10/1",
+      "member": "Kelvin",
+      "amount": 150,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437469_jzkpv7o7y_4",
+      "date": "2025/10/1",
       "member": "家用",
-      "type": "expense",
-      "amount": 210,
+      "amount": 150,
       "mainCategory": "餐飲",
       "subCategory": "現金",
       "description": "餐飲-晚餐",
-      "date": "2025-09-20"
+      "type": "expense"
     },
     {
-      "id": "1758524212802yzo4fzbdz",
+      "id": "1759820437470_nme67j3e6_5",
+      "date": "2025/10/3",
       "member": "家用",
-      "type": "expense",
-      "amount": 273,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "餐飲-早餐麥當勞",
-      "date": "2025-09-21"
-    },
-    {
-      "id": "17585242128024h5l9qzqd",
-      "member": "家用",
-      "type": "expense",
-      "amount": 27,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "餐飲-711",
-      "date": "2025-09-21"
-    },
-    {
-      "id": "17585242128027uaxm4c13",
-      "member": "家用",
-      "type": "expense",
       "amount": 185,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
       "description": "餐飲-晚餐小火鍋",
-      "date": "2025-09-21"
+      "type": "expense"
     },
     {
-      "id": "1758524212802b9lz6p8b9",
+      "id": "1759820437470_df1w6n1tc_6",
+      "date": "2025/10/4",
       "member": "家用",
-      "type": "expense",
+      "amount": 185,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-晚餐小火鍋",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437470_4i1q8m98b_7",
+      "date": "2025/10/4",
+      "member": "Kelvin",
+      "amount": 107,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "日常-AI",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437470_gdz8746tf_8",
+      "date": "2025/10/4",
+      "member": "家用",
+      "amount": 36,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-711",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437471_vnzsaxgow_9",
+      "date": "2025/10/4",
+      "member": "Kelvin",
+      "amount": 154,
+      "mainCategory": "交通",
+      "subCategory": "信用卡",
+      "description": "交通-汽油",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437472_62h43m9bb_10",
+      "date": "2025/10/4",
+      "member": "Ryan",
+      "amount": 142,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-卡多摩果泥",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437472_2vxv3uhj2_11",
+      "date": "2025/10/5",
+      "member": "Ryan",
+      "amount": 350,
+      "mainCategory": "醫療",
+      "subCategory": "現金",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437473_7620f1rdp_12",
+      "date": "2025/10/5",
+      "member": "Kelvin",
+      "amount": 350,
+      "mainCategory": "醫療",
+      "subCategory": "現金",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437474_b31bkc9td_13",
+      "date": "2025/10/5",
+      "member": "家用",
+      "amount": 210,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-五燈獎便當",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437474_5ndbqjx9l_14",
+      "date": "2025/10/5",
+      "member": "Ryan",
+      "amount": 297,
+      "mainCategory": "娛樂",
+      "subCategory": "現金",
+      "description": "娛樂-玩具",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437475_gjihozvok_15",
+      "date": "2025/10/5",
+      "member": "Ryan",
+      "amount": 160,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-卡多摩果泥",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437475_ghj30f0sc_16",
+      "date": "2025/10/5",
+      "member": "Ryan",
+      "amount": 7995,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-奶粉",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437475_7jr9odlub_17",
+      "date": "2025/10/5",
+      "member": "Ryan",
+      "amount": 70,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-麵包",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437476_wspwto470_18",
+      "date": "2025/10/5",
+      "member": "Kelvin",
+      "amount": 180,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437478_qtpohjpu7_19",
+      "date": "2025/10/6",
+      "member": "家用",
+      "amount": 79,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-飲料",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437478_64ue40g95_20",
+      "date": "2025/10/6",
+      "member": "家用",
+      "amount": 150,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-麥味登早餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437478_9a43r029w_21",
+      "date": "2025/9/30",
+      "member": "Kelvin",
+      "amount": 280,
+      "mainCategory": "醫療",
+      "subCategory": "現金",
+      "description": "醫療-復健",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437479_qqhkv1tud_22",
+      "date": "2025/9/30",
+      "member": "Ryan",
+      "amount": 280,
+      "mainCategory": "醫療",
+      "subCategory": "現金",
+      "description": "醫療-上課掛號費",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437480_ljhcmh4ex_23",
+      "date": "2025/9/30",
+      "member": "家用",
+      "amount": 1112,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "瓦斯費",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437566_oujfw598q_24",
+      "date": "2025/9/30",
+      "member": "Kelvin",
+      "amount": 30,
+      "mainCategory": "交通",
+      "subCategory": "信用卡",
+      "description": "交通-2次停車費",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437567_wrhtnhpzi_25",
+      "date": "2025/9/30",
+      "member": "Kelvin",
+      "amount": 45,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-牛奶",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437567_s3oiizlx0_26",
+      "date": "2025/9/30",
+      "member": "Kelvin",
+      "amount": 120,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437567_cafvtmgog_27",
+      "date": "2025/9/30",
+      "member": "家用",
+      "amount": 688,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "水費",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437567_8cr3jwstt_28",
+      "date": "2025/9/30",
+      "member": "家用",
+      "amount": 7050,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "娛樂-信用卡按摩椅",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437568_8u4y3fez7_29",
+      "date": "2025/9/29",
+      "member": "Ryan",
+      "amount": 430,
+      "mainCategory": "醫療",
+      "subCategory": "信用卡",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437568_ljl9mifuq_30",
+      "date": "2025/9/29",
+      "member": "家用",
+      "amount": 343,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-全聯",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437568_wfi7mlg2i_31",
+      "date": "2025/9/29",
+      "member": "Phuong",
+      "amount": 650,
+      "mainCategory": "醫療",
+      "subCategory": "信用卡",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437568_ipzq6tr5h_32",
+      "date": "2025/9/28",
+      "member": "Kelvin",
+      "amount": 124,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-梅子",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437569_ljezfz1js_33",
+      "date": "2025/9/28",
+      "member": "家用",
+      "amount": 185,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-晚餐小火鍋",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437570_izsvurfh9_34",
+      "date": "2025/9/28",
+      "member": "Kelvin",
+      "amount": 115,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437570_5noikgrfl_35",
+      "date": "2025/9/28",
+      "member": "家用",
+      "amount": 235,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-晚餐小火鍋",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437570_l717lcelh_36",
+      "date": "2025/9/28",
+      "member": "家用",
+      "amount": 402,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-水果",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437571_scpqp8sfq_37",
+      "date": "2025/9/28",
+      "member": "Phuong",
+      "amount": 730,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-黑糖茶",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437571_gh8hzdto9_38",
+      "date": "2025/9/28",
+      "member": "Kelvin",
+      "amount": 221,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "早餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437571_1slvryyw1_39",
+      "date": "2025/9/27",
+      "member": "家用",
+      "amount": 80,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "晚餐鐵板麵",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437572_l22t371o3_40",
+      "date": "2025/9/27",
+      "member": "家用",
+      "amount": 276,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "麥當勞",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437572_mmr3e412q_41",
+      "date": "2025/9/27",
+      "member": "Kelvin",
+      "amount": 350,
+      "mainCategory": "醫療",
+      "subCategory": "信用卡",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437572_c7vfgassd_42",
+      "date": "2025/9/27",
+      "member": "Ryan",
+      "amount": 284,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-果泥",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437573_qmgmo430z_43",
+      "date": "2025/9/26",
+      "member": "Kelvin",
+      "amount": 160,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437573_164rrilvl_44",
+      "date": "2025/9/26",
+      "member": "家用",
+      "amount": 4550,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "兩個月管理費",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437574_dbeyyk228_45",
+      "date": "2025/9/26",
+      "member": "Ryan",
+      "amount": 350,
+      "mainCategory": "醫療",
+      "subCategory": "信用卡",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437574_z3bqrysk4_46",
+      "date": "2025/9/25",
+      "member": "Kelvin",
+      "amount": 140,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437575_9cdzhk4d_47",
+      "date": "2025/9/24",
+      "member": "Kelvin",
+      "amount": 30,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "娛樂-AI",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437575_87kfc9aoq_48",
+      "date": "2025/9/24",
+      "member": "Phuong",
+      "amount": 350,
+      "mainCategory": "醫療",
+      "subCategory": "信用卡",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437575_4x2ni61xg_49",
+      "date": "2025/9/24",
+      "member": "Kelvin",
+      "amount": 606,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "娛樂-icloud",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437576_955elj6i5_50",
+      "date": "2025/9/24",
+      "member": "Kelvin",
+      "amount": 130,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437576_tlbvd0h0s_51",
+      "date": "2025/9/24",
+      "member": "Kelvin",
+      "amount": 100,
+      "mainCategory": "娛樂",
+      "subCategory": "現金",
+      "description": "娛樂-大樂透",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437576_oezehfbsc_52",
+      "date": "2025/9/23",
+      "member": "Kelvin",
+      "amount": 180,
+      "mainCategory": "交通",
+      "subCategory": "信用卡",
+      "description": "交通-12次停車費",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437576_j4wkzhji4_53",
+      "date": "2025/9/23",
+      "member": "Kelvin",
+      "amount": 145,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437577_vop050pzk_54",
+      "date": "2025/9/22",
+      "member": "Kelvin",
+      "amount": 160,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437577_5s32m4gdv_55",
+      "date": "2025/9/22",
+      "member": "Phuong",
+      "amount": 129,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "娛樂-包包飾品",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437577_y9b4ly5w2_56",
+      "date": "2025/9/22",
+      "member": "Ryan",
+      "amount": 181,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "學習-筆和簿子",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437578_6elrh2k20_57",
+      "date": "2025/9/21",
+      "member": "Kelvin",
+      "amount": 350,
+      "mainCategory": "醫療",
+      "subCategory": "現金",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437578_n75w2tnap_58",
+      "date": "2025/9/21",
+      "member": "Phuong",
+      "amount": 350,
+      "mainCategory": "醫療",
+      "subCategory": "現金",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437579_s8h8o1051_59",
+      "date": "2025/9/21",
+      "member": "Phuong",
+      "amount": 2580,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "娛樂-西門町包包",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437579_8kfrik84d_60",
+      "date": "2025/9/21",
+      "member": "Ryan",
+      "amount": 350,
+      "mainCategory": "醫療",
+      "subCategory": "現金",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437579_09n8agv8h_61",
+      "date": "2025/9/21",
+      "member": "Ryan",
+      "amount": 576,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "日常-尿布",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437580_g5epx9tnd_62",
+      "date": "2025/9/21",
+      "member": "家用",
+      "amount": 273,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-早餐麥當勞",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437580_n12zno5u5_63",
+      "date": "2025/9/21",
+      "member": "家用",
+      "amount": 27,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-711",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437580_tqitm5qgb_64",
+      "date": "2025/9/21",
+      "member": "家用",
+      "amount": 185,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-晚餐小火鍋",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437581_2wm98aemr_65",
+      "date": "2025/9/21",
+      "member": "家用",
       "amount": 175,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
       "description": "餐飲-午餐",
-      "date": "2025-09-21"
+      "type": "expense"
     },
     {
-      "id": "1758524212802qjk14v5mj",
+      "id": "1759820437581_3wwumx7xs_66",
+      "date": "2025/9/20",
       "member": "家用",
-      "type": "expense",
+      "amount": 260,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-早餐麥味登",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437667_imduffs8d_67",
+      "date": "2025/9/20",
+      "member": "家用",
+      "amount": 210,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-晚餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437668_b9i3aoo2r_68",
+      "date": "2025/9/20",
+      "member": "家用",
       "amount": 169,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
       "description": "餐飲-711",
-      "date": "2025-09-20"
+      "type": "expense"
     },
     {
-      "id": "1758524212802pzyds072y",
-      "member": "家用",
-      "type": "income",
-      "amount": 20000,
-      "mainCategory": "現金流收入",
+      "id": "1759820437669_ywbwukk9j_69",
+      "date": "2025/9/19",
+      "member": "Kelvin",
+      "amount": 76,
+      "mainCategory": "交通",
+      "subCategory": "信用卡",
+      "description": "交通-汽油",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437669_lh87oqzee_70",
+      "date": "2025/9/19",
+      "member": "Kelvin",
+      "amount": 120,
+      "mainCategory": "餐飲",
       "subCategory": "現金",
-      "description": "跟大哥借2萬",
-      "date": "2025-09-03"
+      "description": "餐飲-午餐",
+      "type": "expense"
     },
     {
-      "id": "1758524212802cx4nkfhp8",
+      "id": "1759820437670_1a0sr5nm3_71",
+      "date": "2025/9/19",
+      "member": "Ryan",
+      "amount": 93,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-711麵包",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437671_h1hixkvnx_72",
+      "date": "2025/9/19",
       "member": "家用",
-      "type": "expense",
-      "amount": 7050,
+      "amount": 1458,
+      "mainCategory": "其他收入",
+      "subCategory": "現金",
+      "description": "其他收入-8月差額",
+      "type": "income"
+    },
+    {
+      "id": "1759820437671_niahm6j74_73",
+      "date": "2025/9/19",
+      "member": "家用",
+      "amount": 35000,
+      "mainCategory": "現金流支出",
+      "subCategory": "現金",
+      "description": "現金流支出-還大哥錢",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437672_mlnl1i6wg_74",
+      "date": "2025/9/19",
+      "member": "家用",
+      "amount": 27000,
+      "mainCategory": "其他",
+      "subCategory": "現金",
+      "description": "其他-房租",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437672_rhcubouk7_75",
+      "date": "2025/9/19",
+      "member": "家用",
+      "amount": 26618,
+      "mainCategory": "現金流支出",
+      "subCategory": "現金",
+      "description": "現金流支出-台新信用卡",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437672_qeltp393e_76",
+      "date": "2025/9/18",
+      "member": "Kelvin",
+      "amount": 160,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437672_k5575o98w_77",
+      "date": "2025/9/18",
+      "member": "Ryan",
+      "amount": 850,
+      "mainCategory": "醫療",
+      "subCategory": "現金",
+      "description": "牙醫退費",
+      "type": "income"
+    },
+    {
+      "id": "1759820437673_80h935m5k_78",
+      "date": "2025/9/17",
+      "member": "Kelvin",
+      "amount": 160,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437674_jert2am1y_79",
+      "date": "2025/9/17",
+      "member": "Kelvin",
+      "amount": 92,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-牛奶",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437674_pz09c1odl_80",
+      "date": "2025/9/16",
+      "member": "Kelvin",
+      "amount": 145,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437674_zqfmkryiz_81",
+      "date": "2025/9/16",
+      "member": "Ryan",
+      "amount": 97,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-711麵包",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437674_512trlu50_82",
+      "date": "2025/9/15",
+      "member": "Kelvin",
+      "amount": 1979,
+      "mainCategory": "日常",
+      "subCategory": "現金",
+      "description": "日常-手機欠費",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437675_ly6coahh9_83",
+      "date": "2025/9/15",
+      "member": "Kelvin",
+      "amount": 242,
+      "mainCategory": "日常",
+      "subCategory": "現金",
+      "description": "日常-手機8月",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437675_4kz19qi5r_84",
+      "date": "2025/9/15",
+      "member": "Kelvin",
+      "amount": 150,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437675_jpzj1nrko_85",
+      "date": "2025/9/15",
+      "member": "Ryan",
+      "amount": 208,
       "mainCategory": "娛樂",
       "subCategory": "信用卡",
-      "description": "信用卡按摩椅",
-      "date": "2025-09-03"
+      "description": "娛樂-呵比禮物",
+      "type": "expense"
     },
     {
-      "id": "1758524212802sgyy9etic",
-      "member": "家用",
-      "type": "expense",
-      "amount": 5092,
-      "mainCategory": "日常",
+      "id": "1759820437675_hwmi8ddq7_86",
+      "date": "2025/9/15",
+      "member": "Ryan",
+      "amount": 71,
+      "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "信用卡保險",
-      "date": "2025-09-03"
+      "description": "餐飲-果泥",
+      "type": "expense"
     },
     {
-      "id": "17585242128024qh3bpve5",
+      "id": "1759820437676_muun8yrbc_87",
+      "date": "2025/9/15",
       "member": "家用",
-      "type": "expense",
+      "amount": 93004,
+      "mainCategory": "薪資",
+      "subCategory": "現金",
+      "description": "薪資-9月",
+      "type": "income"
+    },
+    {
+      "id": "1759820437676_jlvs9yt3p_88",
+      "date": "2025/9/14",
+      "member": "Kelvin",
       "amount": 185,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "晚餐小火鍋",
-      "date": "2025-09-04"
+      "description": "餐飲-晚餐",
+      "type": "expense"
     },
     {
-      "id": "1758524212802zrwgz9xuw",
+      "id": "1759820437676_8v4chhk8g_89",
+      "date": "2025/9/14",
       "member": "家用",
-      "type": "income",
-      "amount": 15000,
-      "mainCategory": "楊梅",
+      "amount": 185,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-晚餐小火鍋",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437677_wqx2xji2p_90",
+      "date": "2025/9/13",
+      "member": "Kelvin",
+      "amount": 350,
+      "mainCategory": "醫療",
       "subCategory": "現金",
-      "description": "房租",
-      "date": "2025-09-05"
+      "description": "醫療-看感冒",
+      "type": "expense"
     },
     {
-      "id": "1758524212802e8f3d3ktj",
+      "id": "1759820437678_y907ciqph_91",
+      "date": "2025/9/13",
+      "member": "Ryan",
+      "amount": 1000,
+      "mainCategory": "醫療",
+      "subCategory": "現金",
+      "description": "醫療-看牙醫",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437678_p46bsihkz_92",
+      "date": "2025/9/13",
+      "member": "Ryan",
+      "amount": 350,
+      "mainCategory": "醫療",
+      "subCategory": "現金",
+      "description": "醫療-看感冒",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437679_wrlylmmrw_93",
+      "date": "2025/9/13",
       "member": "家用",
-      "type": "expense",
+      "amount": 210,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-早餐麥味登",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437679_0unagxyyw_94",
+      "date": "2025/9/13",
+      "member": "家用",
+      "amount": 91,
+      "mainCategory": "交通",
+      "subCategory": "信用卡",
+      "description": "交通-汽油",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437680_ohx1kpolz_95",
+      "date": "2025/9/13",
+      "member": "家用",
       "amount": 79,
       "mainCategory": "餐飲",
-      "subCategory": "現金",
-      "description": "711",
-      "date": "2025-09-06"
+      "subCategory": "信用卡",
+      "description": "餐飲-愛買滷鴨血",
+      "type": "expense"
     },
     {
-      "id": "1758524212802znu4wgayf",
+      "id": "1759820437681_hwnyakypa_96",
+      "date": "2025/9/13",
       "member": "家用",
-      "type": "expense",
-      "amount": 107,
+      "amount": 2826,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "萊爾富",
-      "date": "2025-09-06"
+      "description": "餐飲-愛買",
+      "type": "expense"
     },
     {
-      "id": "1758524212802uj9p0estt",
-      "member": "家用",
-      "type": "expense",
-      "amount": 185,
-      "mainCategory": "餐飲",
+      "id": "1759820437681_3pc5nuagr_97",
+      "date": "2025/9/12",
+      "member": "Kelvin",
+      "amount": 283,
+      "mainCategory": "日常",
       "subCategory": "信用卡",
-      "description": "午餐小火鍋",
-      "date": "2025-09-06"
+      "description": "日常-隨身碟",
+      "type": "expense"
     },
     {
-      "id": "1758524212802zeyaj0x4s",
-      "member": "家用",
-      "type": "expense",
-      "amount": 80,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "早餐麥味登",
-      "date": "2025-09-06"
-    },
-    {
-      "id": "17585242128021vv8uasa4",
-      "member": "家用",
-      "type": "expense",
-      "amount": 109,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "全家",
-      "date": "2025-09-07"
-    },
-    {
-      "id": "1758524212802eaj5f5gi2",
-      "member": "家用",
-      "type": "expense",
-      "amount": 90,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "711",
-      "date": "2025-09-07"
-    },
-    {
-      "id": "17585242128024cksd6cdw",
-      "member": "家用",
-      "type": "expense",
-      "amount": 175,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "早餐麥味登",
-      "date": "2025-09-07"
-    },
-    {
-      "id": "17585242128027fq7eoh8j",
-      "member": "家用",
-      "type": "expense",
-      "amount": 375,
-      "mainCategory": "交通",
-      "subCategory": "現金",
-      "description": "宜蘭車票",
-      "date": "2025-09-07"
-    },
-    {
-      "id": "17585242128026ikp36bnt",
-      "member": "家用",
-      "type": "expense",
-      "amount": 68,
+      "id": "1759820437682_iayclc0b7_98",
+      "date": "2025/9/11",
+      "member": "Kelvin",
+      "amount": 150,
       "mainCategory": "餐飲",
       "subCategory": "現金",
-      "description": "麵包",
-      "date": "2025-09-07"
+      "description": "餐飲-午餐",
+      "type": "expense"
     },
     {
-      "id": "1758524212802o78i94mkq",
-      "member": "家用",
-      "type": "expense",
-      "amount": 90,
+      "id": "1759820437682_6tpsi3hrb_99",
+      "date": "2025/9/11",
+      "member": "Phuong",
+      "amount": 260,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "全家",
-      "date": "2025-09-07"
+      "description": "餐飲-蝦皮餅乾",
+      "type": "expense"
     },
     {
-      "id": "17585242128024wtvswrn5",
-      "member": "家用",
-      "type": "expense",
-      "amount": 175,
-      "mainCategory": "餐飲",
+      "id": "1759820437683_s593e90sz_100",
+      "date": "2025/9/11",
+      "member": "Ryan",
+      "amount": 888,
+      "mainCategory": "日常",
       "subCategory": "信用卡",
-      "description": "全家",
-      "date": "2025-09-07"
+      "description": "日常-擠帶血",
+      "type": "expense"
     },
     {
-      "id": "1758524212802y809k3lq5",
-      "member": "家用",
-      "type": "expense",
-      "amount": 125,
-      "mainCategory": "交通",
+      "id": "1759820437683_s8a25u1of_101",
+      "date": "2025/9/11",
+      "member": "Ryan",
+      "amount": 280,
+      "mainCategory": "醫療",
       "subCategory": "現金",
-      "description": "小黃",
-      "date": "2025-09-07"
+      "description": "醫療-上課掛號費",
+      "type": "expense"
     },
     {
-      "id": "1758524212802lb2cp2371",
+      "id": "1759820437768_nve3bun1s_102",
+      "date": "2025/9/11",
       "member": "家用",
-      "type": "expense",
-      "amount": 92,
-      "mainCategory": "娛樂",
-      "subCategory": "信用卡",
-      "description": "童媽吉住宿",
-      "date": "2025-09-07"
-    },
-    {
-      "id": "1758524212802qsuqbokwg",
-      "member": "家用",
-      "type": "expense",
-      "amount": 310,
+      "amount": 153,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "午餐雞肉飯",
-      "date": "2025-09-07"
+      "description": "餐飲-雞蛋",
+      "type": "expense"
     },
     {
-      "id": "1758524212802zoainhoqg",
-      "member": "家用",
-      "type": "expense",
-      "amount": 109,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "711",
-      "date": "2025-09-07"
-    },
-    {
-      "id": "1758524212802v363ufwfa",
-      "member": "家用",
-      "type": "expense",
-      "amount": 569,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "85度C蛋糕",
-      "date": "2025-09-07"
-    },
-    {
-      "id": "1758524212802e2jcvh00i",
-      "member": "家用",
-      "type": "expense",
-      "amount": 164,
-      "mainCategory": "其他",
-      "subCategory": "現金",
-      "description": "其他",
-      "date": "2025-09-07"
-    },
-    {
-      "id": "1758524212802tdlmeoass",
-      "member": "家用",
-      "type": "expense",
-      "amount": 68,
+      "id": "1759820437769_qibsc9u0p_103",
+      "date": "2025/9/10",
+      "member": "Kelvin",
+      "amount": 140,
       "mainCategory": "餐飲",
       "subCategory": "現金",
-      "description": "餐飲-晚餐-甜不辣",
-      "date": "2025-09-07"
+      "description": "餐飲-午餐",
+      "type": "expense"
     },
     {
-      "id": "1758524212802inbc48ulv",
-      "member": "家用",
-      "type": "expense",
-      "amount": 55,
-      "mainCategory": "其他",
-      "subCategory": "現金",
-      "description": "其他",
-      "date": "2025-09-07"
-    },
-    {
-      "id": "1758524212802djskgncdr",
-      "member": "家用",
-      "type": "expense",
-      "amount": 250,
+      "id": "1759820437770_dan5azlfj_104",
+      "date": "2025/9/9",
+      "member": "Kelvin",
+      "amount": 150,
       "mainCategory": "餐飲",
       "subCategory": "現金",
-      "description": "夜市吃的",
-      "date": "2025-09-07"
+      "description": "餐飲-午餐",
+      "type": "expense"
     },
     {
-      "id": "1758524212802ow3niv2x8",
-      "member": "家用",
-      "type": "expense",
-      "amount": 21454,
-      "mainCategory": "楊梅",
+      "id": "1759820437770_wedpqhdxt_105",
+      "date": "2025/9/9",
+      "member": "Ryan",
+      "amount": 17906,
+      "mainCategory": "學費",
       "subCategory": "現金",
-      "description": "銀行房貸",
-      "date": "2025-09-08"
+      "description": "學費-吉的堡",
+      "type": "expense"
     },
     {
-      "id": "17585242128027oz9um7b3",
+      "id": "1759820437770_ikkab0ck5_106",
+      "date": "2025/9/9",
       "member": "家用",
-      "type": "expense",
-      "amount": 60,
-      "mainCategory": "交通",
-      "subCategory": "信用卡",
-      "description": "UBER",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "1758524212802np3f12tz5",
-      "member": "家用",
-      "type": "expense",
-      "amount": 375,
-      "mainCategory": "交通",
-      "subCategory": "信用卡",
-      "description": "台北車票",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "1758524212802unyaj5js9",
-      "member": "家用",
-      "type": "expense",
-      "amount": 375,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "麵包",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "1758524212802vrxy8z195",
-      "member": "家用",
-      "type": "expense",
-      "amount": 175,
-      "mainCategory": "其他",
-      "subCategory": "現金",
-      "description": "其他",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "1758524212802798cgfsh6",
-      "member": "家用",
-      "type": "expense",
-      "amount": 339,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "午餐北車",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "17585242128025k798d7tq",
-      "member": "家用",
-      "type": "expense",
-      "amount": 50,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "711",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "175852421280213gcab7lw",
-      "member": "家用",
-      "type": "expense",
-      "amount": 60,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "車輪餅",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "1758524212802tv7kuu18a",
-      "member": "家用",
-      "type": "expense",
-      "amount": 185,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "晚餐小火鍋",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "1758524212802sz6i2ikix",
-      "member": "家用",
-      "type": "expense",
-      "amount": 46,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "萊爾富",
-      "date": "2025-09-08"
-    },
-    {
-      "id": "1758524212802xjdl1qs3g",
-      "member": "家用",
-      "type": "income",
       "amount": 15000,
       "mainCategory": "現金流收入",
       "subCategory": "現金",
       "description": "跟大哥借1萬5",
-      "date": "2025-09-09"
+      "type": "income"
     },
     {
-      "id": "1758524212802rfvhkyctj",
-      "member": "家用",
-      "type": "expense",
-      "amount": 153,
+      "id": "1759820437771_kkcps6vzt_107",
+      "date": "2025/9/8",
+      "member": "Phuong",
+      "amount": 64,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "娛樂-瑜珈帶子",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437772_aq11qnjfe_108",
+      "date": "2025/9/8",
+      "member": "Phuong",
+      "amount": 290,
+      "mainCategory": "日常",
+      "subCategory": "現金",
+      "description": "日常-手機殼",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437772_9udgx4o4j_109",
+      "date": "2025/9/8",
+      "member": "Phuong",
+      "amount": 150,
+      "mainCategory": "日常",
+      "subCategory": "現金",
+      "description": "日常-剪頭髮",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437772_yh1xhax6a_110",
+      "date": "2025/9/8",
+      "member": "Ryan",
+      "amount": 120,
+      "mainCategory": "日常",
+      "subCategory": "現金",
+      "description": "日常-剪頭髮",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437772_dfdjyaa30_111",
+      "date": "2025/9/8",
+      "member": "Ryan",
+      "amount": 24,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "雞蛋",
-      "date": "2025-09-11"
+      "description": "餐飲-飲料",
+      "type": "expense"
     },
     {
-      "id": "175852421280235pr9mio2",
+      "id": "1759820437774_bdnfzt4sf_112",
+      "date": "2025/9/8",
       "member": "家用",
-      "type": "expense",
-      "amount": 210,
-      "mainCategory": "餐飲",
-      "subCategory": "信用卡",
-      "description": "早餐麥味登",
-      "date": "2025-09-13"
+      "amount": 21454,
+      "mainCategory": "楊梅",
+      "subCategory": "現金",
+      "description": "楊梅-銀行房貸",
+      "type": "expense"
     },
     {
-      "id": "1758524212802fvxkc7m3q",
+      "id": "1759820437774_usj0j7vhk_113",
+      "date": "2025/9/8",
       "member": "家用",
-      "type": "expense",
-      "amount": 91,
+      "amount": 60,
       "mainCategory": "交通",
       "subCategory": "信用卡",
-      "description": "汽油",
-      "date": "2025-09-13"
+      "description": "交通-UBER",
+      "type": "expense"
     },
     {
-      "id": "1758524212802hrl0im6kg",
+      "id": "1759820437774_ksue0z2al_114",
+      "date": "2025/9/8",
       "member": "家用",
-      "type": "expense",
-      "amount": 79,
+      "amount": 375,
+      "mainCategory": "交通",
+      "subCategory": "信用卡",
+      "description": "交通-台北車票",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437774_iwtc4mkk6_115",
+      "date": "2025/9/8",
+      "member": "家用",
+      "amount": 375,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "愛買滷鴨血",
-      "date": "2025-09-13"
+      "description": "餐飲-麵包",
+      "type": "expense"
     },
     {
-      "id": "1758524212802shsfs273f",
+      "id": "1759820437775_rkvc2jifq_116",
+      "date": "2025/9/8",
       "member": "家用",
-      "type": "expense",
-      "amount": 2826,
+      "amount": 175,
+      "mainCategory": "其他",
+      "subCategory": "現金",
+      "description": "其他-其他",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437775_ukkbg3pw8_117",
+      "date": "2025/9/8",
+      "member": "家用",
+      "amount": 339,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "愛買",
-      "date": "2025-09-13"
+      "description": "餐飲-午餐北車",
+      "type": "expense"
     },
     {
-      "id": "175852421280207ujm3vvn",
+      "id": "1759820437775_3g7srx8oy_118",
+      "date": "2025/9/8",
       "member": "家用",
-      "type": "expense",
+      "amount": 50,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-711",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437776_kl4fl3g94_119",
+      "date": "2025/9/8",
+      "member": "家用",
+      "amount": 60,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-車輪餅",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437776_onncxim31_120",
+      "date": "2025/9/8",
+      "member": "家用",
       "amount": 185,
       "mainCategory": "餐飲",
       "subCategory": "信用卡",
-      "description": "晚餐小火鍋",
-      "date": "2025-09-14"
+      "description": "餐飲-晚餐小火鍋",
+      "type": "expense"
     },
     {
-      "id": "1758524212802fh0qcajfr",
+      "id": "1759820437776_382m3mrkf_121",
+      "date": "2025/9/8",
       "member": "家用",
-      "type": "income",
-      "amount": 93004,
-      "mainCategory": "薪資",
-      "subCategory": "現金",
-      "description": "9月",
-      "date": "2025-09-15"
+      "amount": 46,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-萊爾富",
+      "type": "expense"
     },
     {
-      "id": "1758524212802jj2ka0rtt",
+      "id": "1759820437776_ctfr2n5rf_122",
+      "date": "2025/9/7",
+      "member": "Phuong",
+      "amount": 480,
+      "mainCategory": "娛樂",
+      "subCategory": "現金",
+      "description": "娛樂-夜市衣服",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437777_nqlqs03nw_123",
+      "date": "2025/9/7",
+      "member": "Ryan",
+      "amount": 300,
+      "mainCategory": "禮物",
+      "subCategory": "現金",
+      "description": "禮物-汽車",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437777_p928up2mh_124",
+      "date": "2025/9/7",
       "member": "家用",
-      "type": "income",
-      "amount": 1458,
-      "mainCategory": "其他收入",
-      "subCategory": "現金",
-      "description": "8月差額",
-      "date": "2025-09-19"
+      "amount": 109,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-全家",
+      "type": "expense"
     },
     {
-      "id": "1758524212802xcucii3xj",
+      "id": "1759820437777_nkochcj2m_125",
+      "date": "2025/9/7",
       "member": "家用",
-      "type": "expense",
-      "amount": 35000,
-      "mainCategory": "現金流支出",
-      "subCategory": "現金",
-      "description": "還大哥錢",
-      "date": "2025-09-19"
+      "amount": 90,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-711",
+      "type": "expense"
     },
     {
-      "id": "1758524212802ti1vz2y8a",
+      "id": "1759820437777_r5iyn81xs_126",
+      "date": "2025/9/7",
       "member": "家用",
-      "type": "expense",
-      "amount": 27000,
-      "mainCategory": "其他",
-      "subCategory": "現金",
-      "description": "房租\r\n",
-      "date": "2025-09-19"
+      "amount": 175,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-早餐麥味登",
+      "type": "expense"
     },
     {
-      "id": "1758524212802vu09iwxy3",
+      "id": "1759820437778_zvmmxhwxe_127",
+      "date": "2025/9/7",
       "member": "家用",
-      "type": "expense",
-      "amount": 26618,
-      "mainCategory": "現金流支出",
+      "amount": 375,
+      "mainCategory": "交通",
       "subCategory": "現金",
-      "description": "台新信用卡",
-      "date": "2025-09-19"
+      "description": "交通-宜蘭車票",
+      "type": "expense"
     },
     {
-      "id": "1758526366911icyr6efjq",
-      "member": "Kelvin",
-      "type": "expense",
-      "amount": 160,
+      "id": "1759820437778_akypk31fs_128",
+      "date": "2025/9/7",
+      "member": "家用",
+      "amount": 68,
       "mainCategory": "餐飲",
       "subCategory": "現金",
-      "description": "午餐",
-      "date": "2025-09-22"
+      "description": "餐飲-麵包",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437778_17m5noqsy_129",
+      "date": "2025/9/7",
+      "member": "家用",
+      "amount": 90,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-全家",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437778_g22n2mkdv_130",
+      "date": "2025/9/7",
+      "member": "家用",
+      "amount": 175,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-全家",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437779_x9lagy3b7_131",
+      "date": "2025/9/7",
+      "member": "家用",
+      "amount": 125,
+      "mainCategory": "交通",
+      "subCategory": "現金",
+      "description": "交通-小黃",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437779_5a7fdjkfp_132",
+      "date": "2025/9/7",
+      "member": "家用",
+      "amount": 92,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "娛樂-童媽吉住宿",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437779_fnp5i5jpk_133",
+      "date": "2025/9/7",
+      "member": "家用",
+      "amount": 310,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐雞肉飯",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437779_pa94xs5p5_134",
+      "date": "2025/9/7",
+      "member": "家用",
+      "amount": 109,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-711",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437866_v5668zkxy_135",
+      "date": "2025/9/7",
+      "member": "家用",
+      "amount": 569,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-85度C蛋糕",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437867_s9vz7giis_136",
+      "date": "2025/9/7",
+      "member": "家用",
+      "amount": 164,
+      "mainCategory": "其他",
+      "subCategory": "現金",
+      "description": "其他-其他",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437867_18q0smea5_137",
+      "date": "2025/9/7",
+      "member": "家用",
+      "amount": 68,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-晚餐-甜不辣",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437867_4mize62wn_138",
+      "date": "2025/9/7",
+      "member": "家用",
+      "amount": 55,
+      "mainCategory": "其他",
+      "subCategory": "現金",
+      "description": "其他-其他",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437868_rr569fv15_139",
+      "date": "2025/9/7",
+      "member": "家用",
+      "amount": 250,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-夜市吃的",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437868_jc6xj1j90_140",
+      "date": "2025/9/6",
+      "member": "Kelvin",
+      "amount": 966,
+      "mainCategory": "其他",
+      "subCategory": "現金",
+      "description": "其他-e7play代付",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437869_kzj4cnlrm_141",
+      "date": "2025/9/6",
+      "member": "Kelvin",
+      "amount": 966,
+      "mainCategory": "其他",
+      "subCategory": "現金",
+      "description": "其他-收到代付",
+      "type": "income"
+    },
+    {
+      "id": "1759820437869_b2kfv12j9_142",
+      "date": "2025/9/6",
+      "member": "Kelvin",
+      "amount": 100,
+      "mainCategory": "娛樂",
+      "subCategory": "現金",
+      "description": "娛樂-大樂透",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437869_6hrzwt8bq_143",
+      "date": "2025/9/6",
+      "member": "家用",
+      "amount": 79,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-711",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437870_44l93hqsv_144",
+      "date": "2025/9/6",
+      "member": "家用",
+      "amount": 107,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-萊爾富",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437870_taraqwxa1_145",
+      "date": "2025/9/6",
+      "member": "家用",
+      "amount": 185,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐小火鍋",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437870_yo3v1gbsj_146",
+      "date": "2025/9/6",
+      "member": "家用",
+      "amount": 80,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-早餐麥味登",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437870_19v6oj4aa_147",
+      "date": "2025/9/5",
+      "member": "Kelvin",
+      "amount": 145,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437871_do8bfk0jw_148",
+      "date": "2025/9/5",
+      "member": "Kelvin",
+      "amount": 110,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-晚餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437871_jj6u900be_149",
+      "date": "2025/9/5",
+      "member": "家用",
+      "amount": 15000,
+      "mainCategory": "楊梅",
+      "subCategory": "現金",
+      "description": "楊梅-房租",
+      "type": "income"
+    },
+    {
+      "id": "1759820437871_muz911zvq_150",
+      "date": "2025/9/4",
+      "member": "Kelvin",
+      "amount": 130,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437872_ug8fs9ng8_151",
+      "date": "2025/9/4",
+      "member": "Kelvin",
+      "amount": 120,
+      "mainCategory": "交通",
+      "subCategory": "信用卡",
+      "description": "交通-8次停車費",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437872_jlwi0yoz2_152",
+      "date": "2025/9/4",
+      "member": "家用",
+      "amount": 185,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-晚餐小火鍋",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437872_zjma6x7bj_153",
+      "date": "2025/9/3",
+      "member": "Kelvin",
+      "amount": 110,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437872_b9zoa22fd_154",
+      "date": "2025/9/3",
+      "member": "Phuong",
+      "amount": 65,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-早餐麥味登",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437872_o8561cnuk_155",
+      "date": "2025/9/3",
+      "member": "Phuong",
+      "amount": 1598,
+      "mainCategory": "日常",
+      "subCategory": "現金",
+      "description": "日常-手機網路",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437873_j9zyq9ske_156",
+      "date": "2025/9/3",
+      "member": "家用",
+      "amount": 20000,
+      "mainCategory": "現金流收入",
+      "subCategory": "現金",
+      "description": "現金流收入-跟大哥借2萬",
+      "type": "income"
+    },
+    {
+      "id": "1759820437873_wbzfkuw89_157",
+      "date": "2025/9/3",
+      "member": "家用",
+      "amount": 7050,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "娛樂-信用卡按摩椅",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437873_fvkip9uh0_158",
+      "date": "2025/9/3",
+      "member": "家用",
+      "amount": 5092,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "日常-信用卡保險",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437874_w6jb5k6d2_159",
+      "date": "2025/9/2",
+      "member": "Kelvin",
+      "amount": 100,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759820437874_4vu8kme99_160",
+      "date": "2025/9/1",
+      "member": "Kelvin",
+      "amount": 130,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "麥當勞",
+      "type": "expense"
     }
-  ],
-  "metadata": {
-    "lastUpdated": "2025-09-22T07:32:53.615Z",
-    "version": "1.0",
-    "description": "家庭收支記錄資料",
-    "recordCount": 105
-  }
+  ]
 }
