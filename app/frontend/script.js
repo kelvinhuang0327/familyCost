@@ -6,6 +6,28 @@
         // 月份篩選狀態
         let selectedDashboardMonth = null;
         let selectedListMonth = null;
+        
+        // 初始化當月份
+        function initializeCurrentMonth() {
+            const now = new Date();
+            const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+            selectedDashboardMonth = currentMonthStr;
+            selectedListMonth = currentMonthStr;
+            
+            // 設置選擇器的預設值
+            setTimeout(() => {
+                const dashboardSelect = document.getElementById('dashboardMonthSelect');
+                const listSelect = document.getElementById('listMonthSelect');
+                if (dashboardSelect) {
+                    dashboardSelect.value = currentMonthStr;
+                }
+                if (listSelect) {
+                    listSelect.value = currentMonthStr;
+                }
+            }, 100);
+            
+            console.log('📅 初始化當月份:', currentMonthStr);
+        }
 
         // 跨瀏覽器數據同步
         // syncInterval變量已移除 - 不再需要自動同步
@@ -18,6 +40,11 @@
             console.log('🔄 updateAllDisplays: 開始更新所有顯示');
             console.log('📊 當前records數量:', records.length);
             console.log('📊 records內容:', records.slice(0, 3)); // 顯示前3筆記錄
+            
+            // 初始化當月份（如果尚未初始化）
+            if (selectedDashboardMonth === null || selectedListMonth === null) {
+                initializeCurrentMonth();
+            }
             
             updateStats();
             updateRecentRecords();
@@ -32,14 +59,32 @@
         // 獲取篩選後的記錄
         function getFilteredRecords(page = 'dashboard') {
             let selectedMonth = null;
+            let isExplicitlyAll = false;
+            
             if (page === 'dashboard') {
                 selectedMonth = selectedDashboardMonth;
             } else if (page === 'list') {
                 selectedMonth = selectedListMonth;
             }
             
-            if (!selectedMonth) {
+            // 檢查是否明確選擇了「顯示全部」
+            const selectElement = page === 'dashboard' ? 
+                document.getElementById('dashboardMonthSelect') : 
+                document.getElementById('listMonthSelect');
+            
+            if (selectElement && selectElement.value === '') {
+                isExplicitlyAll = true;
+            }
+            
+            // 如果明確選擇了「顯示全部」，返回所有記錄
+            if (isExplicitlyAll) {
                 return records;
+            }
+            
+            // 如果沒有選擇月份，預設顯示當月份
+            if (!selectedMonth) {
+                const now = new Date();
+                selectedMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
             }
             
             const [year, month] = selectedMonth.split('-').map(Number);
@@ -52,7 +97,7 @@
         // 總覽頁面月份選擇
         function changeDashboardMonth() {
             const monthSelect = document.getElementById('dashboardMonthSelect');
-            selectedDashboardMonth = monthSelect.value;
+            selectedDashboardMonth = monthSelect.value || null; // 空值時設為 null
             
             console.log('📅 總覽頁面選擇月份:', selectedDashboardMonth);
             updateStats();
@@ -63,7 +108,7 @@
         // 列表頁面月份選擇
         function changeListMonth() {
             const monthSelect = document.getElementById('listMonthSelect');
-            selectedListMonth = monthSelect.value;
+            selectedListMonth = monthSelect.value || null; // 空值時設為 null
             
             console.log('📅 列表頁面選擇月份:', selectedListMonth);
             filterRecords();
@@ -2846,10 +2891,11 @@
             container.innerHTML = '';
             
             if (filteredRecords.length === 0) {
-                if (selectedListMonth) {
-                    container.innerHTML = `<p style="text-align: center; color: #666;">該月份沒有符合條件的記錄</p>`;
-                } else {
+                const selectElement = document.getElementById('listMonthSelect');
+                if (selectElement && selectElement.value === '') {
                     container.innerHTML = '<p style="text-align: center; color: #666;">沒有符合條件的記錄</p>';
+                } else {
+                    container.innerHTML = `<p style="text-align: center; color: #666;">該月份沒有符合條件的記錄</p>`;
                 }
                 return;
             }
