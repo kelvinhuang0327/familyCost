@@ -2618,6 +2618,78 @@
             min-width: 200px;
         }
 
+/* 月份選擇器樣式 */
+.month-selector {
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 10px 20px;
+    margin: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.month-selector-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.month-selector label {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.month-selector select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    font-size: 14px;
+    min-width: 150px;
+    cursor: pointer;
+}
+
+.month-selector select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* 手機版月份選擇器樣式 */
+@media screen and (max-width: 480px) {
+    .month-selector {
+        padding: 8px 15px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        position: sticky;
+        top: 0;
+        z-index: 999;
+    }
+    
+    .month-selector-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .month-selector label {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    
+    .month-selector select {
+        width: 100%;
+        padding: 8px 12px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background: white;
+    }
+}
+
 /* 日曆樣式 */
 .calendar-grid {
     display: grid !important;

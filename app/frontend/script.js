@@ -2,6 +2,10 @@
         let records = [];
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
+        
+        // 月份篩選狀態
+        let selectedDashboardMonth = null;
+        let selectedListMonth = null;
 
         // 跨瀏覽器數據同步
         // syncInterval變量已移除 - 不再需要自動同步
@@ -23,6 +27,46 @@
             updateMemberStats();
             
             console.log('✅ updateAllDisplays: 所有顯示更新完成');
+        }
+
+        // 獲取篩選後的記錄
+        function getFilteredRecords(page = 'dashboard') {
+            let selectedMonth = null;
+            if (page === 'dashboard') {
+                selectedMonth = selectedDashboardMonth;
+            } else if (page === 'list') {
+                selectedMonth = selectedListMonth;
+            }
+            
+            if (!selectedMonth) {
+                return records;
+            }
+            
+            const [year, month] = selectedMonth.split('-').map(Number);
+            return records.filter(record => {
+                const recordDate = new Date(convertDateToStandard(record.date));
+                return recordDate.getFullYear() === year && recordDate.getMonth() === (month - 1);
+            });
+        }
+
+        // 總覽頁面月份選擇
+        function changeDashboardMonth() {
+            const monthSelect = document.getElementById('dashboardMonthSelect');
+            selectedDashboardMonth = monthSelect.value;
+            
+            console.log('📅 總覽頁面選擇月份:', selectedDashboardMonth);
+            updateStats();
+            updateRecentRecords();
+            updateMemberStats();
+        }
+
+        // 列表頁面月份選擇
+        function changeListMonth() {
+            const monthSelect = document.getElementById('listMonthSelect');
+            selectedListMonth = monthSelect.value;
+            
+            console.log('📅 列表頁面選擇月份:', selectedListMonth);
+            filterRecords();
         }
 
         // 自動同步功能已移除 - 現在使用JSON文件存儲，不需要同步
@@ -2061,9 +2105,13 @@
         }
 
         function updateStats() {
+            // 獲取篩選後的記錄
+            const filteredRecords = getFilteredRecords('dashboard');
+            
             // 調試：檢查記錄數量和重複ID
             console.log('🔍 updateStats調試信息:');
             console.log('- 總記錄數:', records.length);
+            console.log('- 篩選後記錄數:', filteredRecords.length);
             console.log('- 記錄ID列表:', records.map(r => r.id));
             
             // 檢查重複ID
@@ -2072,11 +2120,11 @@
                 console.warn('⚠️ 發現重複ID:', duplicateIds);
             }
             
-            const totalIncome = records
+            const totalIncome = filteredRecords
                 .filter(record => record.type === 'income')
                 .reduce((sum, record) => sum + record.amount, 0);
             
-            const totalExpense = records
+            const totalExpense = filteredRecords
                 .filter(record => record.type === 'expense')
                 .reduce((sum, record) => sum + record.amount, 0);
             
@@ -2084,12 +2132,12 @@
             console.log('- 總支出:', totalExpense);
             
             // 計算現金支出（所有成員的現金支出）
-            const cashExpense = records
+            const cashExpense = filteredRecords
                 .filter(record => record.type === 'expense' && record.subCategory === '現金')
                 .reduce((sum, record) => sum + record.amount, 0);
             
             // 計算現金收入（所有成員的現金收入）
-            const cashIncome = records
+            const cashIncome = filteredRecords
                 .filter(record => record.type === 'income' && record.subCategory === '現金')
                 .reduce((sum, record) => sum + record.amount, 0);
             
@@ -2103,19 +2151,19 @@
             console.log('- 現金餘額 (所有成員現金收入-所有成員現金支出):', cashBalance);
             
             // 詳細調試：檢查現金收入記錄
-            const cashIncomeRecords = records.filter(record => record.type === 'income' && record.subCategory === '現金');
+            const cashIncomeRecords = filteredRecords.filter(record => record.type === 'income' && record.subCategory === '現金');
             console.log('📊 現金收入記錄詳情:', cashIncomeRecords);
             
             // 詳細調試：檢查現金支出記錄
-            const cashExpenseRecords = records.filter(record => record.type === 'expense' && record.subCategory === '現金');
+            const cashExpenseRecords = filteredRecords.filter(record => record.type === 'expense' && record.subCategory === '現金');
             console.log('📊 現金支出記錄詳情:', cashExpenseRecords);
             
             // 檢查所有記錄的 subCategory 類型
-            const allSubCategories = [...new Set(records.map(r => r.subCategory))];
+            const allSubCategories = [...new Set(filteredRecords.map(r => r.subCategory))];
             console.log('📊 所有 subCategory 類型:', allSubCategories);
             
             // 計算信用卡支出
-            const creditExpense = records
+            const creditExpense = filteredRecords
                 .filter(record => record.type === 'expense' && record.subCategory === '信用卡')
                 .reduce((sum, record) => sum + record.amount, 0);
             
@@ -2171,7 +2219,9 @@
             memberStatsContainer.innerHTML = '';
             memberIndicatorsContainer.innerHTML = '';
 
+            const filteredRecords = getFilteredRecords('dashboard');
             console.log('updateMemberStats: 總記錄數', records.length);
+            console.log('updateMemberStats: 篩選後記錄數', filteredRecords.length);
             console.log('updateMemberStats: 記錄內容', records);
 
             // 重新排列成員順序，讓第一個成員在中間
@@ -2182,7 +2232,7 @@
             }
             
             reorderedMembers.forEach((member, index) => {
-                const memberRecords = records.filter(record => record.member === member);
+                const memberRecords = filteredRecords.filter(record => record.member === member);
                 console.log(`${member} 的記錄:`, memberRecords);
                 
                 const memberIncome = memberRecords
@@ -2658,8 +2708,9 @@
         }
 
         function updateRecentRecords() {
-            const recentRecords = records
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
+            const filteredRecords = getFilteredRecords('dashboard');
+            const recentRecords = filteredRecords
+                .sort((a, b) => new Date(convertDateToStandard(b.date)) - new Date(convertDateToStandard(a.date)))
                 .slice(0, 5);
             
             const container = document.getElementById('recentRecords');
@@ -2772,7 +2823,10 @@
             const typeFilter = document.getElementById('typeFilter').value;
             const dateFilter = document.getElementById('dateFilter').value;
             
-            const filteredRecords = records.filter(record => {
+            // 首先獲取月份篩選後的記錄
+            let baseRecords = getFilteredRecords('list');
+            
+            const filteredRecords = baseRecords.filter(record => {
                 const matchesSearch = !searchTerm || 
                     record.member.toLowerCase().includes(searchTerm) ||
                     record.mainCategory.toLowerCase().includes(searchTerm) ||
@@ -2792,12 +2846,16 @@
             container.innerHTML = '';
             
             if (filteredRecords.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #666;">沒有符合條件的記錄</p>';
+                if (selectedListMonth) {
+                    container.innerHTML = `<p style="text-align: center; color: #666;">該月份沒有符合條件的記錄</p>`;
+                } else {
+                    container.innerHTML = '<p style="text-align: center; color: #666;">沒有符合條件的記錄</p>';
+                }
                 return;
             }
             
             filteredRecords
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .sort((a, b) => new Date(convertDateToStandard(b.date)) - new Date(convertDateToStandard(a.date)))
                 .forEach(record => {
                     const recordElement = createRecordElement(record);
                     container.appendChild(recordElement);
