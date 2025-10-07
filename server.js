@@ -393,7 +393,7 @@ function processExcelRow(row, currentMember = null) {
         
         // 如果沒有子類別，設為默認值
         if (!subCategory) {
-            subCategory = '現金'; // 默認子類別改為現金
+            subCategory = '信用卡'; // 恢復原來的默認子類別
         }
         
         // 如果沒有描述，使用主類別作為描述
@@ -416,7 +416,7 @@ function processExcelRow(row, currentMember = null) {
             member: member || '未知',
             amount: amount,
             mainCategory: mainCategory || '其他',
-            subCategory: subCategory || '現金',
+            subCategory: subCategory || '信用卡',
             description: description || mainCategory || '其他',
             type: type || (amount >= 0 ? '收入' : '支出'),
             paymentMethod: '信用卡' // 預設付款方式
@@ -484,6 +484,7 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
             type = row[keys[2]] || '支出'; // 類別欄位
             mainCategory = row[keys[3]];
             paymentMethod = row[keys[4]];
+            subCategory = paymentMethod; // 將付款方式映射到子類別
             description = row[keys[5]];
             date = row[keys[6]];
             
@@ -493,6 +494,7 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
                 type: type,
                 mainCategory: mainCategory,
                 paymentMethod: paymentMethod,
+                subCategory: subCategory,
                 description: description,
                 date: date,
                 keys: keys
@@ -605,7 +607,7 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
         
         // 如果沒有子類別，設為默認值
         if (!subCategory) {
-            subCategory = '現金'; // 默認子類別改為現金
+            subCategory = '信用卡'; // 恢復原來的默認子類別
         }
         
         // 如果沒有描述，使用主類別作為描述
@@ -638,7 +640,7 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
             member: member || '未知',
             amount: finalAmount,
             mainCategory: mainCategory || '其他',
-            subCategory: subCategory || '現金',
+            subCategory: subCategory || '信用卡',
             description: description || mainCategory || '其他',
             type: recordType
         };
