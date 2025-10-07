@@ -668,20 +668,23 @@ function formatDate(dateStr) {
             const date = new Date(excelEpoch.getTime() + serialNumber * 24 * 60 * 60 * 1000);
             
             if (!isNaN(date.getTime())) {
-                const formatted = date.toISOString().split('T')[0];
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1; // getMonth() 返回 0-11
+                const day = date.getDate();
+                const formatted = `${year}/${month}/${day}`;
                 console.log('🔍 [formatDate] Excel 序列號轉換結果:', formatted);
                 return formatted;
             }
         }
         
-        // 處理 M/D 格式 (如 9/1, 9/23, 9/21)
+        // 處理 M/D 格式 (如 9/1, 9/23, 9/21) - 轉換為系統格式 YYYY/M/D
         if (typeof dateStr === 'string' && dateStr.includes('/')) {
             const parts = dateStr.split('/');
             if (parts.length === 2) {
-                const month = parts[0].padStart(2, '0');
-                const day = parts[1].padStart(2, '0');
+                const month = parts[0];
+                const day = parts[1];
                 const currentYear = new Date().getFullYear();
-                const formatted = `${currentYear}-${month}-${day}`;
+                const formatted = `${currentYear}/${month}/${day}`;
                 
                 console.log('🔍 [formatDate] M/D 格式解析:', { 
                     original: dateStr, 
@@ -695,11 +698,14 @@ function formatDate(dateStr) {
             }
         }
         
-        // 處理標準日期格式
+        // 處理標準日期格式 - 轉換為系統格式 YYYY/M/D
         if (typeof dateStr === 'string') {
             const date = new Date(dateStr);
             if (!isNaN(date.getTime())) {
-                const formatted = date.toISOString().split('T')[0];
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1; // getMonth() 返回 0-11
+                const day = date.getDate();
+                const formatted = `${year}/${month}/${day}`;
                 console.log('🔍 [formatDate] 標準日期轉換結果:', formatted);
                 return formatted;
             }
