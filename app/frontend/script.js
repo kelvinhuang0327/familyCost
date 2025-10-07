@@ -50,7 +50,7 @@
             updateRecentRecords();
             updateAllRecords();
             updateCalendar();
-            updateDataStats();
+            // updateDataStats(); // 已移除，避免覆蓋月份篩選統計
             updateMemberStats();
             
             console.log('✅ updateAllDisplays: 所有顯示更新完成');
@@ -1952,7 +1952,7 @@
             updateRecentRecords();
             updateAllRecords();
             updateCalendar();
-            updateDataStats();
+            // updateDataStats(); // 已移除，避免覆蓋月份篩選統計
         }
 
         // 統一的日期格式化函數，避免時區問題
@@ -3303,7 +3303,7 @@
                 console.log('成功生成 data.json 備份檔案');
                 
                 // 更新統計顯示
-                updateDataStats();
+                // updateDataStats(); // 已移除，避免覆蓋月份篩選統計
             } catch (error) {
                 console.warn('無法生成 data.json 備份檔案:', error);
             }
@@ -4005,7 +4005,7 @@
                 updateRecentRecords();
                 updateAllRecords();
                 updateCalendar(); // 確保日曆更新
-                updateDataStats();
+                // updateDataStats(); // 已移除，避免覆蓋月份篩選統計
                 cancelDelete();
                 
                 // 自動備份到GitHub - 已移除
@@ -4180,7 +4180,7 @@
                                 updateRecentRecords();
                                 updateAllRecords();
                                 updateCalendar();
-                                updateDataStats();
+                                // updateDataStats(); // 已移除，避免覆蓋月份篩選統計
                                 updateMemberStats();
                         
                                 alert(`✅ 所有數據已成功清空！\n\n清除了 ${clearResult.changes} 筆記錄`);
@@ -4255,7 +4255,7 @@
                             updateRecentRecords();
                             updateAllRecords();
                             updateCalendar(); // 確保日曆更新
-                            updateDataStats();
+                            // updateDataStats(); // 已移除，避免覆蓋月份篩選統計
                             
                             alert(`數據還原完成！\n還原了 ${records.length} 筆記錄。`);
                         }
