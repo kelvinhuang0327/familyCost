@@ -1599,6 +1599,56 @@
       "subCategory": "現金",
       "description": "麥當勞",
       "type": "expense"
+    },
+    {
+      "id": "1759822776218_lftvho9ly_1",
+      "date": "2025/10/7",
+      "member": "Kelvin",
+      "amount": 150,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759822776218_t6e4t6t37_2",
+      "date": "2025/10/7",
+      "member": "家用",
+      "amount": 21454,
+      "mainCategory": "日常",
+      "subCategory": "現金",
+      "description": "楊梅房貸",
+      "type": "expense"
+    },
+    {
+      "id": "1759822776218_tnk6l6gli_3",
+      "date": "2025/10/6",
+      "member": "家用",
+      "amount": 7500,
+      "mainCategory": "日常",
+      "subCategory": "現金",
+      "description": "楊梅租金",
+      "type": "income"
+    },
+    {
+      "id": "1759822776219_ur8hmt7l4_4",
+      "date": "2025/10/6",
+      "member": "家用",
+      "amount": 41250,
+      "mainCategory": "日常",
+      "subCategory": "現金",
+      "description": "中秋",
+      "type": "income"
+    },
+    {
+      "id": "1759822776220_gsz1p6ltk_7",
+      "date": "2025/10/5",
+      "member": "家用",
+      "amount": 4592,
+      "mainCategory": "現金流支出",
+      "subCategory": "現金",
+      "description": "華南信用卡",
+      "type": "expense"
     }
   ]
 }
