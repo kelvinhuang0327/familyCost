@@ -2765,71 +2765,6 @@
             updateDayRecords();
         }
 
-        function updateDayRecords() {
-            console.log('📅 updateDayRecords: 開始更新日曆記錄');
-            console.log('📅 當前records數量:', records.length);
-            
-            // 先清空所有日期的記錄
-            document.querySelectorAll('.day-records').forEach(element => {
-                element.innerHTML = '';
-            });
-            
-            // 按日期和成員分組計算總額
-            const dayMemberTotals = {};
-            records.forEach(record => {
-                const date = record.date;
-                const member = record.member;
-                const amount = record.type === 'income' ? record.amount : -record.amount;
-                
-                if (!dayMemberTotals[date]) {
-                    dayMemberTotals[date] = {};
-                }
-                if (!dayMemberTotals[date][member]) {
-                    dayMemberTotals[date][member] = 0;
-                }
-                dayMemberTotals[date][member] += amount;
-            });
-            
-            // 顯示每個成員的當日總額
-            Object.keys(dayMemberTotals).forEach(date => {
-                const dayRecordsElement = document.getElementById(`day-records-${date}`);
-                if (dayRecordsElement) {
-                    const memberTotals = dayMemberTotals[date];
-                    Object.keys(memberTotals).forEach(member => {
-                        const total = memberTotals[member];
-                        if (total !== 0) {
-                            const recordClass = total > 0 ? 'day-income' : 'day-expense';
-                            const prefix = total > 0 ? '+' : '';
-                            
-                            const recordDiv = document.createElement('div');
-                            recordDiv.className = recordClass;
-                            recordDiv.textContent = `${member}: ${prefix}$${Math.abs(total).toLocaleString()}`;
-                            dayRecordsElement.appendChild(recordDiv);
-                        }
-                    });
-                    
-                    // 如果有記錄，添加has-records類
-                    if (dayRecordsElement.children.length > 0) {
-                        const dayElement = dayRecordsElement.closest('.calendar-day');
-                        if (dayElement) {
-                            dayElement.classList.add('has-records');
-                        }
-                    }
-                }
-            });
-        }
-
-        function changeMonth(direction) {
-            currentMonth += direction;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            } else if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            updateCalendar();
-        }
 
         function filterRecords() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
@@ -4617,7 +4552,14 @@
         function convertDateToStandard(dateStr) {
             if (!dateStr) return dateStr;
             // 將 2025/9/21 轉換為 2025-09-21
-            return dateStr.replace(/\//g, '-').replace(/\b(\d{1,2})\b/g, (match) => match.padStart(2, '0'));
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                const year = parts[0];
+                const month = parts[1].padStart(2, '0');
+                const day = parts[2].padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            return dateStr;
         }
 
         // 日曆功能
@@ -4684,7 +4626,7 @@
             // 按日期和成員分組計算總額
             const dayMemberTotals = {};
             records.forEach(record => {
-                const date = record.date;
+                const date = convertDateToStandard(record.date); // 轉換日期格式
                 const member = record.member;
                 const amount = record.type === 'income' ? record.amount : -record.amount;
                 
