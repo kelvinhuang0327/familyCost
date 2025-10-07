@@ -451,7 +451,7 @@
             .member-stats-grid {
                 display: flex !important;
                 overflow-x: auto !important;
-                gap: -20px !important; /* 負間距創造重疊效果 */
+                gap: 12px !important; /* 統一間距 */
                 padding: 20px 0 10px 0 !important;
                 scroll-snap-type: x mandatory !important;
                 -webkit-overflow-scrolling: touch !important;
@@ -482,7 +482,7 @@
                 padding: 12px !important;
                 width: 240px !important;
                 min-width: 240px !important;
-                min-height: 120px !important;
+                min-height: 140px !important; /* 增加高度以容納更多內容 */
                 flex-shrink: 0 !important;
                 scroll-snap-align: center !important;
                 background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%) !important;
@@ -493,7 +493,7 @@
                 z-index: 1 !important;
                 display: flex !important;
                 flex-direction: column !important;
-                justify-content: center !important;
+                justify-content: space-between !important; /* 改為space-between以更好地分佈內容 */
                 align-items: center !important;
             }
             
@@ -2020,10 +2020,10 @@
                 padding: 12px !important;
                 min-width: 240px !important;
                 width: 240px !important;
-                min-height: 120px !important;
+                min-height: 140px !important; /* 增加高度以容納更多內容 */
                 display: flex !important;
                 flex-direction: column !important;
-                justify-content: center !important;
+                justify-content: space-between !important; /* 改為space-between以更好地分佈內容 */
                 align-items: center !important;
             }
         }
