@@ -2831,28 +2831,6 @@
             updateCalendar();
         }
 
-        function showDayRecords(date) {
-            const dayRecords = records.filter(record => record.date === formatDateToYYYYMMDD(date));
-            
-            if (dayRecords.length === 0) {
-                // 不顯示提醒，直接返回
-                return;
-            }
-            
-            let message = `${date.toLocaleDateString('zh-TW')} 的記錄：\n\n`;
-            dayRecords.forEach(record => {
-                const prefix = record.type === 'income' ? '+' : '-';
-                const categoryText = record.subCategory ? `${record.mainCategory} - ${record.subCategory}` : record.mainCategory;
-                message += `${record.member} - ${categoryText}: ${prefix}$${record.amount}\n`;
-                if (record.description) {
-                    message += `  描述: ${record.description}\n`;
-                }
-                message += '\n';
-            });
-            
-            alert(message);
-        }
-
         function filterRecords() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const memberFilter = document.getElementById('memberFilter').value;
@@ -4625,5 +4603,161 @@
             const expense = labels.map(member => memberTotals[member].expense);
             
             return { labels, income, expense };
+        }
+
+        // 統一的日期格式化函數，避免時區問題
+        function formatDateToYYYYMMDD(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // 將斜線日期格式轉換為標準格式
+        function convertDateToStandard(dateStr) {
+            if (!dateStr) return dateStr;
+            // 將 2025/9/21 轉換為 2025-09-21
+            return dateStr.replace(/\//g, '-').replace(/\b(\d{1,2})\b/g, (match) => match.padStart(2, '0'));
+        }
+
+        // 日曆功能
+        function updateCalendar() {
+            const calendarTitle = document.getElementById('calendarTitle');
+            const calendarGrid = document.getElementById('calendarGrid');
+            
+            if (!calendarTitle || !calendarGrid) {
+                console.log('⚠️ 日曆元素不存在，跳過日曆更新');
+                return;
+            }
+            
+            calendarTitle.textContent = `${currentYear}年${currentMonth + 1}月`;
+            
+            // 清空日曆（不包含星期標題，因為HTML中已經有了）
+            calendarGrid.innerHTML = '';
+            
+            // 獲取當月第一天和最後一天
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+            
+            // 生成42天（6週）
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                if (date.getMonth() !== currentMonth) {
+                    dayElement.classList.add('other-month');
+                }
+                
+                if (date.toDateString() === new Date().toDateString()) {
+                    dayElement.classList.add('today');
+                }
+                
+                const dateStr = formatDateToYYYYMMDD(date);
+                dayElement.innerHTML = `
+                    <div class="day-number">${date.getDate()}</div>
+                    <div class="day-records" id="day-records-${dateStr}"></div>
+                `;
+                dayElement.id = `day-${dateStr}`;
+                
+                dayElement.onclick = () => showDayRecords(date);
+                calendarGrid.appendChild(dayElement);
+            }
+            
+            // 更新每日記錄
+            updateDayRecords();
+        }
+
+        function updateDayRecords() {
+            console.log('📅 updateDayRecords: 開始更新日曆記錄');
+            console.log('📅 當前records數量:', records.length);
+            
+            // 先清空所有日期的記錄
+            document.querySelectorAll('.day-records').forEach(element => {
+                element.innerHTML = '';
+            });
+            
+            // 按日期和成員分組計算總額
+            const dayMemberTotals = {};
+            records.forEach(record => {
+                const date = record.date;
+                const member = record.member;
+                const amount = record.type === 'income' ? record.amount : -record.amount;
+                
+                if (!dayMemberTotals[date]) {
+                    dayMemberTotals[date] = {};
+                }
+                if (!dayMemberTotals[date][member]) {
+                    dayMemberTotals[date][member] = 0;
+                }
+                dayMemberTotals[date][member] += amount;
+            });
+            
+            // 顯示每個成員的當日總額
+            Object.keys(dayMemberTotals).forEach(date => {
+                const dayRecordsElement = document.getElementById(`day-records-${date}`);
+                if (dayRecordsElement) {
+                    const memberTotals = dayMemberTotals[date];
+                    Object.keys(memberTotals).forEach(member => {
+                        const total = memberTotals[member];
+                        if (total !== 0) {
+                            const recordClass = total > 0 ? 'day-income' : 'day-expense';
+                            const prefix = total > 0 ? '+' : '';
+                            
+                            const recordDiv = document.createElement('div');
+                            recordDiv.className = recordClass;
+                            recordDiv.textContent = `${member}: ${prefix}$${Math.abs(total).toLocaleString()}`;
+                            dayRecordsElement.appendChild(recordDiv);
+                        }
+                    });
+                    
+                    // 如果有記錄，添加has-records類
+                    if (dayRecordsElement.children.length > 0) {
+                        const dayElement = dayRecordsElement.closest('.calendar-day');
+                        if (dayElement) {
+                            dayElement.classList.add('has-records');
+                        }
+                    }
+                }
+            });
+        }
+
+        function changeMonth(direction) {
+            currentMonth += direction;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            updateCalendar();
+        }
+
+        function showDayRecords(date) {
+            const standardDate = formatDateToYYYYMMDD(date);
+            const dayRecords = records.filter(record => convertDateToStandard(record.date) === standardDate);
+            
+            if (dayRecords.length === 0) {
+                // 不顯示提醒，直接返回
+                return;
+            }
+            
+            let message = `${date.toLocaleDateString('zh-TW')} 的記錄：\n\n`;
+            dayRecords.forEach(record => {
+                const prefix = record.type === 'income' ? '+' : '-';
+                const categoryText = record.subCategory ? `${record.mainCategory} - ${record.subCategory}` : record.mainCategory;
+                message += `${record.member} - ${categoryText}: ${prefix}$${record.amount}\n`;
+                if (record.description) {
+                    message += `  描述: ${record.description}\n`;
+                }
+                message += '\n';
+            });
+            
+            alert(message);
         }
 
