@@ -7,6 +7,11 @@
         let selectedDashboardMonth = null;
         let selectedListMonth = null;
         
+        // 日期區間篩選狀態
+        let selectedDashboardDateRange = 'month'; // 'month' 或 'range'
+        let selectedDashboardStartDate = null;
+        let selectedDashboardEndDate = null;
+        
         // 初始化當月份
         function initializeCurrentMonth() {
             // 自動檢測數據中最新月份
@@ -83,7 +88,31 @@
             let isExplicitlyAll = false;
             
             if (page === 'dashboard') {
-                selectedMonth = selectedDashboardMonth;
+                // 檢查查詢方式
+                if (selectedDashboardDateRange === 'range') {
+                    // 日期區間查詢
+                    const startDateInput = document.getElementById('dashboardStartDate');
+                    const endDateInput = document.getElementById('dashboardEndDate');
+                    
+                    if (!startDateInput.value || !endDateInput.value) {
+                        console.log('📅 日期區間未完整設置，返回所有記錄');
+                        return records;
+                    }
+                    
+                    selectedDashboardStartDate = startDateInput.value;
+                    selectedDashboardEndDate = endDateInput.value;
+                    
+                    const startDate = new Date(selectedDashboardStartDate);
+                    const endDate = new Date(selectedDashboardEndDate);
+                    
+                    return records.filter(record => {
+                        const recordDate = new Date(convertDateToStandard(record.date));
+                        return recordDate >= startDate && recordDate <= endDate;
+                    });
+                } else {
+                    // 月份查詢（原有邏輯）
+                    selectedMonth = selectedDashboardMonth;
+                }
             } else if (page === 'list') {
                 selectedMonth = selectedListMonth;
             }
@@ -144,6 +173,52 @@
             });
         }
 
+        // 總覽頁面日期區間查詢方式選擇
+        function changeDashboardDateRange() {
+            const dateRangeSelect = document.getElementById('dashboardDateRangeSelect');
+            const startDateInput = document.getElementById('dashboardStartDate');
+            const endDateInput = document.getElementById('dashboardEndDate');
+            
+            // 如果是日期輸入框觸發的變化，直接更新統計
+            if (this === startDateInput || this === endDateInput) {
+                selectedDashboardStartDate = startDateInput.value;
+                selectedDashboardEndDate = endDateInput.value;
+                console.log('📅 日期區間變化:', selectedDashboardStartDate, '至', selectedDashboardEndDate);
+                updateStats();
+                updateRecentRecords();
+                updateMemberStats();
+                return;
+            }
+            
+            // 查詢方式變化
+            selectedDashboardDateRange = dateRangeSelect.value;
+            console.log('📅 總覽頁面查詢方式:', selectedDashboardDateRange);
+            
+            // 切換顯示的選擇器
+            const monthSelector = document.getElementById('dashboardMonthSelector');
+            const dateRangeInputs = document.getElementById('dashboardDateRangeInputs');
+            
+            if (selectedDashboardDateRange === 'month') {
+                monthSelector.style.display = 'block';
+                dateRangeInputs.style.display = 'none';
+            } else {
+                monthSelector.style.display = 'none';
+                dateRangeInputs.style.display = 'block';
+                
+                // 設置預設日期範圍（最近30天）
+                const endDate = new Date();
+                const startDate = new Date();
+                startDate.setDate(startDate.getDate() - 30);
+                
+                startDateInput.value = startDate.toISOString().split('T')[0];
+                endDateInput.value = endDate.toISOString().split('T')[0];
+            }
+            
+            updateStats();
+            updateRecentRecords();
+            updateMemberStats();
+        }
+        
         // 總覽頁面月份選擇
         function changeDashboardMonth() {
             const monthSelect = document.getElementById('dashboardMonthSelect');
@@ -2236,47 +2311,6 @@
             console.log('- 總收入:', totalIncome);
             console.log('- 總支出:', totalExpense);
             
-            // 計算現金支出（所有成員的現金支出）
-            const cashExpense = filteredRecords
-                .filter(record => record.type === 'expense' && record.subCategory === '現金')
-                .reduce((sum, record) => sum + record.amount, 0);
-            
-            // 計算現金收入（所有成員的現金收入）
-            const cashIncome = filteredRecords
-                .filter(record => record.type === 'income' && record.subCategory === '現金')
-                .reduce((sum, record) => sum + record.amount, 0);
-            
-            // 計算當月現金餘額（根據選擇的月份）
-            const cashBalance = cashIncome - cashExpense;
-            
-            // 計算累計現金餘額 = 所有月份的現金收入 - 所有月份的現金支出
-            const cumulativeCashIncome = records
-                .filter(record => record.type === 'income' && record.subCategory === '現金')
-                .reduce((sum, record) => sum + record.amount, 0);
-            
-            const cumulativeCashExpense = records
-                .filter(record => record.type === 'expense' && record.subCategory === '現金')
-                .reduce((sum, record) => sum + record.amount, 0);
-            
-            const cumulativeCashBalance = cumulativeCashIncome - cumulativeCashExpense;
-            
-            // 調試信息
-            console.log('💰 現金統計調試:');
-            console.log('- 當月現金收入:', cashIncome);
-            console.log('- 當月現金支出:', cashExpense);
-            console.log('- 當月現金餘額:', cashBalance);
-            console.log('- 累計現金收入:', cumulativeCashIncome);
-            console.log('- 累計現金支出:', cumulativeCashExpense);
-            console.log('- 累計現金餘額:', cumulativeCashBalance);
-            
-            // 詳細調試：檢查現金收入記錄
-            const cashIncomeRecords = filteredRecords.filter(record => record.type === 'income' && record.subCategory === '現金');
-            console.log('📊 現金收入記錄詳情:', cashIncomeRecords);
-            
-            // 詳細調試：檢查現金支出記錄
-            const cashExpenseRecords = filteredRecords.filter(record => record.type === 'expense' && record.subCategory === '現金');
-            console.log('📊 現金支出記錄詳情:', cashExpenseRecords);
-            
             // 檢查所有記錄的 subCategory 類型
             const allSubCategories = [...new Set(filteredRecords.map(r => r.subCategory))];
             console.log('📊 所有 subCategory 類型:', allSubCategories);
@@ -2286,47 +2320,8 @@
                 .filter(record => record.type === 'expense' && record.subCategory === '信用卡')
                 .reduce((sum, record) => sum + record.amount, 0);
             
-            // 計算當月現金流（當月家用收入 - 當月現金支出）
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
-            
-            const monthlyHouseholdIncome = records
-                .filter(record => {
-                    const recordDate = new Date(convertDateToStandard(record.date));
-                    return record.member === '家用' && 
-                           record.type === 'income' &&
-                           recordDate.getMonth() === currentMonth && 
-                           recordDate.getFullYear() === currentYear;
-                })
-                .reduce((sum, record) => sum + record.amount, 0);
-            
-            const monthlyCashExpense = records
-                .filter(record => {
-                    const recordDate = new Date(convertDateToStandard(record.date));
-                    return record.type === 'expense' && 
-                           record.subCategory === '現金' &&
-                           recordDate.getMonth() === currentMonth && 
-                           recordDate.getFullYear() === currentYear;
-                })
-                .reduce((sum, record) => sum + record.amount, 0);
-            
-            // 當月現金流 = 當月家用收入 - 當月現金支出
-            const monthlyCashFlow = monthlyHouseholdIncome - monthlyCashExpense;
-
             document.getElementById('totalExpense').textContent = `$${totalExpense.toLocaleString()}`;
             document.getElementById('creditExpense').textContent = `$${creditExpense.toLocaleString()}`;
-            
-            // 當月現金餘額顯示（帶顏色）
-            const cashBalanceElement = document.getElementById('balance');
-            const cashBalancePrefix = cashBalance >= 0 ? '+' : '';
-            cashBalanceElement.textContent = `${cashBalancePrefix}$${Math.abs(cashBalance).toLocaleString()}`;
-            cashBalanceElement.style.color = cashBalance >= 0 ? '#4CAF50' : '#F44336';
-            
-            // 累計現金餘額顯示（帶顏色）
-            const cumulativeCashBalanceElement = document.getElementById('cumulativeBalance');
-            const cumulativeCashBalancePrefix = cumulativeCashBalance >= 0 ? '+' : '';
-            cumulativeCashBalanceElement.textContent = `${cumulativeCashBalancePrefix}$${Math.abs(cumulativeCashBalance).toLocaleString()}`;
-            cumulativeCashBalanceElement.style.color = cumulativeCashBalance >= 0 ? '#4CAF50' : '#F44336';
 
             // 更新各成員統計
             updateMemberStats();
