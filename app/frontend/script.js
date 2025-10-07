@@ -2216,14 +2216,28 @@
                 .filter(record => record.type === 'income' && record.subCategory === '現金')
                 .reduce((sum, record) => sum + record.amount, 0);
             
-            // 計算現金餘額 = 所有成員的現金收入 - 所有成員的現金支出
+            // 計算當月現金餘額 = 當月現金收入 - 當月現金支出
             const cashBalance = cashIncome - cashExpense;
+            
+            // 計算累計現金餘額 = 所有月份的現金收入 - 所有月份的現金支出
+            const cumulativeCashIncome = records
+                .filter(record => record.type === 'income' && record.subCategory === '現金')
+                .reduce((sum, record) => sum + record.amount, 0);
+            
+            const cumulativeCashExpense = records
+                .filter(record => record.type === 'expense' && record.subCategory === '現金')
+                .reduce((sum, record) => sum + record.amount, 0);
+            
+            const cumulativeCashBalance = cumulativeCashIncome - cumulativeCashExpense;
             
             // 調試信息
             console.log('💰 現金統計調試:');
-            console.log('- 所有成員現金收入:', cashIncome);
-            console.log('- 所有成員現金支出:', cashExpense);
-            console.log('- 現金餘額 (所有成員現金收入-所有成員現金支出):', cashBalance);
+            console.log('- 當月現金收入:', cashIncome);
+            console.log('- 當月現金支出:', cashExpense);
+            console.log('- 當月現金餘額:', cashBalance);
+            console.log('- 累計現金收入:', cumulativeCashIncome);
+            console.log('- 累計現金支出:', cumulativeCashExpense);
+            console.log('- 累計現金餘額:', cumulativeCashBalance);
             
             // 詳細調試：檢查現金收入記錄
             const cashIncomeRecords = filteredRecords.filter(record => record.type === 'income' && record.subCategory === '現金');
@@ -2272,11 +2286,17 @@
             document.getElementById('totalExpense').textContent = `$${totalExpense.toLocaleString()}`;
             document.getElementById('creditExpense').textContent = `$${creditExpense.toLocaleString()}`;
             
-            // 現金餘額顯示（所有現金收入 - 所有現金支出，帶顏色）
+            // 當月現金餘額顯示（帶顏色）
             const cashBalanceElement = document.getElementById('balance');
             const cashBalancePrefix = cashBalance >= 0 ? '+' : '';
             cashBalanceElement.textContent = `${cashBalancePrefix}$${Math.abs(cashBalance).toLocaleString()}`;
             cashBalanceElement.style.color = cashBalance >= 0 ? '#4CAF50' : '#F44336';
+            
+            // 累計現金餘額顯示（帶顏色）
+            const cumulativeCashBalanceElement = document.getElementById('cumulativeBalance');
+            const cumulativeCashBalancePrefix = cumulativeCashBalance >= 0 ? '+' : '';
+            cumulativeCashBalanceElement.textContent = `${cumulativeCashBalancePrefix}$${Math.abs(cumulativeCashBalance).toLocaleString()}`;
+            cumulativeCashBalanceElement.style.color = cumulativeCashBalance >= 0 ? '#4CAF50' : '#F44336';
 
             // 更新各成員統計
             updateMemberStats();

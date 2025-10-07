@@ -155,6 +155,7 @@
                 overflow-x: auto !important;
                 scroll-snap-type: x mandatory !important;
                 -webkit-overflow-scrolling: touch !important;
+                margin-bottom: 20px !important;
             }
             
             .stats::-webkit-scrollbar,
