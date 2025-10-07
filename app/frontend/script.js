@@ -90,7 +90,8 @@
             const [year, month] = selectedMonth.split('-').map(Number);
             return records.filter(record => {
                 const recordDate = new Date(convertDateToStandard(record.date));
-                return recordDate.getFullYear() === year && recordDate.getMonth() === (month - 1);
+                // 比較年份和月份，注意 getMonth() 返回 0-11，所以需要 +1
+                return recordDate.getFullYear() === year && (recordDate.getMonth() + 1) === month;
             });
         }
 
