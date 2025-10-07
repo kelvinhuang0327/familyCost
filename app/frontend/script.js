@@ -9,24 +9,47 @@
         
         // 初始化當月份
         function initializeCurrentMonth() {
-            // 強制設置為10月份，因為數據中最新的是10月份
-            const latestMonthStr = '2025-10';
-            selectedDashboardMonth = latestMonthStr;
-            selectedListMonth = latestMonthStr;
-            
-            // 設置選擇器的預設值
-            setTimeout(() => {
-                const dashboardSelect = document.getElementById('dashboardMonthSelect');
-                const listSelect = document.getElementById('listMonthSelect');
-                if (dashboardSelect) {
-                    dashboardSelect.value = latestMonthStr;
-                }
-                if (listSelect) {
-                    listSelect.value = latestMonthStr;
-                }
-            }, 100);
-            
-            console.log('📅 初始化當月份:', latestMonthStr);
+            // 自動檢測數據中最新月份
+            if (records.length > 0) {
+                const existingMonths = [...new Set(records.map(record => {
+                    const recordDate = new Date(convertDateToStandard(record.date));
+                    return `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}`;
+                }))];
+                
+                // 按日期排序，選擇最新的月份
+                existingMonths.sort((a, b) => {
+                    const [yearA, monthA] = a.split('-').map(Number);
+                    const [yearB, monthB] = b.split('-').map(Number);
+                    if (yearA !== yearB) return yearA - yearB;
+                    return monthA - monthB;
+                });
+                
+                const latestMonthStr = existingMonths[existingMonths.length - 1];
+                selectedDashboardMonth = latestMonthStr;
+                selectedListMonth = latestMonthStr;
+                
+                // 設置選擇器的預設值
+                setTimeout(() => {
+                    const dashboardSelect = document.getElementById('dashboardMonthSelect');
+                    const listSelect = document.getElementById('listMonthSelect');
+                    if (dashboardSelect) {
+                        dashboardSelect.value = latestMonthStr;
+                    }
+                    if (listSelect) {
+                        listSelect.value = latestMonthStr;
+                    }
+                }, 100);
+                
+                console.log('📅 初始化當月份 (自動檢測):', latestMonthStr);
+            } else {
+                // 如果沒有數據，使用當前月份
+                const now = new Date();
+                const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+                selectedDashboardMonth = currentMonthStr;
+                selectedListMonth = currentMonthStr;
+                
+                console.log('📅 初始化當月份 (當前月份):', currentMonthStr);
+            }
         }
 
         // 跨瀏覽器數據同步
@@ -2225,15 +2248,8 @@
                 .filter(record => record.type === 'income' && record.subCategory === '現金')
                 .reduce((sum, record) => sum + record.amount, 0);
             
-            // 強制計算10月份的現金餘額
-            const octoberRecords = records.filter(record => record.date.startsWith('2025/10'));
-            const octoberCashIncome = octoberRecords
-                .filter(record => record.type === 'income' && record.subCategory === '現金')
-                .reduce((sum, record) => sum + record.amount, 0);
-            const octoberCashExpense = octoberRecords
-                .filter(record => record.type === 'expense' && record.subCategory === '現金')
-                .reduce((sum, record) => sum + record.amount, 0);
-            const cashBalance = octoberCashIncome - octoberCashExpense;
+            // 計算當月現金餘額（根據選擇的月份）
+            const cashBalance = cashIncome - cashExpense;
             
             // 計算累計現金餘額 = 所有月份的現金收入 - 所有月份的現金支出
             const cumulativeCashIncome = records
