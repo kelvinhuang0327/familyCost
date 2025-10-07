@@ -291,7 +291,29 @@ function processExcelRow(row, currentMember = null) {
         
         // 根據圖片格式：成員 | 金額 | 主類別 | 子類別 | 描述 | 日期
         const keys = Object.keys(row);
-        if (keys.length >= 6) {
+        if (keys.length >= 7) {
+            // 按順序提取：第1欄=成員，第2欄=金額，第3欄=類別，第4欄=主類別，第5欄=付款方式，第6欄=描述，第7欄=日期
+            member = row[keys[0]] || currentMember || '未知';
+            amount = row[keys[1]];
+            type = row[keys[2]] || '支出'; // 類別欄位
+            mainCategory = row[keys[3]];
+            const paymentMethod = row[keys[4]];
+            subCategory = paymentMethod; // 將付款方式映射到子類別
+            description = row[keys[5]];
+            date = row[keys[6]];
+            
+            console.log('🔍 [processExcelRow] 按順序提取 (7欄格式):', {
+                member: member,
+                amount: amount,
+                type: type,
+                mainCategory: mainCategory,
+                paymentMethod: paymentMethod,
+                subCategory: subCategory,
+                description: description,
+                date: date,
+                keys: keys
+            });
+        } else if (keys.length >= 6) {
             // 按順序提取：第1欄=成員，第2欄=金額，第3欄=主類別，第4欄=子類別，第5欄=描述，第6欄=日期
             member = row[keys[0]] || currentMember || '未知';
             amount = row[keys[1]];
