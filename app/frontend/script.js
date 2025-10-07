@@ -19,14 +19,14 @@
                 const dashboardSelect = document.getElementById('dashboardMonthSelect');
                 const listSelect = document.getElementById('listMonthSelect');
                 if (dashboardSelect) {
-                    dashboardSelect.value = currentMonthStr;
+                    dashboardSelect.value = latestMonthStr;
                 }
                 if (listSelect) {
-                    listSelect.value = currentMonthStr;
+                    listSelect.value = latestMonthStr;
                 }
             }, 100);
             
-            console.log('📅 初始化當月份:', currentMonthStr);
+            console.log('📅 初始化當月份:', latestMonthStr);
         }
 
         // 跨瀏覽器數據同步
