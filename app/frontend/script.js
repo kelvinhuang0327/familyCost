@@ -3481,16 +3481,26 @@
                 // 如果是 Excel 日期數字，轉換為日期
                 if (!isNaN(dateStr) && dateStr > 25569) { // Excel 日期起始值
                     const excelDate = new Date((dateStr - 25569) * 86400 * 1000);
-                    dateStr = formatDateToYYYYMMDD(excelDate);
+                    dateStr = formatDateToYYYYMMDD(excelDate).replace(/-/g, '/'); // 轉換為 / 格式
                 } else {
-                    // 處理斜線分隔的日期格式 (2025/09/01 -> 2025-09-01)
-                    dateStr = dateStr.replace(/\//g, '-');
+                    // 處理日期格式，統一轉換為 / 格式
+                    if (dateStr.includes('-')) {
+                        dateStr = dateStr.replace(/-/g, '/'); // 將 - 格式轉換為 / 格式
+                    }
+                    // 確保日期格式正確 (2025/9/1 -> 2025/9/1)
+                    const parts = dateStr.split('/');
+                    if (parts.length === 3) {
+                        const year = parts[0];
+                        const month = parts[1];
+                        const day = parts[2];
+                        dateStr = `${year}/${month}/${day}`;
+                    }
                 }
             }
             
-            const date = new Date(dateStr);
+            const date = new Date(dateStr.replace(/\//g, '-')); // 驗證時轉換為 - 格式
             if (isNaN(date.getTime())) {
-                errors.push(`日期無效：${row['日期']} (格式: YYYY-MM-DD)`);
+                errors.push(`日期無效：${row['日期']} (格式: YYYY/M/D)`);
             }
 
             if (errors.length > 0) {
