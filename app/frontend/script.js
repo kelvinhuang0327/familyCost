@@ -2159,6 +2159,7 @@
             console.log('🔍 updateStats調試信息:');
             console.log('- 總記錄數:', records.length);
             console.log('- 篩選後記錄數:', filteredRecords.length);
+            console.log('- 當前選擇的月份:', selectedDashboardMonth);
             console.log('- 記錄ID列表:', records.map(r => r.id));
             
             // 檢查重複ID
@@ -2166,6 +2167,14 @@
             if (duplicateIds.length > 0) {
                 console.warn('⚠️ 發現重複ID:', duplicateIds);
             }
+            
+            // 確保只使用篩選後的記錄進行統計
+            console.log('🔍 篩選後記錄詳情:');
+            console.log('- 篩選後記錄日期範圍:', filteredRecords.map(r => r.date).slice(0, 5));
+            console.log('- 篩選後記錄類型分布:', {
+                income: filteredRecords.filter(r => r.type === 'income').length,
+                expense: filteredRecords.filter(r => r.type === 'expense').length
+            });
             
             const totalIncome = filteredRecords
                 .filter(record => record.type === 'income')
