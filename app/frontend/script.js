@@ -81,10 +81,21 @@
                 return records;
             }
             
-            // 如果沒有選擇月份，預設顯示當月份
+            // 如果沒有選擇月份，預設顯示數據中存在的月份
             if (!selectedMonth) {
-                const now = new Date();
-                selectedMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+                // 獲取數據中實際存在的月份
+                const existingMonths = [...new Set(records.map(record => {
+                    const recordDate = new Date(convertDateToStandard(record.date));
+                    return `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}`;
+                }))].sort();
+                
+                // 如果有數據，使用最新的月份；如果沒有數據，使用當前月份
+                if (existingMonths.length > 0) {
+                    selectedMonth = existingMonths[existingMonths.length - 1];
+                } else {
+                    const now = new Date();
+                    selectedMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+                }
             }
             
             const [year, month] = selectedMonth.split('-').map(Number);
