@@ -87,7 +87,15 @@
                 const existingMonths = [...new Set(records.map(record => {
                     const recordDate = new Date(convertDateToStandard(record.date));
                     return `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}`;
-                }))].sort();
+                }))];
+                
+                // 按日期排序，選擇最新的月份
+                existingMonths.sort((a, b) => {
+                    const [yearA, monthA] = a.split('-').map(Number);
+                    const [yearB, monthB] = b.split('-').map(Number);
+                    if (yearA !== yearB) return yearA - yearB;
+                    return monthA - monthB;
+                });
                 
                 // 如果有數據，使用最新的月份；如果沒有數據，使用當前月份
                 if (existingMonths.length > 0) {
