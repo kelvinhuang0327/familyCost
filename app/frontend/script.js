@@ -64,10 +64,8 @@
             console.log('📊 當前records數量:', records.length);
             console.log('📊 records內容:', records.slice(0, 3)); // 顯示前3筆記錄
             
-            // 初始化當月份（如果尚未初始化）
-            if (selectedDashboardMonth === null || selectedListMonth === null) {
-                initializeCurrentMonth();
-            }
+            // 總是重新初始化當月份，確保重新整理時正確顯示
+            initializeCurrentMonth();
             
             updateStats();
             updateRecentRecords();
