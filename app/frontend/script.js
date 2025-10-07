@@ -4677,9 +4677,15 @@
             return `${year}-${month}-${day}`;
         }
 
-        // 將斜線日期格式轉換為標準格式
+        // 將日期格式轉換為標準格式 (YYYY-MM-DD)
         function convertDateToStandard(dateStr) {
             if (!dateStr) return dateStr;
+            
+            // 如果已經是標準格式 (YYYY-MM-DD)，直接返回
+            if (dateStr.includes('-') && dateStr.split('-').length === 3) {
+                return dateStr;
+            }
+            
             // 將 2025/9/21 轉換為 2025-09-21
             const parts = dateStr.split('/');
             if (parts.length === 3) {
@@ -4688,6 +4694,8 @@
                 const day = parts[2].padStart(2, '0');
                 return `${year}-${month}-${day}`;
             }
+            
+            // 如果格式不認識，返回原字符串
             return dateStr;
         }
 
