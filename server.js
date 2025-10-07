@@ -393,7 +393,7 @@ function processExcelRow(row, currentMember = null) {
         
         // 如果沒有子類別，設為默認值
         if (!subCategory) {
-            subCategory = '信用卡'; // 默認子類別
+            subCategory = '現金'; // 默認子類別改為現金
         }
         
         // 如果沒有描述，使用主類別作為描述
@@ -416,7 +416,7 @@ function processExcelRow(row, currentMember = null) {
             member: member || '未知',
             amount: amount,
             mainCategory: mainCategory || '其他',
-            subCategory: subCategory || '信用卡',
+            subCategory: subCategory || '現金',
             description: description || mainCategory || '其他',
             type: type || (amount >= 0 ? '收入' : '支出'),
             paymentMethod: '信用卡' // 預設付款方式
@@ -605,7 +605,7 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
         
         // 如果沒有子類別，設為默認值
         if (!subCategory) {
-            subCategory = '信用卡'; // 默認子類別
+            subCategory = '現金'; // 默認子類別改為現金
         }
         
         // 如果沒有描述，使用主類別作為描述
@@ -638,7 +638,7 @@ function processExcelRowNewFormat(row, rowNumber = 0) {
             member: member || '未知',
             amount: finalAmount,
             mainCategory: mainCategory || '其他',
-            subCategory: subCategory || '信用卡',
+            subCategory: subCategory || '現金',
             description: description || mainCategory || '其他',
             type: recordType
         };
