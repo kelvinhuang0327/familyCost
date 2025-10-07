@@ -103,9 +103,9 @@
                     <div class="date-range-inputs" id="dashboardDateRangeInputs" style="display: none;">
                         <div class="date-range-inputs-content">
                             <label for="dashboardStartDate">開始日期：</label>
-                            <input type="date" id="dashboardStartDate" onchange="changeDashboardDateRange()">
+                            <input type="date" id="dashboardStartDate" onchange="changeDashboardDateRange.call(this)">
                             <label for="dashboardEndDate">結束日期：</label>
-                            <input type="date" id="dashboardEndDate" onchange="changeDashboardDateRange()">
+                            <input type="date" id="dashboardEndDate" onchange="changeDashboardDateRange.call(this)">
                         </div>
                     </div>
                 </div>

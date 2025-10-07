@@ -94,6 +94,8 @@
                     const startDateInput = document.getElementById('dashboardStartDate');
                     const endDateInput = document.getElementById('dashboardEndDate');
                     
+                    console.log('📅 日期區間查詢 - 開始日期:', startDateInput.value, '結束日期:', endDateInput.value);
+                    
                     if (!startDateInput.value || !endDateInput.value) {
                         console.log('📅 日期區間未完整設置，返回所有記錄');
                         return records;
@@ -105,10 +107,19 @@
                     const startDate = new Date(selectedDashboardStartDate);
                     const endDate = new Date(selectedDashboardEndDate);
                     
-                    return records.filter(record => {
+                    console.log('📅 解析後的日期範圍:', startDate, '至', endDate);
+                    
+                    const filteredRecords = records.filter(record => {
                         const recordDate = new Date(convertDateToStandard(record.date));
-                        return recordDate >= startDate && recordDate <= endDate;
+                        const isInRange = recordDate >= startDate && recordDate <= endDate;
+                        if (isInRange) {
+                            console.log('📅 匹配記錄:', record.date, record.description, record.amount);
+                        }
+                        return isInRange;
                     });
+                    
+                    console.log('📅 日期區間篩選結果:', filteredRecords.length, '筆記錄');
+                    return filteredRecords;
                 } else {
                     // 月份查詢（原有邏輯）
                     selectedMonth = selectedDashboardMonth;
@@ -184,9 +195,17 @@
                 selectedDashboardStartDate = startDateInput.value;
                 selectedDashboardEndDate = endDateInput.value;
                 console.log('📅 日期區間變化:', selectedDashboardStartDate, '至', selectedDashboardEndDate);
-                updateStats();
-                updateRecentRecords();
-                updateMemberStats();
+                console.log('📅 觸發的輸入框:', this.id);
+                
+                // 檢查日期是否有效
+                if (selectedDashboardStartDate && selectedDashboardEndDate) {
+                    console.log('📅 日期有效，開始更新統計...');
+                    updateStats();
+                    updateRecentRecords();
+                    updateMemberStats();
+                } else {
+                    console.log('📅 日期不完整，跳過更新');
+                }
                 return;
             }
             
