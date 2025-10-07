@@ -104,6 +104,15 @@
                     const now = new Date();
                     selectedMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
                 }
+                
+                // 更新對應的變量，確保一致性
+                if (page === 'dashboard') {
+                    selectedDashboardMonth = selectedMonth;
+                } else if (page === 'list') {
+                    selectedListMonth = selectedMonth;
+                }
+                
+                console.log(`📅 自動選擇月份 (${page}):`, selectedMonth);
             }
             
             const [year, month] = selectedMonth.split('-').map(Number);
