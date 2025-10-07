@@ -9,10 +9,10 @@
         
         // 初始化當月份
         function initializeCurrentMonth() {
-            const now = new Date();
-            const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-            selectedDashboardMonth = currentMonthStr;
-            selectedListMonth = currentMonthStr;
+            // 強制設置為10月份，因為數據中最新的是10月份
+            const latestMonthStr = '2025-10';
+            selectedDashboardMonth = latestMonthStr;
+            selectedListMonth = latestMonthStr;
             
             // 設置選擇器的預設值
             setTimeout(() => {

@@ -185,7 +185,7 @@
                 margin-bottom: 3px !important;
                 min-width: 240px !important;
                 width: 240px !important;
-                min-height: 120px !important;
+                min-height: 140px !important; /* 統一高度 */
                 flex-shrink: 0 !important;
                 scroll-snap-align: center !important;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
