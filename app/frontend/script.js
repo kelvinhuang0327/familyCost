@@ -895,7 +895,8 @@
                 
                 // 比較核心欄位
                 const memberMatch = systemRecord.member === excelRecord.member;
-                const dateMatch = systemRecord.date === excelRecord.date;
+                // 正規化日期格式進行比較
+                const dateMatch = convertDateToStandard(systemRecord.date) === convertDateToStandard(excelRecord.date);
                 const amountMatch = Math.abs(systemRecord.amount) === Math.abs(excelRecord.amount);
                 
                 // 如果成員、日期、金額都匹配，可能是重複記錄
@@ -3672,11 +3673,15 @@
             importRecords.forEach(importRecord => {
                 // 檢查是否與現有記錄重複
                 const isDuplicate = records.some(existingRecord => {
+                    // 正規化日期格式進行比較
+                    const existingDate = convertDateToStandard(existingRecord.date);
+                    const importDate = convertDateToStandard(importRecord.date);
+                    
                     return existingRecord.member === importRecord.member &&
                            existingRecord.amount === importRecord.amount &&
                            existingRecord.mainCategory === importRecord.mainCategory &&
                            existingRecord.subCategory === importRecord.subCategory &&
-                           existingRecord.date === importRecord.date &&
+                           existingDate === importDate &&
                            existingRecord.description === importRecord.description;
                 });
                 
