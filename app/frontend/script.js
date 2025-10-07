@@ -148,7 +148,7 @@
         // 檢查是否有2025年的記錄，如果有則切換到2025年
         function checkAndSwitchTo2025() {
             const has2025Records = records.some(record => {
-                const recordDate = new Date(record.date);
+                const recordDate = new Date(convertDateToStandard(record.date));
                 return recordDate.getFullYear() === 2025;
             });
             
@@ -2229,7 +2229,7 @@
             
             const monthlyHouseholdIncome = records
                 .filter(record => {
-                    const recordDate = new Date(record.date);
+                    const recordDate = new Date(convertDateToStandard(record.date));
                     return record.member === '家用' && 
                            record.type === 'income' &&
                            recordDate.getMonth() === currentMonth && 
@@ -2239,7 +2239,7 @@
             
             const monthlyCashExpense = records
                 .filter(record => {
-                    const recordDate = new Date(record.date);
+                    const recordDate = new Date(convertDateToStandard(record.date));
                     return record.type === 'expense' && 
                            record.subCategory === '現金' &&
                            recordDate.getMonth() === currentMonth && 
@@ -2605,7 +2605,7 @@
             const currentMonth = new Date().getMonth();
             const currentYear = new Date().getFullYear();
             const cashExpenseRecords = records.filter(record => {
-                const recordDate = new Date(record.date);
+                const recordDate = new Date(convertDateToStandard(record.date));
                 return record.type === 'expense' && 
                        record.subCategory === '現金' &&
                        recordDate.getMonth() === currentMonth && 
@@ -2623,7 +2623,7 @@
             const currentMonth = new Date().getMonth();
             const currentYear = new Date().getFullYear();
             const creditExpenseRecords = records.filter(record => {
-                const recordDate = new Date(record.date);
+                const recordDate = new Date(convertDateToStandard(record.date));
                 return record.type === 'expense' && 
                        record.subCategory === '信用卡' &&
                        recordDate.getMonth() === currentMonth && 
@@ -2641,7 +2641,7 @@
             const currentMonth = new Date().getMonth();
             const currentYear = new Date().getFullYear();
             const incomeRecords = records.filter(record => {
-                const recordDate = new Date(record.date);
+                const recordDate = new Date(convertDateToStandard(record.date));
                 return record.member === '家用' && record.type === 'income' && 
                        recordDate.getMonth() === currentMonth && 
                        recordDate.getFullYear() === currentYear;
@@ -2658,7 +2658,7 @@
             const currentMonth = new Date().getMonth();
             const currentYear = new Date().getFullYear();
             const allRecords = records.filter(record => {
-                const recordDate = new Date(record.date);
+                const recordDate = new Date(convertDateToStandard(record.date));
                 return recordDate.getMonth() === currentMonth && 
                        recordDate.getFullYear() === currentYear;
             });
@@ -3794,7 +3794,7 @@
             
             // 檢查日期格式
             const invalidDates = records.filter(record => {
-                const date = new Date(record.date);
+                const date = new Date(convertDateToStandard(record.date));
                 return isNaN(date.getTime());
             });
             if (invalidDates.length > 0) {
@@ -4379,7 +4379,7 @@
         // 獲取指定月份的數據
         function getDataByMonth(year, month) {
             const filteredRecords = records.filter(record => {
-                const recordDate = new Date(record.date);
+                const recordDate = new Date(convertDateToStandard(record.date));
                 const recordYear = recordDate.getFullYear();
                 const recordMonth = recordDate.getMonth() + 1; // getMonth() 返回 0-11，需要 +1
                 
@@ -4601,7 +4601,7 @@
             
             // 處理實際數據
             data.forEach(record => {
-                const date = new Date(record.date);
+                const date = new Date(convertDateToStandard(record.date));
                 const day = String(date.getDate()).padStart(2, '0');
                 
                 if (record.type === 'income') {
