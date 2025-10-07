@@ -12,6 +12,10 @@
         let selectedDashboardStartDate = null;
         let selectedDashboardEndDate = null;
         
+        let selectedListDateRange = 'month'; // 'month' 或 'range'
+        let selectedListStartDate = null;
+        let selectedListEndDate = null;
+        
         // 初始化當月份
         function initializeCurrentMonth() {
             // 自動檢測數據中最新月份
@@ -125,7 +129,42 @@
                     selectedMonth = selectedDashboardMonth;
                 }
             } else if (page === 'list') {
-                selectedMonth = selectedListMonth;
+                // 檢查查詢方式
+                if (selectedListDateRange === 'range') {
+                    // 日期區間查詢
+                    const startDateInput = document.getElementById('listStartDate');
+                    const endDateInput = document.getElementById('listEndDate');
+                    
+                    console.log('📅 列表頁日期區間查詢 - 開始日期:', startDateInput.value, '結束日期:', endDateInput.value);
+                    
+                    if (!startDateInput.value || !endDateInput.value) {
+                        console.log('📅 列表頁日期區間未完整設置，返回所有記錄');
+                        return records;
+                    }
+                    
+                    selectedListStartDate = startDateInput.value;
+                    selectedListEndDate = endDateInput.value;
+                    
+                    const startDate = new Date(selectedListStartDate);
+                    const endDate = new Date(selectedListEndDate);
+                    
+                    console.log('📅 列表頁解析後的日期範圍:', startDate, '至', endDate);
+                    
+                    const filteredRecords = records.filter(record => {
+                        const recordDate = new Date(convertDateToStandard(record.date));
+                        const isInRange = recordDate >= startDate && recordDate <= endDate;
+                        if (isInRange) {
+                            console.log('📅 列表頁匹配記錄:', record.date, record.description, record.amount);
+                        }
+                        return isInRange;
+                    });
+                    
+                    console.log('📅 列表頁日期區間篩選結果:', filteredRecords.length, '筆記錄');
+                    return filteredRecords;
+                } else {
+                    // 月份查詢（原有邏輯）
+                    selectedMonth = selectedListMonth;
+                }
             }
             
             // 檢查是否明確選擇了「顯示全部」
@@ -249,6 +288,56 @@
             updateMemberStats();
         }
 
+        // 列表頁面日期區間查詢方式選擇
+        function changeListDateRange() {
+            const dateRangeSelect = document.getElementById('listDateRangeSelect');
+            const startDateInput = document.getElementById('listStartDate');
+            const endDateInput = document.getElementById('listEndDate');
+            
+            // 如果是日期輸入框觸發的變化，直接更新統計
+            if (this === startDateInput || this === endDateInput) {
+                selectedListStartDate = startDateInput.value;
+                selectedListEndDate = endDateInput.value;
+                console.log('📅 列表頁日期區間變化:', selectedListStartDate, '至', selectedListEndDate);
+                console.log('📅 列表頁觸發的輸入框:', this.id);
+                
+                // 檢查日期是否有效
+                if (selectedListStartDate && selectedListEndDate) {
+                    console.log('📅 列表頁日期有效，開始更新記錄...');
+                    filterRecords();
+                } else {
+                    console.log('📅 列表頁日期不完整，跳過更新');
+                }
+                return;
+            }
+            
+            // 查詢方式變化
+            selectedListDateRange = dateRangeSelect.value;
+            console.log('📅 列表頁面查詢方式:', selectedListDateRange);
+            
+            // 切換顯示的選擇器
+            const monthSelector = document.getElementById('listMonthSelector');
+            const dateRangeInputs = document.getElementById('listDateRangeInputs');
+            
+            if (selectedListDateRange === 'month') {
+                monthSelector.style.display = 'flex';
+                dateRangeInputs.style.display = 'none';
+            } else {
+                monthSelector.style.display = 'none';
+                dateRangeInputs.style.display = 'flex';
+                
+                // 設置預設日期範圍（最近30天）
+                const endDate = new Date();
+                const startDate = new Date();
+                startDate.setDate(startDate.getDate() - 30);
+                
+                startDateInput.value = startDate.toISOString().split('T')[0];
+                endDateInput.value = endDate.toISOString().split('T')[0];
+            }
+            
+            filterRecords();
+        }
+        
         // 列表頁面月份選擇
         function changeListMonth() {
             const monthSelect = document.getElementById('listMonthSelect');

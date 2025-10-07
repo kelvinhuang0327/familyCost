@@ -55,19 +55,20 @@
         <div class="content">
             <!-- 總覽頁面 -->
             <div id="dashboard" class="tab-content active">
-                <!-- 日期區間選擇器 -->
-                <div class="date-range-selector" id="dashboardDateRangeSelector">
-                    <div class="date-range-selector-content">
-                        <label for="dashboardDateRangeSelect">查詢方式：</label>
-                        <select id="dashboardDateRangeSelect" onchange="changeDashboardDateRange()">
-                            <option value="month">月份查詢</option>
-                            <option value="range">日期區間</option>
-                        </select>
-                    </div>
-                    
-                    <!-- 月份選擇器 -->
-                    <div class="month-selector" id="dashboardMonthSelector">
-                        <div class="month-selector-content">
+                <!-- 查詢選擇器 -->
+                <div class="query-selector" id="dashboardQuerySelector">
+                    <div class="query-selector-content">
+                        <!-- 查詢方式選擇 -->
+                        <div class="query-method">
+                            <label for="dashboardDateRangeSelect">查詢方式：</label>
+                            <select id="dashboardDateRangeSelect" onchange="changeDashboardDateRange()">
+                                <option value="month">月份查詢</option>
+                                <option value="range">日期區間</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 月份選擇器 -->
+                        <div class="month-selector" id="dashboardMonthSelector">
                             <label for="dashboardMonthSelect">選擇月份：</label>
                             <select id="dashboardMonthSelect" onchange="changeDashboardMonth()">
                                 <option value="">顯示全部</option>
@@ -97,11 +98,9 @@
                                 <option value="2024-12">2024年12月</option>
                             </select>
                         </div>
-                    </div>
-                    
-                    <!-- 日期區間選擇器 -->
-                    <div class="date-range-inputs" id="dashboardDateRangeInputs" style="display: none;">
-                        <div class="date-range-inputs-content">
+                        
+                        <!-- 日期區間選擇器 -->
+                        <div class="date-range-inputs" id="dashboardDateRangeInputs" style="display: none;">
                             <label for="dashboardStartDate">開始日期：</label>
                             <input type="date" id="dashboardStartDate" onchange="changeDashboardDateRange.call(this)">
                             <label for="dashboardEndDate">結束日期：</label>
@@ -144,37 +143,57 @@
 
             <!-- 列表頁面 -->
             <div id="list" class="tab-content">
-                <!-- 月份選擇器 -->
-                <div class="month-selector" id="listMonthSelector">
-                    <div class="month-selector-content">
-                        <label for="listMonthSelect">選擇月份：</label>
-                        <select id="listMonthSelect" onchange="changeListMonth()">
-                            <option value="">顯示全部</option>
-                            <option value="2025-01">2025年1月</option>
-                            <option value="2025-02">2025年2月</option>
-                            <option value="2025-03">2025年3月</option>
-                            <option value="2025-04">2025年4月</option>
-                            <option value="2025-05">2025年5月</option>
-                            <option value="2025-06">2025年6月</option>
-                            <option value="2025-07">2025年7月</option>
-                            <option value="2025-08">2025年8月</option>
-                            <option value="2025-09">2025年9月</option>
-                            <option value="2025-10">2025年10月</option>
-                            <option value="2025-11">2025年11月</option>
-                            <option value="2025-12">2025年12月</option>
-                            <option value="2024-01">2024年1月</option>
-                            <option value="2024-02">2024年2月</option>
-                            <option value="2024-03">2024年3月</option>
-                            <option value="2024-04">2024年4月</option>
-                            <option value="2024-05">2024年5月</option>
-                            <option value="2024-06">2024年6月</option>
-                            <option value="2024-07">2024年7月</option>
-                            <option value="2024-08">2024年8月</option>
-                            <option value="2024-09">2024年9月</option>
-                            <option value="2024-10">2024年10月</option>
-                            <option value="2024-11">2024年11月</option>
-                            <option value="2024-12">2024年12月</option>
-                        </select>
+                <!-- 查詢選擇器 -->
+                <div class="query-selector" id="listQuerySelector">
+                    <div class="query-selector-content">
+                        <!-- 查詢方式選擇 -->
+                        <div class="query-method">
+                            <label for="listDateRangeSelect">查詢方式：</label>
+                            <select id="listDateRangeSelect" onchange="changeListDateRange()">
+                                <option value="month">月份查詢</option>
+                                <option value="range">日期區間</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 月份選擇器 -->
+                        <div class="month-selector" id="listMonthSelector">
+                            <label for="listMonthSelect">選擇月份：</label>
+                            <select id="listMonthSelect" onchange="changeListMonth()">
+                                <option value="">顯示全部</option>
+                                <option value="2025-01">2025年1月</option>
+                                <option value="2025-02">2025年2月</option>
+                                <option value="2025-03">2025年3月</option>
+                                <option value="2025-04">2025年4月</option>
+                                <option value="2025-05">2025年5月</option>
+                                <option value="2025-06">2025年6月</option>
+                                <option value="2025-07">2025年7月</option>
+                                <option value="2025-08">2025年8月</option>
+                                <option value="2025-09">2025年9月</option>
+                                <option value="2025-10">2025年10月</option>
+                                <option value="2025-11">2025年11月</option>
+                                <option value="2025-12">2025年12月</option>
+                                <option value="2024-01">2024年1月</option>
+                                <option value="2024-02">2024年2月</option>
+                                <option value="2024-03">2024年3月</option>
+                                <option value="2024-04">2024年4月</option>
+                                <option value="2024-05">2024年5月</option>
+                                <option value="2024-06">2024年6月</option>
+                                <option value="2024-07">2024年7月</option>
+                                <option value="2024-08">2024年8月</option>
+                                <option value="2024-09">2024年9月</option>
+                                <option value="2024-10">2024年10月</option>
+                                <option value="2024-11">2024年11月</option>
+                                <option value="2024-12">2024年12月</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 日期區間選擇器 -->
+                        <div class="date-range-inputs" id="listDateRangeInputs" style="display: none;">
+                            <label for="listStartDate">開始日期：</label>
+                            <input type="date" id="listStartDate" onchange="changeListDateRange.call(this)">
+                            <label for="listEndDate">結束日期：</label>
+                            <input type="date" id="listEndDate" onchange="changeListDateRange.call(this)">
+                        </div>
                     </div>
                 </div>
                 <div class="filter-bar">

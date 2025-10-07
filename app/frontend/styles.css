@@ -2660,8 +2660,8 @@
             min-width: 200px;
         }
 
-/* 日期區間選擇器樣式 */
-.date-range-selector {
+/* 查詢選擇器樣式 */
+.query-selector {
     background: #f8f9fa;
     border-bottom: 1px solid #dee2e6;
     padding: 15px 20px;
@@ -2669,22 +2669,30 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.date-range-selector-content {
+.query-selector-content {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
     max-width: 1200px;
-    margin: 0 auto 10px auto;
+    margin: 0 auto;
+    flex-wrap: wrap;
 }
 
-.date-range-selector label {
+/* 查詢方式選擇 */
+.query-method {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.query-method label {
     font-weight: 600;
     color: #333;
     font-size: 14px;
     white-space: nowrap;
 }
 
-.date-range-selector select {
+.query-method select {
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -2694,18 +2702,49 @@
     cursor: pointer;
 }
 
-.date-range-selector select:focus {
+.query-method select:focus {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-.date-range-inputs {
-    max-width: 1200px;
-    margin: 0 auto;
+/* 月份選擇器樣式 */
+.month-selector {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.date-range-inputs-content {
+.month-selector label {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.month-selector select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    font-size: 14px;
+    min-width: 150px;
+    cursor: pointer;
+}
+
+.month-selector select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* 日期區間輸入框樣式 */
+.date-range-inputs {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -2733,15 +2772,6 @@
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-/* 月份選擇器樣式 */
-.month-selector {
-    background: transparent;
-    border: none;
-    padding: 0;
-    margin: 0;
-    box-shadow: none;
 }
 
 .month-selector-content {
@@ -2775,9 +2805,9 @@
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-/* 手機版日期區間選擇器樣式 */
+/* 手機版查詢選擇器樣式 */
 @media screen and (max-width: 480px) {
-    .date-range-selector {
+    .query-selector {
         padding: 10px 15px;
         background: #f8f9fa;
         border-bottom: 1px solid #dee2e6;
@@ -2786,33 +2816,24 @@
         z-index: 999;
     }
     
-    .date-range-selector-content {
+    .query-selector-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .query-method {
         flex-direction: column;
         align-items: stretch;
         gap: 8px;
-        margin-bottom: 10px;
     }
     
-    .date-range-selector label {
+    .query-method label {
         font-size: 14px;
         margin-bottom: 4px;
     }
     
-    .date-range-selector select {
-        width: 100%;
-        padding: 8px 12px;
-        font-size: 14px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-    
-    .date-range-inputs-content {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-    }
-    
-    .date-range-inputs input[type="date"] {
+    .query-method select {
         width: 100%;
         padding: 8px 12px;
         font-size: 14px;
@@ -2821,17 +2842,14 @@
     }
     
     .month-selector {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
         padding: 0;
         background: transparent;
         border: none;
         position: static;
         z-index: auto;
-    }
-    
-    .month-selector-content {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
     }
     
     .month-selector label {
@@ -2840,6 +2858,26 @@
     }
     
     .month-selector select {
+        width: 100%;
+        padding: 8px 12px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background: white;
+    }
+    
+    .date-range-inputs {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .date-range-inputs label {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    
+    .date-range-inputs input[type="date"] {
         width: 100%;
         padding: 8px 12px;
         font-size: 14px;
