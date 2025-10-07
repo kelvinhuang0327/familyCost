@@ -185,6 +185,7 @@
                 margin-bottom: 3px !important;
                 min-width: 240px !important;
                 width: 240px !important;
+                min-height: 120px !important;
                 flex-shrink: 0 !important;
                 scroll-snap-align: center !important;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
@@ -194,6 +195,10 @@
                 transition: all 0.3s ease !important;
                 position: relative !important;
                 z-index: 1 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
             }
             
             .stat-card:first-child {
@@ -477,6 +482,7 @@
                 padding: 12px !important;
                 width: 240px !important;
                 min-width: 240px !important;
+                min-height: 120px !important;
                 flex-shrink: 0 !important;
                 scroll-snap-align: center !important;
                 background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%) !important;
@@ -485,6 +491,10 @@
                 transition: all 0.3s ease !important;
                 position: relative !important;
                 z-index: 1 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
             }
             
             .member-stats .stat-card:first-child {
