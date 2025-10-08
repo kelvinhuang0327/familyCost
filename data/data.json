@@ -1649,6 +1649,26 @@
       "subCategory": "現金",
       "description": "華南信用卡",
       "type": "expense"
+    },
+    {
+      "id": "1759916210812_y9ukstp28_1",
+      "date": "2025/10/8",
+      "member": "Kelvin",
+      "amount": 145,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1759916210813_53tcrgxrf_2",
+      "date": "2025/10/8",
+      "member": "Ryan",
+      "amount": 2499,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "書桌",
+      "type": "expense"
     }
   ]
 }
