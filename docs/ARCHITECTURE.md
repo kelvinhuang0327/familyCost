@@ -71,7 +71,6 @@ familyCost/
 │       └── config.js            # 環境配置
 ├── data/                         # 數據目錄
 │   ├── data.json                # 主要數據文件
-│   ├── data_backup.json         # 數據備份
 │   └── version.json             # 版本信息
 ├── scripts/                      # 腳本目錄
 │   ├── start_local.sh           # 本地啟動腳本

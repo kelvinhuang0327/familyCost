@@ -85,7 +85,6 @@ familyCost/
 │       └── config.js            # 環境配置
 ├── data/                         # 數據目錄
 │   ├── data.json                # 主數據文件
-│   ├── data_backup.json         # 數據備份
 │   └── version.json             # 版本信息
 ├── docs/                         # 文檔目錄
 │   ├── ARCHITECTURE.md          # 系統架構

@@ -15,10 +15,10 @@ async function cleanData() {
         
         console.log(`📊 原始記錄數: ${data.records.length}`);
         
-        // 備份原始數據
-        const backupPath = path.join(__dirname, '../data/data_backup.json');
+        // 備份原始數據到臨時文件
+        const backupPath = path.join(__dirname, '../data/data_backup_temp.json');
         await fs.writeFile(backupPath, dataContent, 'utf8');
-        console.log('💾 已備份原始數據到 data_backup.json');
+        console.log('💾 已備份原始數據到 data_backup_temp.json');
         
         let cleanedCount = 0;
         let skippedCount = 0;
@@ -53,7 +53,7 @@ async function cleanData() {
         console.log(`   - 總記錄數: ${data.records.length}`);
         console.log(`   - 已清理: ${cleanedCount} 筆`);
         console.log(`   - 跳過: ${skippedCount} 筆`);
-        console.log(`   - 備份文件: data_backup.json`);
+        console.log(`   - 備份文件: data_backup_temp.json`);
         
     } catch (error) {
         console.error('❌ 數據清理失敗:', error);
