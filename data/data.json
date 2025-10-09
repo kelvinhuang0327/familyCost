@@ -1669,6 +1669,16 @@
       "subCategory": "信用卡",
       "description": "書桌",
       "type": "expense"
+    },
+    {
+      "id": "1759976420755_4outyko9f_1",
+      "date": "2025/10/8",
+      "member": "家用",
+      "amount": 200,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-水果",
+      "type": "expense"
     }
   ]
 }
