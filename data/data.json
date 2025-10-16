@@ -1679,6 +1679,276 @@
       "subCategory": "現金",
       "description": "餐飲-水果",
       "type": "expense"
+    },
+    {
+      "id": "1760604101696_c1891p1xi_1",
+      "date": "2025/10/16",
+      "member": "Phuong",
+      "amount": 799,
+      "mainCategory": "日常",
+      "subCategory": "現金",
+      "description": "日常-手機8月",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101697_6uvuqmgc2_2",
+      "date": "2025/10/16",
+      "member": "Kelvin",
+      "amount": 130,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101697_yty2fz2ad_3",
+      "date": "2025/10/16",
+      "member": "Phuong",
+      "amount": 135,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "早餐",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101697_6ivowvojc_4",
+      "date": "2025/10/15",
+      "member": "Ryan",
+      "amount": 90,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "APP",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101698_yi79723mu_5",
+      "date": "2025/10/15",
+      "member": "Kelvin",
+      "amount": 100,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-午餐",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101698_47w8zfxwp_6",
+      "date": "2025/10/13",
+      "member": "Ryan",
+      "amount": 4401,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "元大保險",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101699_jigj2wos_7",
+      "date": "2025/10/13",
+      "member": "家用",
+      "amount": 747,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "蝦皮籃子",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101699_rnj728cmr_8",
+      "date": "2025/10/12",
+      "member": "Ryan",
+      "amount": 113,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "卡多摩吸管",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101699_883ewflsb_9",
+      "date": "2025/10/12",
+      "member": "Kelvin",
+      "amount": 81,
+      "mainCategory": "交通",
+      "subCategory": "信用卡",
+      "description": "汽油",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101787_bhhzk7f1w_10",
+      "date": "2025/10/12",
+      "member": "Ryan",
+      "amount": 418,
+      "mainCategory": "娛樂",
+      "subCategory": "信用卡",
+      "description": "家樂福",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101787_0eacyt3pn_11",
+      "date": "2025/10/12",
+      "member": "家用",
+      "amount": 60,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": 711,
+      "type": "expense"
+    },
+    {
+      "id": "1760604101788_aroc3o59j_12",
+      "date": "2025/10/12",
+      "member": "家用",
+      "amount": 185,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-晚餐小火鍋",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101788_9ea8ou20i_13",
+      "date": "2025/10/12",
+      "member": "Ryan",
+      "amount": 222,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "卡多摩果泥",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101788_tk8q070t8_14",
+      "date": "2025/10/11",
+      "member": "家用",
+      "amount": 225,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "肉羹滷肉飯",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101789_4vpdrt37y_15",
+      "date": "2025/10/11",
+      "member": "家用",
+      "amount": 1893,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "愛買",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101789_gms7kbcqp_16",
+      "date": "2025/10/11",
+      "member": "Kelvin",
+      "amount": 26,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "飲料",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101790_uld97mf7o_17",
+      "date": "2025/10/10",
+      "member": "家用",
+      "amount": 165,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "麥味登早餐",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101790_kihkpu4c5_18",
+      "date": "2025/10/10",
+      "member": "家用",
+      "amount": 185,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "餐飲-晚餐小火鍋",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101791_3iy07zr1f_19",
+      "date": "2025/10/10",
+      "member": "Kelvin",
+      "amount": 111,
+      "mainCategory": "交通",
+      "subCategory": "信用卡",
+      "description": "UBER小黃",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101791_2zc3timdy_20",
+      "date": "2025/10/10",
+      "member": "家用",
+      "amount": 29,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": "全家",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101791_6u152ubxj_21",
+      "date": "2025/10/8",
+      "member": "家用",
+      "amount": 45,
+      "mainCategory": "餐飲",
+      "subCategory": "信用卡",
+      "description": 711,
+      "type": "expense"
+    },
+    {
+      "id": "1760604101791_ak5jkgmy8_22",
+      "date": "2025/10/16",
+      "member": "Kelvin",
+      "amount": 5000,
+      "mainCategory": "餐飲",
+      "subCategory": "現金",
+      "description": "10/4-10/16現金支出(500)",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101791_r2wddtq3s_23",
+      "date": "2025/10/13",
+      "member": "Kelvin",
+      "amount": 1130,
+      "mainCategory": "交通費",
+      "subCategory": "現金",
+      "description": "薪資-10月",
+      "type": "income"
+    },
+    {
+      "id": "1760604101792_j8g0khab9_24",
+      "date": "2025/10/15",
+      "member": "家用",
+      "amount": 82378,
+      "mainCategory": "薪資",
+      "subCategory": "現金",
+      "description": "薪資-10月",
+      "type": "income"
+    },
+    {
+      "id": "1760604101792_335trf0hp_25",
+      "date": "2025/10/12",
+      "member": "Ryan",
+      "amount": 17420,
+      "mainCategory": "學費",
+      "subCategory": "現金",
+      "description": "學費-吉的堡",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101792_zz5on9oe1_26",
+      "date": "2025/10/12",
+      "member": "Phuong",
+      "amount": 998,
+      "mainCategory": "娛樂",
+      "subCategory": "現金",
+      "description": "衣服",
+      "type": "expense"
+    },
+    {
+      "id": "1760604101792_baw03uhw9_27",
+      "date": "2025/10/8",
+      "member": "家用",
+      "amount": 400,
+      "mainCategory": "日常",
+      "subCategory": "信用卡",
+      "description": "楊梅出租廣告",
+      "type": "expense"
     }
   ]
 }
