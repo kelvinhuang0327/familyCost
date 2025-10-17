@@ -401,7 +401,7 @@
 
         // 類別選項
         const categories = {
-            income: ['醫療', '獎金', '投資收益', '房租收入', '借款收入', '代付收入', '其他收入'],
+            income: ['醫療', '獎金', '投資收益', '房租收入', '借款收入', '代付收入', '其他收入', '現金流'],
             expense: {
                 '娛樂': [],
                 '日常': [],
@@ -411,7 +411,8 @@
                 '其他': [],
                 '醫療': [],
                 '禮物': [],
-                '學費': []
+                '學費': [],
+                '現金流': []
             }
         };
 
@@ -2413,7 +2414,7 @@
                 .reduce((sum, record) => sum + record.amount, 0);
             
             const totalExpense = filteredRecords
-                .filter(record => record.type === 'expense')
+                .filter(record => record.type === 'expense' && record.mainCategory !== '現金流')
                 .reduce((sum, record) => sum + record.amount, 0);
             
             console.log('- 總收入:', totalIncome);
@@ -2428,8 +2429,20 @@
                 .filter(record => record.type === 'expense' && record.subCategory === '信用卡')
                 .reduce((sum, record) => sum + record.amount, 0);
             
+            // 計算現金餘額（現金收入 - 現金支出）
+            const cashIncome = filteredRecords
+                .filter(record => record.type === 'income' && record.subCategory === '現金')
+                .reduce((sum, record) => sum + record.amount, 0);
+            
+            const cashExpense = filteredRecords
+                .filter(record => record.type === 'expense' && record.subCategory === '現金')
+                .reduce((sum, record) => sum + record.amount, 0);
+            
+            const cashBalance = cashIncome - cashExpense;
+            
             document.getElementById('totalExpense').textContent = `$${totalExpense.toLocaleString()}`;
             document.getElementById('creditExpense').textContent = `$${creditExpense.toLocaleString()}`;
+            document.getElementById('cashBalance').textContent = `$${cashBalance.toLocaleString()}`;
 
             // 更新各成員統計
             updateMemberStats();
@@ -2467,7 +2480,7 @@
                     .filter(record => record.type === 'income')
                     .reduce((sum, record) => sum + record.amount, 0);
                 const memberExpense = memberRecords
-                    .filter(record => record.type === 'expense')
+                    .filter(record => record.type === 'expense' && record.mainCategory !== '現金流')
                     .reduce((sum, record) => sum + record.amount, 0);
                 const memberBalance = memberIncome - memberExpense;
                 
@@ -2618,7 +2631,7 @@
                 .filter(record => record.type === 'income')
                 .reduce((sum, record) => sum + record.amount, 0);
             const memberExpense = memberRecords
-                .filter(record => record.type === 'expense')
+                .filter(record => record.type === 'expense' && record.mainCategory !== '現金流')
                 .reduce((sum, record) => sum + record.amount, 0);
             const memberBalance = memberIncome - memberExpense;
             
@@ -2757,9 +2770,9 @@
             const currentYear = new Date().getFullYear();
             console.log('當前月份:', currentMonth, '當前年份:', currentYear);
             
-            // 暫時移除日期篩選，顯示所有支出記錄
+            // 暫時移除日期篩選，顯示所有支出記錄（排除現金流）
             const expenseRecords = records.filter(record => {
-                const isExpense = record.type === 'expense';
+                const isExpense = record.type === 'expense' && record.mainCategory !== '現金流';
                 console.log(`記錄 ${record.id}: 成員=${record.member}, 是支出=${isExpense}`);
                 return isExpense;
             });
@@ -2836,7 +2849,7 @@
             });
             
             const totalIncome = allRecords.filter(r => r.member === '家用' && r.type === 'income').reduce((sum, record) => sum + record.amount, 0);
-            const totalExpense = allRecords.filter(r => r.member === '家用' && r.type === 'expense').reduce((sum, record) => sum + record.amount, 0);
+            const totalExpense = allRecords.filter(r => r.member === '家用' && r.type === 'expense' && r.mainCategory !== '現金流').reduce((sum, record) => sum + record.amount, 0);
             const netAmount = totalIncome - totalExpense;
             
             updateFilterTabs('all');

@@ -725,7 +725,7 @@
       "date": "2025/9/19",
       "member": "家用",
       "amount": 35000,
-      "mainCategory": "現金流支出",
+      "mainCategory": "現金流",
       "subCategory": "現金",
       "description": "現金流支出-還大哥錢",
       "type": "expense"
@@ -745,7 +745,7 @@
       "date": "2025/9/19",
       "member": "家用",
       "amount": 26618,
-      "mainCategory": "現金流支出",
+      "mainCategory": "現金流",
       "subCategory": "現金",
       "description": "現金流支出-台新信用卡",
       "type": "expense"
@@ -1055,7 +1055,7 @@
       "date": "2025/9/9",
       "member": "家用",
       "amount": 15000,
-      "mainCategory": "現金流收入",
+      "mainCategory": "現金流",
       "subCategory": "現金",
       "description": "跟大哥借1萬5",
       "type": "income"
@@ -1555,7 +1555,7 @@
       "date": "2025/9/3",
       "member": "家用",
       "amount": 20000,
-      "mainCategory": "現金流收入",
+      "mainCategory": "現金流",
       "subCategory": "現金",
       "description": "現金流收入-跟大哥借2萬",
       "type": "income"
@@ -1645,7 +1645,7 @@
       "date": "2025/10/5",
       "member": "家用",
       "amount": 4592,
-      "mainCategory": "現金流支出",
+      "mainCategory": "現金流",
       "subCategory": "現金",
       "description": "華南信用卡",
       "type": "expense"
